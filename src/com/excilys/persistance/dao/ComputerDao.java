@@ -1,41 +1,89 @@
 package com.excilys.persistance.dao;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
-import com.excilys.persistance.Computer;
+import com.excilys.persistance.mappers.ComputerMapper;
+import com.excilys.persistance.model.Computer;
+import com.excilys.persistance.utils.Connector;
+import com.excilys.persistance.utils.DateFormator;
 
 public class ComputerDao implements Dao<Computer>{
 
-	public ComputerDao() {}
+	private Connector connector;
+	private ComputerMapper mapper;
 	
+	public ComputerDao() {
+		this.connector = new Connector();
+		this.mapper = new ComputerMapper();
+	}
+
 	@Override
 	public Optional<Computer> get(long id) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Computer> resultList = new ArrayList<>();
+		String transactionQuery = "select * from `computer-database-db`.`computer` where id = " + id + " limit 1;";
+		try{
+			ResultSet resultSet = this.connector.executeTransaction(connector.connection, connector.dbName, transactionQuery);
+			resultList = this.mapper.map(resultSet) ;
+			this.connector.closeConnection();
+		} catch (SQLException e) {
+			System.out.println("Error: " + e.getMessage());
+		}
+		
+		return Optional.of(resultList.get(0));
 	}
 
 	@Override
 	public List<Computer> getAll() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Computer> resultList = new ArrayList<>();
+		String transactionQuery = "select * from `computer-database-db`.`computer`;";
+		try{
+			ResultSet resultSet = this.connector.executeTransaction(connector.connection, connector.dbName, transactionQuery);
+			resultList = this.mapper.map(resultSet) ;
+			this.connector.closeConnection();
+		} catch (SQLException e) {
+			System.out.println("Error: " + e.getMessage());
+		}
+		return resultList;		
 	}
 
 	@Override
 	public void save(Computer t) {
-		// TODO Auto-generated method stub
-		
+		String transactionQuery = "insert into `computer-database-db`.`computer` (NAME, INTRODUCED, DISCONTINUED) values "
+				+ "NAME = \'" + t.getName() + "\', "
+				+ "INTRODUCED = TIMESTAMP(\'"+ DateFormator.formatDate(t.getIntroduced())+"\')"
+				+ "DISCONTINUED = TIMESTAMP(\'"+ DateFormator.formatDate(t.getDiscontinued())+"\';";
+		try {
+			this.connector.executeTransaction(connector.connection, connector.dbName, transactionQuery);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	@Override
-	public void update(Computer t, String[] params) {
-		// TODO Auto-generated method stub
-		
+	public void update(Computer t) {
+		String transactionQuery = "update `computer-database-db`.`computer` "
+				+ "set "
+				+ "NAME = \'" + t.getName() + "\', "
+				+ "INTRODUCED = TIMESTAMP(\'"+ DateFormator.formatDate(t.getIntroduced())+"\')"
+				+ "DISCONTINUED = TIMESTAMP(\'"+ DateFormator.formatDate(t.getDiscontinued())+"\'"
+				+ "where id = " + t.getId() + ";";
+		try {
+			this.connector.executeTransaction(connector.connection, connector.dbName, transactionQuery);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	@Override
 	public void delete(Computer t) {
-		// TODO Auto-generated method stub
-		
+		String transactionQuery = "delete from `computer-database-db`.`computer` where ID = " + t.getId()+ ";";
+		try {
+			this.connector.executeTransaction(connector.connection, connector.dbName, transactionQuery);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 }

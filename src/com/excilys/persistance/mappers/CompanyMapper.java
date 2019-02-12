@@ -1,12 +1,12 @@
-package com.excilys.persistance.dao;
+package com.excilys.persistance.mappers;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.excilys.persistance.Company;
+import com.excilys.persistance.model.Company;
 
-public class CompanyMapper implements DataMapper<Company>{
+public class CompanyMapper implements Mapper<Company>{
 
 	@Override
 	public List<Company> map(ResultSet rs) {

@@ -1,4 +1,4 @@
-package com.excilys.persistance;
+package com.excilys.persistance.model;
 
 public class Company {
 	private int id;

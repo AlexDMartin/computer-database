@@ -1,4 +1,4 @@
-package com.excilys.persistance.dao;
+package com.excilys.persistance.utils;
 
 import java.sql.*;
 import java.util.*;
@@ -49,7 +49,6 @@ public class Connector{
 	
 	private ResultSet execute(Connection con, String dbName, String query) throws SQLException {
 		    Statement stmt = null;
-		    
 		    try {
 		        stmt = con.createStatement();
 		        return stmt.executeQuery(query);

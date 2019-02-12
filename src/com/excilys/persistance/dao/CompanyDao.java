@@ -4,7 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-import com.excilys.persistance.Company;
+import com.excilys.persistance.mappers.CompanyMapper;
+import com.excilys.persistance.model.Company;
+import com.excilys.persistance.utils.Connector;
 
 public class CompanyDao implements Dao<Company>{
 	private Connector connector;
@@ -17,14 +19,17 @@ public class CompanyDao implements Dao<Company>{
 	
 	@Override
 	public Optional<Company> get(long id) {
+		List<Company> resultList = new ArrayList<>();
 		String transactionQuery = "select * from `computer-database-db`.`company` where id = " + id + " limit 1;";
 		try{
-			this.connector.executeTransaction(connector.connection, connector.dbName, transactionQuery);
+			ResultSet resultSet = this.connector.executeTransaction(connector.connection, connector.dbName, transactionQuery);
+			resultList = this.mapper.map(resultSet) ;
+			this.connector.closeConnection();
 		} catch (SQLException e) {
 			System.out.println("Error: " + e.getMessage());
 		}
 		
-		return null;
+		return Optional.of(resultList.get(0));
 	}
 
 	@Override
@@ -42,13 +47,24 @@ public class CompanyDao implements Dao<Company>{
 	}
 
 	@Override
-	public void save(Company t) {
-				
+	public void save(Company t) throws Exception{
+		String transactionQuery = "insert into `computer-database-db`.`company` (NAME) values (";
+		
+		if(t.getName() == null) {	
+			throw new Exception("Company\'s name should not be null");
+		}
+		transactionQuery += t.getName() + ")";
+		
+		try {
+			this.connector.executeTransaction(connector.connection, connector.dbName, transactionQuery);
+		} catch (SQLException e) {
+			System.out.println("Error: " + e.getMessage());
+		}
 	}
 
 	@Override
-	public void update(Company t, String[] params) {
-		// TODO Auto-generated method stub
+	public void update(Company t) {
+		String transactionQuery = "update table `computer-database-db`.`company` (NAME) set (";
 		
 	}
 

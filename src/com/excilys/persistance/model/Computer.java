@@ -1,4 +1,4 @@
-package com.excilys.persistance;
+package com.excilys.persistance.model;
 
 import java.util.Date;
 
@@ -53,7 +53,7 @@ public class Computer {
 	
 	@Override
 	public String toString() {
-		String result = this.name + " (computer number " + this.id + ")";
+		String result = this.id + "\t| "+ this.name;
 		// Find a way to show 'introduced' and 'discontinued'.
 		return result;
 	}

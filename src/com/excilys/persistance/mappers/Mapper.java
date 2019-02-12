@@ -1,9 +1,9 @@
-package com.excilys.persistance.dao;
+package com.excilys.persistance.mappers;
 
 import java.sql.ResultSet;
 import java.util.List;
 
-public interface DataMapper<T> {
+public interface Mapper<T> {
 
 	List<T> map(ResultSet rs);
 }

@@ -1,13 +1,13 @@
-package com.excilys.persistance.dao;
+package com.excilys.persistance.mappers;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.excilys.persistance.Computer;
+import com.excilys.persistance.model.Computer;
 
-public class ComputerMapper implements DataMapper<Computer>{
+public class ComputerMapper implements Mapper<Computer>{
 
 	@Override
 	public List<Computer> map(ResultSet rs) {
