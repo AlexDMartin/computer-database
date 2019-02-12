@@ -6,7 +6,7 @@ import com.excilys.persistance.Computer;
 
 public class ComputerDao implements Dao<Computer>{
 
-	private List<Computer> computers = new ArrayList<>();
+	public ComputerDao() {}
 	
 	@Override
 	public Optional<Computer> get(long id) {

@@ -21,4 +21,10 @@ public class Company {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	@Override
+	public String toString() {
+		String formattedString = Integer.toString(this.id) + "\t| " + this.name;
+		return formattedString;
+	}
 }

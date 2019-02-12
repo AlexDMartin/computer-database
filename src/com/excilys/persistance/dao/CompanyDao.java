@@ -1,20 +1,25 @@
 package com.excilys.persistance.dao;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
 import com.excilys.persistance.Company;
 
 public class CompanyDao implements Dao<Company>{
-
-	public CompanyDao() {}
+	private Connector connector;
+	private CompanyMapper mapper;
+	
+	public CompanyDao() {
+		this.connector = new Connector();
+		this.mapper = new CompanyMapper();
+	}
 	
 	@Override
 	public Optional<Company> get(long id) {
 		String transactionQuery = "select * from `computer-database-db`.`company` where id = " + id + " limit 1;";
 		try{
-			Connector connector = new Connector();
-			connector.executeTransaction(connector.connection, connector.dbName, transactionQuery);
+			this.connector.executeTransaction(connector.connection, connector.dbName, transactionQuery);
 		} catch (SQLException e) {
 			System.out.println("Error: " + e.getMessage());
 		}
@@ -24,21 +29,21 @@ public class CompanyDao implements Dao<Company>{
 
 	@Override
 	public List<Company> getAll() {
+		List<Company> resultList = new ArrayList<>();
 		String transactionQuery = "select * from `computer-database-db`.`company`;";
 		try{
-			Connector connector = new Connector();
-			connector.executeTransaction(connector.connection, connector.dbName, transactionQuery);
+			ResultSet resultSet = this.connector.executeTransaction(connector.connection, connector.dbName, transactionQuery);
+			resultList = this.mapper.map(resultSet) ;
+			this.connector.closeConnection();
 		} catch (SQLException e) {
 			System.out.println("Error: " + e.getMessage());
 		}
-		
-		return null;
+		return resultList;		
 	}
 
 	@Override
 	public void save(Company t) {
-		// TODO Auto-generated method stub
-		
+				
 	}
 
 	@Override

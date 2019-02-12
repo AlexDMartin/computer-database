@@ -14,10 +14,18 @@ public class Connector{
 	
 	public Connector() {}
 	
-	public void executeTransaction(Connection con, String dbName, String query) throws SQLException {
+	public ResultSet executeTransaction(Connection con, String dbName, String query) throws SQLException {
 		this.openConnection();
-		this.execute(this.connection, dbName, query);
-    	this.connection.close();
+		ResultSet result = this.execute(this.connection, dbName, query);
+    	return result;
+	}
+	
+	public void closeConnection() {
+		try {
+			this.connection.close();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 	
 	private void openConnection() throws SQLException {
@@ -39,25 +47,15 @@ public class Connector{
 	    this.connection = conn;
 	}
 	
-	private void execute(Connection con, String dbName, String query) throws SQLException {
-
+	private ResultSet execute(Connection con, String dbName, String query) throws SQLException {
 		    Statement stmt = null;
-		  
+		    
 		    try {
 		        stmt = con.createStatement();
-		        ResultSet rs = stmt.executeQuery(query);
-		        while (rs.next()) {
-		        	// Put mapping here.
-		        	
-		        	int id = rs.getInt("ID");
-		        	String name = rs.getString("NAME");
-		        	
-		        	System.out.println(id + " | " + name);
-		        }
+		        return stmt.executeQuery(query);
 		    } catch (SQLException e) {
 		        System.out.println("Error : " + e.getMessage());
-		    } finally {
-		        if (stmt != null) { stmt.close(); }
 		    }
+		    return null;
 		}
 }
