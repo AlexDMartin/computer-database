@@ -1,10 +1,8 @@
 package com.excilys.gui.interaction;
 
-import java.util.Scanner;
-
 public class MenuInteraction extends UserImputable implements GUIInteraction {
 	public GUIOutput execute(GUIInput param) {
-		System.out.println("Faites votre choix :\n "
+		System.out.println("------\nPick your poison :\n "
 				+ "1 / List Computers\n "
 				+ "2 / List Companies\n "
 				+ "3 / Show Details\n "

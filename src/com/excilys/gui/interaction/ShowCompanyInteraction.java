@@ -1,7 +1,6 @@
 package com.excilys.gui.interaction;
 
 import java.util.Optional;
-import java.util.Scanner;
 
 import com.excilys.persistance.dao.CompanyDao;
 import com.excilys.persistance.model.Company;

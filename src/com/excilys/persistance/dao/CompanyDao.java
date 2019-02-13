@@ -2,7 +2,9 @@ package com.excilys.persistance.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import com.excilys.persistance.mappers.CompanyMapper;
 import com.excilys.persistance.model.Company;
@@ -64,7 +66,7 @@ public class CompanyDao implements Dao<Company>{
 
 	@Override
 	public void update(Company t) {
-		String transactionQuery = "update table `computer-database-db`.`company` (NAME) set (";
+		// TODO Auto-generated method stub
 		
 	}
 

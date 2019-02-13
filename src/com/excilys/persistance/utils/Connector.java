@@ -37,9 +37,11 @@ public class Connector{
 	 * @throws SQLException
 	 */
 	public int executeUpdate(Connection connection, String databaseName, String query) throws SQLException {
+		this.openConnection();
 		try {
-			Statement statement = connection.createStatement();
-	        return statement.executeUpdate(query);
+			Statement statement = this.connection.createStatement();
+	        statement.executeUpdate(query);
+	        return 1;
 	    } catch (SQLException e) {
 	        System.out.println("Error : " + e.getMessage());
 	    }
@@ -62,9 +64,9 @@ public class Connector{
                    ":" + this.portNumber + "/",
                    connectionProps);
         
-	    System.out.println("[CONNECTED] jdbc:" + this.dbms + "://" +
-                this.serverName +
-                ":" + this.portNumber + "/");
+//	    System.out.println("[CONNECTED] jdbc:" + this.dbms + "://" +
+//                this.serverName +
+//                ":" + this.portNumber + "/");
 	    
 	    this.connection = conn;
 	}

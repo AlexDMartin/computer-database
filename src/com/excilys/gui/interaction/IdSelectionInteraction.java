@@ -1,7 +1,5 @@
 package com.excilys.gui.interaction;
 
-import java.util.Scanner;
-
 public class IdSelectionInteraction extends UserImputable implements GUIInteraction{
 
 	@Override
@@ -10,5 +8,4 @@ public class IdSelectionInteraction extends UserImputable implements GUIInteract
 		int id = readInt(param.getScanner());
 		return new GUIOutput(id, UserChoice.NONE);
 	}
-
 }

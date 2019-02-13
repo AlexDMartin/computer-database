@@ -24,6 +24,12 @@ public class GUIInteractionFactory {
 				return new ShowComputerInteraction();
 			case ID:
 				return new IdSelectionInteraction();
+			case UPDATE:
+				return new UpdateComputerInteraction();
+			case CREATE:
+				return new CreateComputerInteraction();
+			case DELETE:
+				return new DeleteComputerInteraction();
 			case CLEAR:
 				return new ClearInteraction();
 			default:

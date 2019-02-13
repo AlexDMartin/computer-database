@@ -1,7 +1,5 @@
 package com.excilys.gui.interaction;
 
-import java.util.Scanner;
-
 public class YesNoInteraction extends UserImputable implements GUIInteraction{
 
 	@Override

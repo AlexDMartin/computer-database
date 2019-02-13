@@ -9,5 +9,8 @@ public enum Interaction {
 	YESNO,
 	ID,
 	COMPANY,
-	COMPUTER
+	COMPUTER, 
+	CREATE, 
+	UPDATE, 
+	DELETE
 }

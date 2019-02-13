@@ -1,7 +1,6 @@
 package com.excilys.gui.interaction;
 
 import java.util.List;
-import java.util.Scanner;
 
 import com.excilys.persistance.dao.ComputerDao;
 import com.excilys.persistance.model.Computer;
