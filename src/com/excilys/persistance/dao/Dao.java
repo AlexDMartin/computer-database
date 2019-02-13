@@ -3,6 +3,12 @@ package com.excilys.persistance.dao;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 
+ * @author Alex Martin
+ *
+ * @param <T>
+ */
 public interface Dao<T> {
      
     Optional<T> get(long id);
@@ -13,6 +19,6 @@ public interface Dao<T> {
      
     void update(T t);
      
-    void delete(T t);
+    int delete(T t);
 }
 

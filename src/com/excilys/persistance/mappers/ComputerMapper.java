@@ -9,6 +9,11 @@ import com.excilys.persistance.model.Computer;
 
 public class ComputerMapper implements Mapper<Computer>{
 
+	/**
+	 * @author Alex Martin
+	 * @param ResultSet
+	 * @return List<Company>  
+	 */
 	@Override
 	public List<Computer> map(ResultSet rs) {
 		if(rs == null) {

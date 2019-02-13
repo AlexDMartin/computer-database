@@ -14,20 +14,42 @@ public class Connector{
 	
 	public Connector() {}
 	
-	public ResultSet executeTransaction(Connection con, String dbName, String query) throws SQLException {
+	/**
+	 * @author Alex Martin
+	 * @param connection
+	 * @param databaseName
+	 * @param query
+	 * @return ResultSet
+	 * @throws SQLException
+	 */
+	public ResultSet executeTransaction(Connection connection, String databaseName, String query) throws SQLException {
 		this.openConnection();
-		ResultSet result = this.execute(this.connection, dbName, query);
+		ResultSet result = this.execute(this.connection, databaseName, query);
     	return result;
 	}
 	
-	public void closeConnection() {
+	/**
+	 * @author Alex Martin
+	 * @param connection
+	 * @param databaseName
+	 * @param query
+	 * @return ResultSet
+	 * @throws SQLException
+	 */
+	public int executeUpdate(Connection connection, String databaseName, String query) throws SQLException {
 		try {
-			this.connection.close();
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
+			Statement statement = connection.createStatement();
+	        return statement.executeUpdate(query);
+	    } catch (SQLException e) {
+	        System.out.println("Error : " + e.getMessage());
+	    }
+		return 0;
 	}
 	
+	/**
+	 * @author Alex Martin
+	 * @throws SQLException
+	 */
 	private void openConnection() throws SQLException {
 	    Connection conn = null;
 	    Properties connectionProps = new Properties();
@@ -47,14 +69,32 @@ public class Connector{
 	    this.connection = conn;
 	}
 	
-	private ResultSet execute(Connection con, String dbName, String query) throws SQLException {
-		    Statement stmt = null;
-		    try {
-		        stmt = con.createStatement();
-		        return stmt.executeQuery(query);
+	/**
+	 * @author Alex Martin
+	 */
+	public void closeConnection() {
+		try {
+			this.connection.close();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	/**
+	 * @author Alex Martin
+	 * @param connection
+	 * @param databaseName
+	 * @param query
+	 * @return ResultSet
+	 * @throws SQLException
+	 */
+	private ResultSet execute(Connection connection, String databaseName, String query) throws SQLException {
+			try {
+				Statement statement = connection.createStatement();
+		        return statement.executeQuery(query);
 		    } catch (SQLException e) {
 		        System.out.println("Error : " + e.getMessage());
 		    }
 		    return null;
-		}
+	}	
 }

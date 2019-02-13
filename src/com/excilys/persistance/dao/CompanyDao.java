@@ -69,7 +69,8 @@ public class CompanyDao implements Dao<Company>{
 	}
 
 	@Override
-	public void delete(Company t) {
+	public int delete(Company t) {
+		return 0;
 		// TODO Auto-generated method stub
 		
 	}

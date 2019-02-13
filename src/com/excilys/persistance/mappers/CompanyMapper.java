@@ -8,6 +8,11 @@ import com.excilys.persistance.model.Company;
 
 public class CompanyMapper implements Mapper<Company>{
 
+	/**
+	 * @author Alex Martin
+	 * @param ResultSet
+	 * @return List<Company>  
+	 */
 	@Override
 	public List<Company> map(ResultSet rs) {
 		if(rs == null) {

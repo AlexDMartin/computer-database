@@ -18,7 +18,10 @@ public class ComputerDao implements Dao<Computer>{
 		this.connector = new Connector();
 		this.mapper = new ComputerMapper();
 	}
-
+	
+	/**
+	 * 
+	 */
 	@Override
 	public Optional<Computer> get(long id) {
 		List<Computer> resultList = new ArrayList<>();
@@ -26,7 +29,7 @@ public class ComputerDao implements Dao<Computer>{
 		try{
 			ResultSet resultSet = this.connector.executeTransaction(connector.connection, connector.dbName, transactionQuery);
 			resultList = this.mapper.map(resultSet) ;
-			this.connector.closeConnection();
+//			this.connector.closeConnection();
 		} catch (SQLException e) {
 			System.out.println("Error: " + e.getMessage());
 		}
@@ -34,6 +37,9 @@ public class ComputerDao implements Dao<Computer>{
 		return Optional.of(resultList.get(0));
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public List<Computer> getAll() {
 		List<Computer> resultList = new ArrayList<>();
@@ -48,6 +54,9 @@ public class ComputerDao implements Dao<Computer>{
 		return resultList;		
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public void save(Computer t) {
 		String transactionQuery = "insert into `computer-database-db`.`computer` (NAME, INTRODUCED, DISCONTINUED) values "
@@ -61,6 +70,9 @@ public class ComputerDao implements Dao<Computer>{
 		}
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public void update(Computer t) {
 		String transactionQuery = "update `computer-database-db`.`computer` "
@@ -76,14 +88,22 @@ public class ComputerDao implements Dao<Computer>{
 		}
 	}
 
+	/**
+	 * 
+	 */
 	@Override
-	public void delete(Computer t) {
+	public int delete(Computer t) {
 		String transactionQuery = "delete from `computer-database-db`.`computer` where ID = " + t.getId()+ ";";
+		int requestResult = 0;
 		try {
-			this.connector.executeTransaction(connector.connection, connector.dbName, transactionQuery);
+			requestResult = this.connector.executeUpdate(connector.connection, connector.dbName, transactionQuery);
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
+		
+		return requestResult;
+		
+		
 	}
 
 }
