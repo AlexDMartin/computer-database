@@ -22,44 +22,44 @@ public class CompanyDao implements Dao<Company>{
 	
 	@Override
 	public Optional<Company> get(long id) {
-		List<Company> resultList = new ArrayList<>();
+		List<Company> requestResult = new ArrayList<>();
 		String transactionQuery = "select * from `computer-database-db`.`company` where id = " + id + " limit 1;";
 		try{
-			ResultSet resultSet = this.connector.executeTransaction(connector.connection, connector.dbName, transactionQuery);
-			resultList = this.mapper.map(resultSet) ;
+			ResultSet resultSet = this.connector.executeTransaction(transactionQuery);
+			requestResult = this.mapper.map(resultSet) ;
 			this.connector.closeConnection();
 		} catch (SQLException e) {
 			System.out.println("Error: " + e.getMessage());
 		}
 		
-		return Optional.of(resultList.get(0));
+		return Optional.of(requestResult.get(0));
 	}
 
 	@Override
 	public List<Company> getAll() {
-		List<Company> resultList = new ArrayList<>();
+		List<Company> requestResult = new ArrayList<>();
 		String transactionQuery = "select * from `computer-database-db`.`company`;";
 		try{
-			ResultSet resultSet = this.connector.executeTransaction(connector.connection, connector.dbName, transactionQuery);
-			resultList = this.mapper.map(resultSet) ;
+			ResultSet resultSet = this.connector.executeTransaction(transactionQuery);
+			requestResult = this.mapper.map(resultSet) ;
 			this.connector.closeConnection();
 		} catch (SQLException e) {
 			System.out.println("Error: " + e.getMessage());
 		}
-		return resultList;		
+		return requestResult;		
 	}
 
 	@Override
 	public void save(Company t) throws Exception{
-		String transactionQuery = "insert into `computer-database-db`.`company` (NAME) values (";
+		String query = "insert into `computer-database-db`.`company` (NAME) values (";
 		
 		if(t.getName() == null) {	
 			throw new Exception("Company\'s name should not be null");
 		}
-		transactionQuery += t.getName() + ")";
+		query += t.getName() + ")";
 		
 		try {
-			this.connector.executeTransaction(connector.connection, connector.dbName, transactionQuery);
+			this.connector.executeUpdate(query);
 		} catch (SQLException e) {
 			System.out.println("Error: " + e.getMessage());
 		}

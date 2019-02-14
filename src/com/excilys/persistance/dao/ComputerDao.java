@@ -22,76 +22,75 @@ public class ComputerDao implements Dao<Computer>{
 	
 	@Override
 	public Optional<Computer> get(long id) {
-		List<Computer> resultList = new ArrayList<>();
-		String transactionQuery = "select * from `computer-database-db`.`computer` where id = " + id + " limit 1;";
+		List<Computer> requestResult = new ArrayList<>();
 		try{
-			ResultSet resultSet = this.connector.executeTransaction(connector.connection, connector.dbName, transactionQuery);
-			resultList = this.mapper.map(resultSet) ;
+			String query = "select * from `computer-database-db`.`computer` where id = " + id + " limit 1;";	
+			ResultSet resultSet = this.connector.executeTransaction(query);
+			requestResult = this.mapper.map(resultSet) ;
 		} catch (SQLException e) {
 			System.out.println("Error: " + e.getMessage());
 		}
 		
-		return Optional.of(resultList.get(0));
+		return Optional.of(requestResult.get(0));
 	}
 
 	@Override
 	public List<Computer> getAll() {
-		List<Computer> resultList = new ArrayList<>();
-		String transactionQuery = "select * from `computer-database-db`.`computer`;";
+		List<Computer> requestResult = new ArrayList<>();
 		try{
-			ResultSet resultSet = this.connector.executeTransaction(connector.connection, connector.dbName, transactionQuery);
-			resultList = this.mapper.map(resultSet) ;
+			String transactionQuery = "select * from `computer-database-db`.`computer`;";
+			ResultSet resultSet = this.connector.executeTransaction(transactionQuery);
+			requestResult = this.mapper.map(resultSet) ;
 			this.connector.closeConnection();
 		} catch (SQLException e) {
 			System.out.println("Error: " + e.getMessage());
 		}
-		return resultList;		
+		
+		return requestResult;		
 	}
 
 	@Override
 	public void save(Computer t) {
-		
-		String fields = "NAME";
-		String values = "\'"+ t.getName() +"\'";
-		if(t.getIntroduced() != null) {
-			fields += ", INTRODUCED";
-			values += ", TIMESTAMP(\'"+ t.getIntroduced().toString() +"\')";
-		}
-		if(t.getIntroduced() != null) {
-			fields += ", DISCONTINUED";
-			values += ", TIMESTAMP(\'"+ t.getDiscontinued().toString() +"\')";
-		}
-		if(t.getCompanyId() > 0) {
-			fields += ", COMPANY_ID";
-			values += ", " + t.getCompanyId();
-		}
-		
-		String transactionQuery = "insert into `computer-database-db`.`computer` ("+ fields +") values ("+ values + ");";
-		
 		try {
-			this.connector.executeUpdate(connector.connection, connector.dbName, transactionQuery);
+			String fields = "NAME";
+			String values = "\'"+ t.getName() +"\'";
+			if(t.getIntroduced() != null) {
+				fields += ", INTRODUCED";
+				values += ", TIMESTAMP(\'"+ t.getIntroduced().toString() +"\')";
+			}
+			if(t.getIntroduced() != null) {
+				fields += ", DISCONTINUED";
+				values += ", TIMESTAMP(\'"+ t.getDiscontinued().toString() +"\')";
+			}
+			if(t.getCompanyId() > 0) {
+				fields += ", COMPANY_ID";
+				values += ", " + t.getCompanyId();
+			}
+			
+			String query = "insert into `computer-database-db`.`computer` ("+ fields +") values ("+ values + ");";
+			this.connector.executeUpdate(query);
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
 	}
 
 	@Override
-	public void update(Computer t) {
-		String transactionQuery = "update `computer-database-db`.`computer` set "
-				+ "NAME = \'" + t.getName() + "\' ";
-		if(t.getIntroduced() != null) {
-			transactionQuery += ", INTRODUCED = TIMESTAMP(\'"+ t.getIntroduced().toString() +"\')";
-		}
-		if(t.getIntroduced() != null) {
-			transactionQuery += ", DISCONTINUED = TIMESTAMP(\'"+ t.getIntroduced().toString() +"\')";
-		}
-		if(t.getCompanyId() > 0) {
-			transactionQuery += ", COMPANY_ID = "+ t.getCompanyId();
-		}
-		transactionQuery += " where ID = " + t.getId() + ";";
-		
+	public void update(Computer t) {	
 		try {
-			this.connector.executeUpdate(connector.connection, connector.dbName, transactionQuery);
+			String transactionQuery = "update `computer-database-db`.`computer` set "
+					+ "NAME = \'" + t.getName() + "\' ";
+			if(t.getIntroduced() != null) {
+				transactionQuery += ", INTRODUCED = TIMESTAMP(\'"+ t.getIntroduced().toString() +"\')";
+			}
+			if(t.getIntroduced() != null) {
+				transactionQuery += ", DISCONTINUED = TIMESTAMP(\'"+ t.getIntroduced().toString() +"\')";
+			}
+			if(t.getCompanyId() > 0) {
+				transactionQuery += ", COMPANY_ID = "+ t.getCompanyId();
+			}
+			transactionQuery += " where ID = " + t.getId() + ";";
+		
+			this.connector.executeUpdate(transactionQuery);
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -99,11 +98,10 @@ public class ComputerDao implements Dao<Computer>{
 
 	@Override
 	public int delete(Computer t) {
-		String transactionQuery = "delete from `computer-database-db`.`computer` where ID = " + t.getId()+ ";";
 		int requestResult = 0;
 		try {
-			requestResult = this.connector.executeUpdate(connector.connection, connector.dbName, transactionQuery);
-			System.out.println("after");
+			String query = "delete from `computer-database-db`.`computer` where ID = " + t.getId()+ ";";
+			requestResult = this.connector.executeUpdate(query);
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}

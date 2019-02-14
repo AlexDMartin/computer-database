@@ -4,48 +4,49 @@ import java.sql.*;
 import java.util.*;
 
 public class Connector{
-	public Connection connection;
-	public String dbName = "computer-database-db";
+	private Connection connection;
+	private String dbName = "computer-database-db";
 	private String userName = "admincdb";
 	private String password = "qwerty1234";
 	private String dbms = "mysql";
 	private String serverName = "localhost";
 	private int portNumber = 3306;
 	
-	public Connector() {}
-	
 	/**
 	 * @author Alex Martin
-	 * @param connection
-	 * @param databaseName
 	 * @param query
 	 * @return ResultSet
 	 * @throws SQLException
 	 */
-	public ResultSet executeTransaction(Connection connection, String databaseName, String query) throws SQLException {
-		this.openConnection();
-		ResultSet result = this.execute(this.connection, databaseName, query);
+	public ResultSet executeTransaction(String query) throws SQLException {
+		ResultSet result = null;
+		try {
+			this.openConnection();
+			Statement statement = connection.createStatement();
+	        return statement.executeQuery(query);
+	    } catch (SQLException e) {
+	        System.out.println("Error : " + e.getMessage());
+	    }
     	return result;
 	}
 	
 	/**
 	 * @author Alex Martin
-	 * @param connection
-	 * @param databaseName
 	 * @param query
 	 * @return ResultSet
 	 * @throws SQLException
 	 */
-	public int executeUpdate(Connection connection, String databaseName, String query) throws SQLException {
-		this.openConnection();
+	public int executeUpdate(String query) throws SQLException {
+		int result = 0;
 		try {
+			this.openConnection();
 			Statement statement = this.connection.createStatement();
 	        statement.executeUpdate(query);
-	        return 1;
+	        result = 1;
 	    } catch (SQLException e) {
 	        System.out.println("Error : " + e.getMessage());
 	    }
-		return 0;
+		return result;
 	}
 	
 	/**
@@ -63,7 +64,7 @@ public class Connector{
                    this.serverName +
                    ":" + this.portNumber + "/",
                    connectionProps);
-        
+       
 //	    System.out.println("[CONNECTED] jdbc:" + this.dbms + "://" +
 //                this.serverName +
 //                ":" + this.portNumber + "/");
@@ -81,22 +82,4 @@ public class Connector{
 			System.out.println(e.getMessage());
 		}
 	}
-
-	/**
-	 * @author Alex Martin
-	 * @param connection
-	 * @param databaseName
-	 * @param query
-	 * @return ResultSet
-	 * @throws SQLException
-	 */
-	private ResultSet execute(Connection connection, String databaseName, String query) throws SQLException {
-			try {
-				Statement statement = connection.createStatement();
-		        return statement.executeQuery(query);
-		    } catch (SQLException e) {
-		        System.out.println("Error : " + e.getMessage());
-		    }
-		    return null;
-	}	
 }
