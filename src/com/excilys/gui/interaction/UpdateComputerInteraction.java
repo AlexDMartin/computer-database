@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 
 import com.excilys.persistance.dao.ComputerDao;
 import com.excilys.persistance.model.Computer;
+import com.excilys.service.ComputerService;
 
 public class UpdateComputerInteraction extends UserImputable implements GUIInteraction{
 
@@ -13,9 +14,9 @@ public class UpdateComputerInteraction extends UserImputable implements GUIInter
 		System.out.println("--- Update a Computer ---");
 		Computer updateComputer = new Computer();
 		try {
-			ComputerDao computerDao = new ComputerDao();
+			ComputerService computerService = new ComputerService();
 			System.out.println(param.getId());
-			updateComputer = computerDao.get(param.getId()).get();
+			updateComputer = computerService.get(param.getId()).get();
 		} catch(IndexOutOfBoundsException e) {
 			System.out.println("This index do not exist [" + e.getMessage() + "]");
 		}

@@ -8,7 +8,11 @@ import com.excilys.persistance.model.Computer;
 
 public class ComputerService implements CallableService<Computer>{
 
-	DaoFactory daoFactory;
+	private DaoFactory daoFactory;
+	
+	public ComputerService() {
+		this.daoFactory = new DaoFactory();
+	}
 	
 	@Override
 	public Optional<Computer> get(long id) {

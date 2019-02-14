@@ -8,7 +8,11 @@ import com.excilys.persistance.model.Company;
 
 public class CompanyService implements CallableService<Company>{
 
-	DaoFactory daoFactory;
+	private DaoFactory daoFactory;
+	
+	public CompanyService() {
+		this.daoFactory = new DaoFactory();
+	}
 	
 	@Override
 	public Optional<Company> get(long id) {
