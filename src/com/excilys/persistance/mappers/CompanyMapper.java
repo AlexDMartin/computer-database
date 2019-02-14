@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.LoggerFactory;
+
 import com.excilys.persistance.model.Company;
 
 public class CompanyMapper implements Mapper<Company>{
@@ -15,6 +17,7 @@ public class CompanyMapper implements Mapper<Company>{
 	 */
 	@Override
 	public List<Company> map(ResultSet rs) {
+		LoggerFactory.getLogger(this.getClass()).info("Mapping compan(y/ies)");
 		if(rs == null) {
 			return null;
 		}

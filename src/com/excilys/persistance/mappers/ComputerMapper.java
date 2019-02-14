@@ -5,6 +5,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.LoggerFactory;
+
 import com.excilys.persistance.model.Computer;
 
 public class ComputerMapper implements Mapper<Computer>{
@@ -16,6 +18,7 @@ public class ComputerMapper implements Mapper<Computer>{
 	 */
 	@Override
 	public List<Computer> map(ResultSet rs) {
+		LoggerFactory.getLogger(this.getClass()).info("Mapping computers");
 		if(rs == null) {
 			return null;
 		}

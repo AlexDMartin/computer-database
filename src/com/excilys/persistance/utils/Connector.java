@@ -3,7 +3,9 @@ package com.excilys.persistance.utils;
 import java.sql.*;
 import java.util.*;
 
-public class Connector{
+import org.slf4j.LoggerFactory;
+
+public class Connector {
 	private Connection connection;
 	private String dbName = "computer-database-db";
 	private String userName = "admincdb";
@@ -11,7 +13,7 @@ public class Connector{
 	private String dbms = "mysql";
 	private String serverName = "localhost";
 	private int portNumber = 3306;
-	
+
 	/**
 	 * @author Alex Martin
 	 * @param query
@@ -23,13 +25,13 @@ public class Connector{
 		try {
 			this.openConnection();
 			Statement statement = connection.createStatement();
-	        return statement.executeQuery(query);
-	    } catch (SQLException e) {
-	        System.out.println("Error : " + e.getMessage());
-	    }
-    	return result;
+			return statement.executeQuery(query);
+		} catch (SQLException e) {
+			System.out.println("Error : " + e.getMessage());
+		}
+		return result;
 	}
-	
+
 	/**
 	 * @author Alex Martin
 	 * @param query
@@ -41,45 +43,42 @@ public class Connector{
 		try {
 			this.openConnection();
 			Statement statement = this.connection.createStatement();
-	        statement.executeUpdate(query);
-	        result = 1;
-	    } catch (SQLException e) {
-	        System.out.println("Error : " + e.getMessage());
-	    }
+			statement.executeUpdate(query);
+			result = 1;
+		} catch (SQLException e) {
+			System.out.println("Error : " + e.getMessage());
+		}
 		return result;
 	}
-	
+
 	/**
 	 * @author Alex Martin
 	 * @throws SQLException
 	 */
 	private void openConnection() throws SQLException {
-	    Connection conn = null;
-	    Properties connectionProps = new Properties();
-	    connectionProps.put("user", this.userName);
-	    connectionProps.put("password", this.password);
+		Connection conn = null;
+		Properties connectionProps = new Properties();
+		connectionProps.put("user", this.userName);
+		connectionProps.put("password", this.password);
 
-        conn = DriverManager.getConnection(
-                   "jdbc:" + this.dbms + "://" +
-                   this.serverName +
-                   ":" + this.portNumber + "/",
-                   connectionProps);
-       
-//	    System.out.println("[CONNECTED] jdbc:" + this.dbms + "://" +
-//                this.serverName +
-//                ":" + this.portNumber + "/");
-	    
-	    this.connection = conn;
+		conn = DriverManager.getConnection("jdbc:" + this.dbms + "://" + this.serverName + ":" + this.portNumber + "/",
+				connectionProps);
+
+		LoggerFactory.getLogger(this.getClass())
+				.info("[CONNECTED] jdbc:" + this.dbms + "://" + this.serverName + ":" + this.portNumber + "/");
+
+		this.connection = conn;
 	}
-	
+
 	/**
 	 * @author Alex Martin
 	 */
 	public void closeConnection() {
 		try {
 			this.connection.close();
+			LoggerFactory.getLogger(this.getClass()).info("Connection closed");
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
 		}
 	}
 }

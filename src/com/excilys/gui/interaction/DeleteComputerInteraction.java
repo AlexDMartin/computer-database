@@ -1,23 +1,26 @@
 package com.excilys.gui.interaction;
 
-import com.excilys.persistance.dao.ComputerDao;
-import com.excilys.persistance.model.Computer;
+import org.slf4j.LoggerFactory;
 
-public class DeleteComputerInteraction implements GUIInteraction{
+import com.excilys.persistance.model.Computer;
+import com.excilys.service.ComputerService;
+
+public class DeleteComputerInteraction implements GUIInteraction {
 
 	@Override
 	public GUIOutput execute(GUIInput param) {
 		try {
-			ComputerDao computerDao = new ComputerDao();
-
+			ComputerService computerService = new ComputerService();
 			Computer deleteComputer = new Computer();
+
 			deleteComputer.setId(param.getId());
-	
-			int errorCode = computerDao.delete(deleteComputer);
+			int errorCode = computerService.delete(deleteComputer);
+
+			LoggerFactory.getLogger(this.getClass()).info("Computer deleted");
 			return new GUIOutput(errorCode, UserChoice.NONE);
-		} catch(IndexOutOfBoundsException e) {
-			System.out.println("This index do not exist [" + e.getMessage() + "]");
+		} catch (IndexOutOfBoundsException e) {
+			LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
+			return new GUIOutput(0, UserChoice.NONE);
 		}
-		return new GUIOutput(0, UserChoice.NONE);
 	}
 }

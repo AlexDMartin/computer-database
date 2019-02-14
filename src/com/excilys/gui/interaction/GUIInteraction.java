@@ -4,7 +4,7 @@ public interface GUIInteraction {
 	/**
 	 * @author Alex Martin
 	 * @param GUIInput
-	 * @return GUIOutput 
+	 * @return GUIOutput
 	 */
 	public GUIOutput execute(GUIInput param);
 }
