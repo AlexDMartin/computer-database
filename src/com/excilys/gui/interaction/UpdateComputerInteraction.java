@@ -1,7 +1,9 @@
 package com.excilys.gui.interaction;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+
 import com.excilys.persistance.dao.ComputerDao;
-import com.excilys.persistance.model.Company;
 import com.excilys.persistance.model.Computer;
 
 public class UpdateComputerInteraction extends UserImputable implements GUIInteraction{
@@ -19,17 +21,30 @@ public class UpdateComputerInteraction extends UserImputable implements GUIInter
 		}
 		
 		if(updateComputer != null) {
-			// Name.
 			System.out.println("Enter name ("+ updateComputer.getName() +"):");
 			String name = readString(param.getScanner());
 			updateComputer.setName(name);
 			
-			// Company.
-			System.out.println("Enter company id ("+ updateComputer.getCompany().getId() +"):");
+			System.out.println("Enter company id ("+ updateComputer.getCompanyId() +"):");
 			int companyId = readInt(param.getScanner());
-			Company fakeCompany = new Company();
-			fakeCompany.setId(companyId);
-			updateComputer.setCompany(fakeCompany);
+			updateComputer.setCompanyId(companyId);
+			
+			readLine(param.getScanner());
+			
+			System.out.println("Enter introduce date ("+ updateComputer.getIntroduced() +"):");
+			String introducedString = readLine(param.getScanner());
+			Timestamp introduced = formatDate(introducedString);
+			updateComputer.setIntroduced(introduced);
+			if(introduced != null) {
+				updateComputer.setIntroduced(introduced);
+			}
+			
+			System.out.println("Enter discontinued date ("+ updateComputer.getDiscontinued() +"):");
+			String discontinuedString = readLine(param.getScanner());
+			Timestamp discontinued = formatDate(discontinuedString);
+			if(discontinued != null) {
+				updateComputer.setDiscontinued(discontinued);
+			}
 		}
 		
 		try {
@@ -42,5 +57,16 @@ public class UpdateComputerInteraction extends UserImputable implements GUIInter
 		
 		return new GUIOutput(0, UserChoice.NONE);
 	}
-
+	
+	private Timestamp formatDate(String date) {
+		try {
+		    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		    java.util.Date parsedDate = dateFormat.parse(date);
+		    Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
+		    return timestamp;
+		} catch(Exception e) { 
+		    System.out.println("Failed to parse date : " + e.getMessage());
+		}
+		return null;
+	}
 }

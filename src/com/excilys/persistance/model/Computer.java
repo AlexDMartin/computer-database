@@ -1,13 +1,13 @@
 package com.excilys.persistance.model;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class Computer {
 	private int id;
 	private String name;
-	private Date introduced;
-	private Date discontinued;
-	private Company company;
+	private Timestamp introduced;
+	private Timestamp discontinued;
+	private int companyId;
 
 	public Computer() {}
 	
@@ -27,34 +27,42 @@ public class Computer {
 		this.name = name;
 	}
 
-	public Date getIntroduced() {
+	public Timestamp getIntroduced() {
 		return introduced;
 	}
 
-	public void setIntroduced(Date introduced) {
+	public void setIntroduced(Timestamp introduced) {
 		this.introduced = introduced;
 	}
 
-	public Date getDiscontinued() {
+	public Timestamp getDiscontinued() {
 		return discontinued;
 	}
 
-	public void setDiscontinued(Date discontinued) {
+	public void setDiscontinued(Timestamp discontinued) {
 		this.discontinued = discontinued;
 	}
 	
-	public Company getCompany() {
-		return company;
+	public int getCompanyId() {
+		return companyId;
 	}
 
-	public void setCompany(Company company) {
-		this.company = company;
+	public void setCompanyId(int company) {
+		this.companyId = company;
 	}
 	
 	@Override
 	public String toString() {
 		String result = this.id + "\t| "+ this.name;
-		// Find a way to show 'introduced' and 'discontinued'.
+		if(this.introduced != null) {
+			result += ", introduced: " + this.introduced;
+		}
+		if(this.discontinued != null){
+			result += ", discontinued: " + this.discontinued;
+		}
+		if(this.companyId != 0) {
+			result += ", from company #" + this.companyId;
+		}
 		return result;
 	}
 }

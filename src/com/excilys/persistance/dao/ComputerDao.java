@@ -19,9 +19,6 @@ public class ComputerDao implements Dao<Computer>{
 		this.mapper = new ComputerMapper();
 	}
 	
-	/**
-	 * 
-	 */
 	@Override
 	public Optional<Computer> get(long id) {
 		List<Computer> resultList = new ArrayList<>();
@@ -55,14 +52,18 @@ public class ComputerDao implements Dao<Computer>{
 		
 		String fields = "NAME";
 		String values = "\'"+ t.getName() +"\'";
-//		if(false) {
-//			fields += "INTRODUCED";
-//			values += ", TIMESTAMP(\'"+ DateFormator.formatDate(t.getIntroduced())+"\')";
-//		}
-//		if(false) {
-//			fields += "DISCONTINUED";
-//			values += ", TIMESTAMP(\'"+ DateFormator.formatDate(t.getDiscontinued())+"\';";
-//		}
+		if(t.getIntroduced() != null) {
+			fields += ", INTRODUCED";
+			values += ", TIMESTAMP(\'"+ t.getIntroduced().toString() +"\')";
+		}
+		if(t.getIntroduced() != null) {
+			fields += ", DISCONTINUED";
+			values += ", TIMESTAMP(\'"+ t.getDiscontinued().toString() +"\';";
+		}
+		if(t.getCompanyId() > 0) {
+			fields += ", COMPANY_ID";
+			values += t.getCompanyId();
+		}
 		
 		String transactionQuery = "insert into `computer-database-db`.`computer` ("+ fields +") values ("+ values + ");";
 		
@@ -77,13 +78,16 @@ public class ComputerDao implements Dao<Computer>{
 	public void update(Computer t) {
 		String transactionQuery = "update `computer-database-db`.`computer` set "
 				+ "NAME = \'" + t.getName() + "\' ";
-//		if(false) {
-//			transactionQuery += "INTRODUCED = TIMESTAMP(\'"+ DateFormator.formatDate(t.getIntroduced())+"\')";
-//		}
-//		if(false) {
-//			transactionQuery += "DISCONTINUED = TIMESTAMP(\'"+ DateFormator.formatDate(t.getDiscontinued())+"\'";
-//		}
-		transactionQuery += "where id = " + t.getId() + ";";
+		if(t.getIntroduced() != null) {
+			transactionQuery += ", INTRODUCED = TIMESTAMP(\'"+ t.getIntroduced().toString() +"\')";
+		}
+		if(t.getIntroduced() != null) {
+			transactionQuery += ", DISCONTINUED = TIMESTAMP(\'"+ t.getIntroduced().toString() +"\')";
+		}
+		if(t.getCompanyId() > 0) {
+			transactionQuery += ", COMPANY_ID = "+ t.getCompanyId();
+		}
+		transactionQuery += " where ID = " + t.getId() + ";";
 		System.out.println(transactionQuery);
 		try {
 			this.connector.executeUpdate(connector.connection, connector.dbName, transactionQuery);
@@ -97,18 +101,13 @@ public class ComputerDao implements Dao<Computer>{
 		String transactionQuery = "delete from `computer-database-db`.`computer` where ID = " + t.getId()+ ";";
 		int requestResult = 0;
 		try {
-			System.out.println("before");
-			System.out.println("connector.connection" + connector.connection);
-			System.out.println("connector.dbName"+ connector.dbName);
 			requestResult = this.connector.executeUpdate(connector.connection, connector.dbName, transactionQuery);
 			System.out.println("after");
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
 		
-		return requestResult;
-		
-		
+		return requestResult;	
 	}
 
 }
