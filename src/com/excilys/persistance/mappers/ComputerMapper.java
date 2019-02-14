@@ -12,7 +12,7 @@ public class ComputerMapper implements Mapper<Computer>{
 	/**
 	 * @author Alex Martin
 	 * @param ResultSet
-	 * @return List<Company>  
+	 * @return List<Computer>  
 	 */
 	@Override
 	public List<Computer> map(ResultSet rs) {

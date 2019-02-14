@@ -2,12 +2,13 @@ package com.excilys.persistance.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import com.excilys.persistance.mappers.ComputerMapper;
 import com.excilys.persistance.model.Computer;
 import com.excilys.persistance.utils.Connector;
-import com.excilys.persistance.utils.DateFormator;
 
 public class ComputerDao implements Dao<Computer>{
 
@@ -58,11 +59,11 @@ public class ComputerDao implements Dao<Computer>{
 		}
 		if(t.getIntroduced() != null) {
 			fields += ", DISCONTINUED";
-			values += ", TIMESTAMP(\'"+ t.getDiscontinued().toString() +"\';";
+			values += ", TIMESTAMP(\'"+ t.getDiscontinued().toString() +"\')";
 		}
 		if(t.getCompanyId() > 0) {
 			fields += ", COMPANY_ID";
-			values += t.getCompanyId();
+			values += ", " + t.getCompanyId();
 		}
 		
 		String transactionQuery = "insert into `computer-database-db`.`computer` ("+ fields +") values ("+ values + ");";
@@ -88,7 +89,7 @@ public class ComputerDao implements Dao<Computer>{
 			transactionQuery += ", COMPANY_ID = "+ t.getCompanyId();
 		}
 		transactionQuery += " where ID = " + t.getId() + ";";
-		System.out.println(transactionQuery);
+		
 		try {
 			this.connector.executeUpdate(connector.connection, connector.dbName, transactionQuery);
 		} catch (SQLException e) {

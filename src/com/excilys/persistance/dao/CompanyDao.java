@@ -11,6 +11,7 @@ import com.excilys.persistance.model.Company;
 import com.excilys.persistance.utils.Connector;
 
 public class CompanyDao implements Dao<Company>{
+	
 	private Connector connector;
 	private CompanyMapper mapper;
 	
