@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.LoggerFactory;
+
 import com.excilys.persistance.mappers.CompanyMapper;
 import com.excilys.persistance.model.Company;
 import com.excilys.persistance.utils.Connector;
@@ -22,6 +24,7 @@ public class CompanyDao implements Dao<Company>{
 	
 	@Override
 	public Optional<Company> get(long id) {
+		LoggerFactory.getLogger(this.getClass()).info("Company get called");
 		List<Company> requestResult = new ArrayList<>();
 		String transactionQuery = "select * from `computer-database-db`.`company` where id = " + id + " limit 1;";
 		try{
@@ -37,6 +40,7 @@ public class CompanyDao implements Dao<Company>{
 
 	@Override
 	public List<Company> getAll() {
+		LoggerFactory.getLogger(this.getClass()).info("Company getAll called");
 		List<Company> requestResult = new ArrayList<>();
 		String transactionQuery = "select * from `computer-database-db`.`company`;";
 		try{
@@ -51,6 +55,7 @@ public class CompanyDao implements Dao<Company>{
 
 	@Override
 	public void save(Company t) throws Exception{
+		LoggerFactory.getLogger(this.getClass()).info("Company save called");
 		String query = "insert into `computer-database-db`.`company` (NAME) values (";
 		
 		if(t.getName() == null) {	
@@ -67,12 +72,14 @@ public class CompanyDao implements Dao<Company>{
 
 	@Override
 	public void update(Company t) {
+		LoggerFactory.getLogger(this.getClass()).info("Company update called");
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public int delete(Company t) {
+		LoggerFactory.getLogger(this.getClass()).info("Company delete called");
 		return 0;
 		// TODO Auto-generated method stub
 		

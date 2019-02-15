@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.LoggerFactory;
+
 import com.excilys.persistance.mappers.ComputerMapper;
 import com.excilys.persistance.model.Computer;
 import com.excilys.persistance.utils.Connector;
@@ -22,6 +24,7 @@ public class ComputerDao implements Dao<Computer>{
 	
 	@Override
 	public Optional<Computer> get(long id) {
+		LoggerFactory.getLogger(this.getClass()).info("Computer get called");
 		List<Computer> requestResult = new ArrayList<>();
 		try{
 			String query = "select * from `computer-database-db`.`computer` where id = " + id + " limit 1;";	
@@ -36,6 +39,7 @@ public class ComputerDao implements Dao<Computer>{
 
 	@Override
 	public List<Computer> getAll() {
+		LoggerFactory.getLogger(this.getClass()).info("Company getAll called");
 		List<Computer> requestResult = new ArrayList<>();
 		try{
 			String transactionQuery = "select * from `computer-database-db`.`computer`;";
@@ -52,6 +56,7 @@ public class ComputerDao implements Dao<Computer>{
 	@Override
 	public void save(Computer t) {
 		try {
+			LoggerFactory.getLogger(this.getClass()).info("Company save called");
 			String fields = "NAME";
 			String values = "\'"+ t.getName() +"\'";
 			if(t.getIntroduced() != null) {
@@ -77,6 +82,7 @@ public class ComputerDao implements Dao<Computer>{
 	@Override
 	public void update(Computer t) {	
 		try {
+			LoggerFactory.getLogger(this.getClass()).info("Company update called");
 			String transactionQuery = "update `computer-database-db`.`computer` set "
 					+ "NAME = \'" + t.getName() + "\' ";
 			if(t.getIntroduced() != null) {
@@ -98,6 +104,7 @@ public class ComputerDao implements Dao<Computer>{
 
 	@Override
 	public int delete(Computer t) {
+		LoggerFactory.getLogger(this.getClass()).info("Company delete called");
 		int requestResult = 0;
 		try {
 			String query = "delete from `computer-database-db`.`computer` where ID = " + t.getId()+ ";";
