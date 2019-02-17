@@ -1,7 +1,11 @@
 package com.excilys.persistance.utils;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Properties;
 
 import org.slf4j.LoggerFactory;
 
