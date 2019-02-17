@@ -1,8 +1,8 @@
 package com.excilys.dao;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,104 +14,104 @@ import com.excilys.persistance.utils.Connector;
 
 public class ComputerDao implements Dao<Computer>{
 
-	private Connector connector;
-	private ComputerMapper mapper;
+	private static ComputerDao computerDaoInstance = null;
 	
-	public ComputerDao() {
-		this.connector = new Connector();
-		this.mapper = new ComputerMapper();
+	static final String GET_ONE = "SELECT ID, NAME, INTRODUCED, DISCONTINUED, COMPANY_ID FROM computer WHERE ID = ? LIMIT 1";
+	static final String GET_ALL = "SELECT ID, NAME, INTRODUCED, DISCONTINUED, COMPANY_ID  FROM computer ORDER BY ID";
+	static final String SAVE = "INSERT INTO computer (NAME, INTRODUCED, DISCONTINUED, COMPANY_ID) VALUES (?,?,?,?)";
+	static final String UPDATE = "UPDATE computer NAME = ?, INTRODUCED = ? , DISCONTINUED = ? , COMPANY_ID = ? WHERE ID = ?";
+	static final String DELETE = "DELETE FROM computer WHERE ID = ?";
+	
+	private ComputerDao() {}
+	
+	public static ComputerDao getInstance() {
+		if(computerDaoInstance == null) {
+			computerDaoInstance = new ComputerDao();
+		}
+		return computerDaoInstance;
 	}
 	
 	@Override
 	public Optional<Computer> get(long id) {
-		LoggerFactory.getLogger(this.getClass()).info("Computer get called");
-		List<Computer> requestResult = new ArrayList<>();
-		try{
-			String query = "select * from `computer-database-db`.`computer` where id = " + id + " limit 1;";	
-			ResultSet resultSet = this.connector.executeTransaction(query);
-			requestResult = this.mapper.map(resultSet) ;
-		} catch (SQLException e) {
-			System.out.println("Error: " + e.getMessage());
-		}
+		LoggerFactory.getLogger(this.getClass()).info("ComputerDao 'get' called");
+		Computer resultItem = null;
 		
-		return Optional.of(requestResult.get(0));
+		try {
+			PreparedStatement getStatement = Connector.getInstance().getConnection().prepareStatement(GET_ONE);
+			getStatement.setLong(1, id);
+			ResultSet rs = getStatement.executeQuery();	
+			resultItem = ComputerMapper.getInstance().map(rs).get(0);
+		} catch (SQLException e) {
+			LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
+		}
+
+		return Optional.of(resultItem);
 	}
 
 	@Override
 	public List<Computer> getAll() {
-		LoggerFactory.getLogger(this.getClass()).info("Company getAll called");
-		List<Computer> requestResult = new ArrayList<>();
-		try{
-			String transactionQuery = "select * from `computer-database-db`.`computer`;";
-			ResultSet resultSet = this.connector.executeTransaction(transactionQuery);
-			requestResult = this.mapper.map(resultSet) ;
-			this.connector.closeConnection();
+		LoggerFactory.getLogger(this.getClass()).info("ComputerDao 'getAll' called");
+		List<Computer> resultItems = null;
+		
+		try {
+			PreparedStatement getAllStatement = Connector.getInstance().getConnection().prepareStatement(GET_ALL);
+			ResultSet rs = getAllStatement.executeQuery();
+			resultItems = ComputerMapper.getInstance().map(rs);
 		} catch (SQLException e) {
-			System.out.println("Error: " + e.getMessage());
+			LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
 		}
 		
-		return requestResult;		
+		return resultItems;
 	}
 
 	@Override
-	public void save(Computer t) {
+	public void save(Computer computer) {
+		LoggerFactory.getLogger(this.getClass()).info("ComputerDao 'save' called");
+		
 		try {
-			LoggerFactory.getLogger(this.getClass()).info("Company save called");
-			String fields = "NAME";
-			String values = "\'"+ t.getName() +"\'";
-			if(t.getIntroduced() != null) {
-				fields += ", INTRODUCED";
-				values += ", TIMESTAMP(\'"+ t.getIntroduced().toString() +"\')";
-			}
-			if(t.getIntroduced() != null) {
-				fields += ", DISCONTINUED";
-				values += ", TIMESTAMP(\'"+ t.getDiscontinued().toString() +"\')";
-			}
-			if(t.getCompanyId() > 0) {
-				fields += ", COMPANY_ID";
-				values += ", " + t.getCompanyId();
-			}
+			PreparedStatement saveStatement = Connector.getInstance().getConnection().prepareStatement(SAVE);
+			saveStatement.setString(1, computer.getName());
+			saveStatement.setDate(2, computer.getIntroduced());
+			saveStatement.setDate(3, computer.getDiscontinued());
+			saveStatement.setInt(4, computer.getCompany().getId());
 			
-			String query = "insert into `computer-database-db`.`computer` ("+ fields +") values ("+ values + ");";
-			this.connector.executeUpdate(query);
+			int resultCode = saveStatement.executeUpdate();
+			LoggerFactory.getLogger(this.getClass()).info("Save operated on "+ resultCode +" row(s)");
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
+		}	
+	}
+
+	@Override
+	public void update(Computer computer) {	
+		LoggerFactory.getLogger(this.getClass()).info("ComputerDao 'update' called");
+
+		try {
+			PreparedStatement updateStatement = Connector.getInstance().getConnection().prepareStatement(UPDATE);
+			updateStatement.setString(1, computer.getName());
+			updateStatement.setDate(2, computer.getIntroduced());
+			updateStatement.setDate(3, computer.getDiscontinued());
+			updateStatement.setInt(4, computer.getCompany().getId());
+
+			int resultCode = updateStatement.executeUpdate();
+			LoggerFactory.getLogger(this.getClass()).info("Update operated on "+ resultCode +" row(s)");
+		} catch (SQLException e) {
+			LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
 		}
 	}
 
 	@Override
-	public void update(Computer t) {	
+	public void delete(Computer computer) {
+		LoggerFactory.getLogger(this.getClass()).info("ComputerDao 'delete' called");
+
 		try {
-			LoggerFactory.getLogger(this.getClass()).info("Company update called");
-			String transactionQuery = "update `computer-database-db`.`computer` set "
-					+ "NAME = \'" + t.getName() + "\' ";
-			if(t.getIntroduced() != null) {
-				transactionQuery += ", INTRODUCED = TIMESTAMP(\'"+ t.getIntroduced().toString() +"\')";
-			}
-			if(t.getIntroduced() != null) {
-				transactionQuery += ", DISCONTINUED = TIMESTAMP(\'"+ t.getIntroduced().toString() +"\')";
-			}
-			if(t.getCompanyId() > 0) {
-				transactionQuery += ", COMPANY_ID = "+ t.getCompanyId();
-			}
-			transactionQuery += " where ID = " + t.getId() + ";";
-		
-			this.connector.executeUpdate(transactionQuery);
+			PreparedStatement deleteStatement = Connector.getInstance().getConnection().prepareStatement(DELETE);
+			deleteStatement.setLong(1, computer.getId());
+
+			int resultCode = deleteStatement.executeUpdate();
+			LoggerFactory.getLogger(this.getClass()).info("Delete operated on "+ resultCode +" row(s)");
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
 		}
 	}
-
-	@Override
-	public void delete(Computer t) {
-		LoggerFactory.getLogger(this.getClass()).info("Company delete called");
-		int requestResult = 0;
-		try {
-			String query = "delete from `computer-database-db`.`computer` where ID = " + t.getId()+ ";";
-			requestResult = this.connector.executeUpdate(query);
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
-	}
-
 }

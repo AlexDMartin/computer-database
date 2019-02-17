@@ -3,12 +3,6 @@ package com.excilys.dao;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * 
- * @author Alex Martin
- *
- * @param <T>
- */
 public interface Dao<T> {
      
     Optional<T> get(long id);

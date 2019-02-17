@@ -10,6 +10,17 @@ import com.excilys.dao.model.Company;
 
 public class CompanyMapper implements Mapper<Company>{
 
+	private static CompanyMapper companyMapperInstance = null;
+	
+	private CompanyMapper() {}
+	
+	public static CompanyMapper getInstance() {
+		if(companyMapperInstance == null) {
+			companyMapperInstance = new CompanyMapper();
+		}
+		return companyMapperInstance;
+	}
+	
 	/**
 	 * @author Alex Martin
 	 * @param ResultSet
@@ -17,7 +28,7 @@ public class CompanyMapper implements Mapper<Company>{
 	 */
 	@Override
 	public List<Company> map(ResultSet rs) {
-		LoggerFactory.getLogger(this.getClass()).info("Mapping compan(y/ies)");
+		LoggerFactory.getLogger(this.getClass()).info("Company mapping triggered");
 		if(rs == null) {
 			return null;
 		}

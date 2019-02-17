@@ -1,11 +1,27 @@
 package com.excilys.view;
 
+import java.util.Scanner;
+
+import org.slf4j.LoggerFactory;
+
+import com.excilys.controller.MenuController;
+
 public class CliMainView {
 
 	private static CliMainView cliMainViewInstance = null;
 	
 	private CliMainView() {
-		System.out.println("test");
+		LoggerFactory.getLogger(this.getClass()).info("Displaying main menu");
+		Scanner scan = new Scanner(System.in);
+		
+		System.out.println("-------------------\n " + "1 / List Computers\n " + "2 / List Companies\n "
+				+ "3 / Show Details\n " + "4 / Create a Computer\n " + "5 / Update a Computer\n "
+				+ "6 / Delete a Computer\n ");
+		
+		int input = scan.nextInt();
+		
+		MenuController.getInstance().resolve(input);
+		
 	}
 	
 	public static CliMainView getInstance() {

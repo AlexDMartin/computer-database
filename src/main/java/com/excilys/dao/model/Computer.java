@@ -1,13 +1,13 @@
 package com.excilys.dao.model;
 
-import java.sql.Timestamp;
+import java.sql.Date;
 
 public class Computer {
 	private int id;
 	private String name;
-	private Timestamp introduced;
-	private Timestamp discontinued;
-	private int companyId;
+	private Date introduced;
+	private Date discontinued;
+	private Company company;
 
 	public Computer() {}
 	
@@ -27,28 +27,28 @@ public class Computer {
 		this.name = name;
 	}
 
-	public Timestamp getIntroduced() {
+	public Date getIntroduced() {
 		return introduced;
 	}
 
-	public void setIntroduced(Timestamp introduced) {
+	public void setIntroduced(Date introduced) {
 		this.introduced = introduced;
 	}
 
-	public Timestamp getDiscontinued() {
+	public Date getDiscontinued() {
 		return discontinued;
 	}
 
-	public void setDiscontinued(Timestamp discontinued) {
+	public void setDiscontinued(Date discontinued) {
 		this.discontinued = discontinued;
 	}
 	
-	public int getCompanyId() {
-		return companyId;
+	public Company getCompany() {
+		return company;
 	}
 
-	public void setCompanyId(int company) {
-		this.companyId = company;
+	public void setCompany(Company company) {
+		this.company = company;
 	}
 	
 	@Override
@@ -60,8 +60,8 @@ public class Computer {
 		if(this.discontinued != null){
 			result += ", discontinued: " + this.discontinued;
 		}
-		if(this.companyId != 0) {
-			result += ", from company #" + this.companyId;
+		if(this.company != null) {
+			result += ", from company " + this.company.getName();
 		}
 		return result;
 	}
