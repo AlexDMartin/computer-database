@@ -1,11 +1,18 @@
-package com.excilys.service;
+package com.excilys.dao;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface CallableService<T> {
+/**
+ * 
+ * @author Alex Martin
+ *
+ * @param <T>
+ */
+public interface Dao<T> {
+     
     Optional<T> get(long id);
-    
+     
     List<T> getAll();
      
     void save(T t) throws Exception;
@@ -14,3 +21,4 @@ public interface CallableService<T> {
      
     void delete(T t);
 }
+

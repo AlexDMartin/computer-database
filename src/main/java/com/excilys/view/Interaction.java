@@ -1,0 +1,5 @@
+package com.excilys.view;
+
+public enum Interaction {
+	MAIN_MENU, LIST_COMPUTER, LIST_COMPANY, CLEAR, DETAILS, YESNO, ID, COMPANY, COMPUTER, CREATE, UPDATE, DELETE
+}

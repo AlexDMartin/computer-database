@@ -3,8 +3,8 @@ package com.excilys.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.excilys.persistance.dao.DaoFactory;
-import com.excilys.persistance.model.Computer;
+import com.excilys.dao.DaoFactory;
+import com.excilys.dao.model.Computer;
 
 public class ComputerService implements CallableService<Computer>{
 
@@ -39,8 +39,8 @@ public class ComputerService implements CallableService<Computer>{
 	}
 
 	@Override
-	public int delete(Computer t) {
-		return daoFactory.getComputerDao().delete(t);
+	public void delete(Computer t) {
+		daoFactory.getComputerDao().delete(t);
 	}
 	
 }
