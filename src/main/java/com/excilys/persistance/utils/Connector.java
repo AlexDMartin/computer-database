@@ -2,9 +2,7 @@ package com.excilys.persistance.utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Properties;
 
 import org.slf4j.LoggerFactory;
@@ -50,43 +48,6 @@ public class Connector {
 		return this.connection;
 	}
 	
-//	/**
-//	 * @author Alex Martin
-//	 * @param query
-//	 * @return ResultSet
-//	 * @throws SQLException
-//	 */
-//	public ResultSet executeTransaction(String query) throws SQLException {
-//		ResultSet result = null;
-//		try {
-//			this.openConnection();
-//			Statement statement = connection.createStatement();
-//			return statement.executeQuery(query);
-//		} catch (SQLException e) {
-//			System.out.println("Error : " + e.getMessage());
-//		}
-//		return result;
-//	}
-//
-//	/**
-//	 * @author Alex Martin
-//	 * @param query
-//	 * @return ResultSet
-//	 * @throws SQLException
-//	 */
-//	public int executeUpdate(String query) throws SQLException {
-//		int result = 0;
-//		try {
-//			this.openConnection();
-//			Statement statement = this.connection.createStatement();
-//			statement.executeUpdate(query);
-//			result = 1;
-//		} catch (SQLException e) {
-//			System.out.println("Error : " + e.getMessage());
-//		}
-//		return result;
-//	}
-
 	public void finalize() {
 		try {
 			this.connection.close();

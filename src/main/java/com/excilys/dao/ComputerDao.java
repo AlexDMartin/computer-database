@@ -3,6 +3,7 @@ package com.excilys.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +20,7 @@ public class ComputerDao implements Dao<Computer>{
 	static final String GET_ONE = "SELECT ID, NAME, INTRODUCED, DISCONTINUED, COMPANY_ID FROM computer WHERE ID = ? LIMIT 1";
 	static final String GET_ALL = "SELECT ID, NAME, INTRODUCED, DISCONTINUED, COMPANY_ID  FROM computer ORDER BY ID";
 	static final String SAVE = "INSERT INTO computer (NAME, INTRODUCED, DISCONTINUED, COMPANY_ID) VALUES (?,?,?,?)";
-	static final String UPDATE = "UPDATE computer NAME = ?, INTRODUCED = ? , DISCONTINUED = ? , COMPANY_ID = ? WHERE ID = ?";
+	static final String UPDATE = "UPDATE computer SET NAME = ?, INTRODUCED = ? , DISCONTINUED = ? , COMPANY_ID = ? WHERE ID = ?";
 	static final String DELETE = "DELETE FROM computer WHERE ID = ?";
 	
 	private ComputerDao() {}
@@ -71,8 +72,8 @@ public class ComputerDao implements Dao<Computer>{
 		try {
 			PreparedStatement saveStatement = Connector.getInstance().getConnection().prepareStatement(SAVE);
 			saveStatement.setString(1, computer.getName());
-			saveStatement.setDate(2, computer.getIntroduced());
-			saveStatement.setDate(3, computer.getDiscontinued());
+			saveStatement.setTimestamp(2, new Timestamp(computer.getIntroduced().getTime()));
+			saveStatement.setTimestamp(3, new Timestamp(computer.getDiscontinued().getTime()));
 			saveStatement.setInt(4, computer.getCompany().getId());
 			
 			int resultCode = saveStatement.executeUpdate();
@@ -89,9 +90,10 @@ public class ComputerDao implements Dao<Computer>{
 		try {
 			PreparedStatement updateStatement = Connector.getInstance().getConnection().prepareStatement(UPDATE);
 			updateStatement.setString(1, computer.getName());
-			updateStatement.setDate(2, computer.getIntroduced());
-			updateStatement.setDate(3, computer.getDiscontinued());
+			updateStatement.setTimestamp(2, new Timestamp(computer.getIntroduced().getTime()));
+			updateStatement.setTimestamp(3, new Timestamp(computer.getDiscontinued().getTime()));
 			updateStatement.setInt(4, computer.getCompany().getId());
+			updateStatement.setInt(5, computer.getId());
 
 			int resultCode = updateStatement.executeUpdate();
 			LoggerFactory.getLogger(this.getClass()).info("Update operated on "+ resultCode +" row(s)");
