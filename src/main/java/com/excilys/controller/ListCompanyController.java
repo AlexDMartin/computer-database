@@ -10,18 +10,18 @@ import com.excilys.view.ListCompanyView;
 
 public class ListCompanyController {
 
-private static ListCompanyController listCompanyControllerInstance = null;
-	
-	private ListCompanyController() {
-		LoggerFactory.getLogger(this.getClass()).info("Listing Companies");
-		List<Company> companyList = DaoFactory.getInstance().getCompanyDao().getAll();
-		ListCompanyView.getInstance().render(companyList);
-	}
-	
-	public static ListCompanyController getInstance() {
-		if(listCompanyControllerInstance == null) {
-			listCompanyControllerInstance = new ListCompanyController();
-		}
-		return listCompanyControllerInstance;
-	}
+  private static ListCompanyController listCompanyControllerInstance = null;
+
+  private ListCompanyController() {
+    LoggerFactory.getLogger(this.getClass()).info("Listing Companies");
+    List<Company> companyList = DaoFactory.getInstance().getCompanyDao().getAll();
+    ListCompanyView.getInstance().render(companyList);
+  }
+
+  public static ListCompanyController getInstance() {
+    if (listCompanyControllerInstance == null) {
+      listCompanyControllerInstance = new ListCompanyController();
+    }
+    return listCompanyControllerInstance;
+  }
 }
