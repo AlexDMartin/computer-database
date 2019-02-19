@@ -4,12 +4,26 @@ import java.util.Scanner;
 
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MenuController.
+ */
 public class MenuController {
+
+  /** The menu controller instance. */
   private static MenuController menuControllerInstance = null;
 
+  /**
+   * Instantiates a new menu controller.
+   */
   private MenuController() {
   }
 
+  /**
+   * Gets the single instance of MenuController.
+   *
+   * @return single instance of MenuController
+   */
   public static MenuController getInstance() {
     if (menuControllerInstance == null) {
       menuControllerInstance = new MenuController();
@@ -17,6 +31,9 @@ public class MenuController {
     return menuControllerInstance;
   }
 
+  /**
+   * Resolve.
+   */
   public void resolve() {
     Scanner scan = new Scanner(System.in);
     int input = scan.nextInt();

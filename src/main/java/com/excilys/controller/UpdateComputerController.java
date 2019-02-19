@@ -12,9 +12,18 @@ import com.excilys.dao.model.Company;
 import com.excilys.dao.model.Computer;
 import com.excilys.view.UpdateComputerView;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class UpdateComputerController.
+ */
 public class UpdateComputerController {
+
+  /** The update computer controller instance. */
   private static UpdateComputerController updateComputerControllerInstance = null;
 
+  /**
+   * Instantiates a new update computer controller.
+   */
   private UpdateComputerController() {
 
     UpdateComputerView view = UpdateComputerView.getInstance();
@@ -67,6 +76,11 @@ public class UpdateComputerController {
     scan.close();
   }
 
+  /**
+   * Gets the single instance of UpdateComputerController.
+   *
+   * @return single instance of UpdateComputerController
+   */
   public static UpdateComputerController getInstance() {
     if (updateComputerControllerInstance == null) {
       updateComputerControllerInstance = new UpdateComputerController();

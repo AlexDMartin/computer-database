@@ -7,18 +7,39 @@ import java.util.Properties;
 
 import org.slf4j.LoggerFactory;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Connector.
+ */
 public class Connector {
 
+  /** The connector instance. */
   private static Connector connectorInstance = null;
 
+  /** The connection. */
   private Connection connection;
+
+  /** The database name. */
   private String databaseName = "computer-database-db";
+
+  /** The user name. */
   private String userName = "admincdb";
+
+  /** The password. */
   private String password = "qwerty1234";
+
+  /** The dbms. */
   private String dbms = "mysql";
+
+  /** The server name. */
   private String serverName = "localhost";
+
+  /** The port number. */
   private int portNumber = 3306;
 
+  /**
+   * Instantiates a new connector.
+   */
   private Connector() {
     try {
       LoggerFactory.getLogger(this.getClass()).info("Connector instance created");
@@ -37,6 +58,11 @@ public class Connector {
     }
   }
 
+  /**
+   * Gets the single instance of Connector.
+   *
+   * @return single instance of Connector
+   */
   public static Connector getInstance() {
     if (connectorInstance == null) {
       connectorInstance = new Connector();
@@ -44,10 +70,19 @@ public class Connector {
     return connectorInstance;
   }
 
+  /**
+   * Gets the connection.
+   *
+   * @return the connection
+   */
   public Connection getConnection() {
     return this.connection;
   }
 
+  /* (non-Javadoc)
+   * @see java.lang.Object#finalize()
+   */
+  @Override
   public void finalize() {
     try {
       this.connection.close();

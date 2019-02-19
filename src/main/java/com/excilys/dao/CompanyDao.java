@@ -12,19 +12,41 @@ import com.excilys.dao.mappers.CompanyMapper;
 import com.excilys.dao.model.Company;
 import com.excilys.persistance.utils.Connector;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CompanyDao.
+ */
 public class CompanyDao implements Dao<Company> {
 
+  /** The company dao instance. */
   private static CompanyDao companyDaoInstance = null;
 
+  /** The Constant GET_ONE. */
   static final String GET_ONE = "SELECT ID, NAME FROM company WHERE ID = ? LIMIT 1";
+
+  /** The Constant GET_ALL. */
   static final String GET_ALL = "SELECT ID, NAME FROM company ORDER BY ID";
+
+  /** The Constant SAVE. */
   static final String SAVE = "INSERT INTO company (NAME) VALUES (?)";
+
+  /** The Constant UPDATE. */
   static final String UPDATE = "UPDATE company NAME = ? WHERE ID = ?";
+
+  /** The Constant DELETE. */
   static final String DELETE = "DELETE FROM company WHERE ID = ?";
 
+  /**
+   * Instantiates a new company dao.
+   */
   private CompanyDao() {
   }
 
+  /**
+   * Gets the single instance of CompanyDao.
+   *
+   * @return single instance of CompanyDao
+   */
   public static CompanyDao getInstance() {
     if (companyDaoInstance == null) {
       companyDaoInstance = new CompanyDao();
@@ -32,6 +54,9 @@ public class CompanyDao implements Dao<Company> {
     return companyDaoInstance;
   }
 
+  /* (non-Javadoc)
+   * @see com.excilys.dao.Dao#get(long)
+   */
   @Override
   public Optional<Company> get(long id) {
     LoggerFactory.getLogger(this.getClass()).info("CompanyDao 'get' called");
@@ -50,6 +75,9 @@ public class CompanyDao implements Dao<Company> {
     return Optional.of(resultItem);
   }
 
+  /* (non-Javadoc)
+   * @see com.excilys.dao.Dao#getAll()
+   */
   @Override
   public List<Company> getAll() {
     LoggerFactory.getLogger(this.getClass()).info("CompanyDao 'getAll' called");
@@ -67,6 +95,9 @@ public class CompanyDao implements Dao<Company> {
     return resultItems;
   }
 
+  /* (non-Javadoc)
+   * @see com.excilys.dao.Dao#save(java.lang.Object)
+   */
   @Override
   public void save(Company company) throws Exception {
     LoggerFactory.getLogger(this.getClass()).info("CompanyDao 'save' called");
@@ -83,6 +114,9 @@ public class CompanyDao implements Dao<Company> {
     }
   }
 
+  /* (non-Javadoc)
+   * @see com.excilys.dao.Dao#update(java.lang.Object)
+   */
   @Override
   public void update(Company company) {
     LoggerFactory.getLogger(this.getClass()).info("Company update called");
@@ -100,6 +134,9 @@ public class CompanyDao implements Dao<Company> {
     }
   }
 
+  /* (non-Javadoc)
+   * @see com.excilys.dao.Dao#delete(java.lang.Object)
+   */
   @Override
   public void delete(Company company) {
     LoggerFactory.getLogger(this.getClass()).info("Company delete called");

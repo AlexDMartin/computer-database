@@ -11,13 +11,26 @@ import com.excilys.dao.DaoFactory;
 import com.excilys.dao.model.Company;
 import com.excilys.dao.model.Computer;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ComputerMapper.
+ */
 public class ComputerMapper implements Mapper<Computer> {
 
+  /** The computer mapper instance. */
   private static ComputerMapper computerMapperInstance = null;
 
+  /**
+   * Instantiates a new computer mapper.
+   */
   private ComputerMapper() {
   }
 
+  /**
+   * Gets the single instance of ComputerMapper.
+   *
+   * @return single instance of ComputerMapper
+   */
   public static ComputerMapper getInstance() {
     if (computerMapperInstance == null) {
       computerMapperInstance = new ComputerMapper();
@@ -26,8 +39,10 @@ public class ComputerMapper implements Mapper<Computer> {
   }
 
   /**
+   * Map.
+   *
    * @author Alex Martin
-   * @param ResultSet
+   * @param rs the rs
    * @return List<Computer>
    */
   @Override

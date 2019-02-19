@@ -12,9 +12,18 @@ import com.excilys.dao.model.Company;
 import com.excilys.dao.model.Computer;
 import com.excilys.view.CreateComputerView;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class CreateComputerController.
+ */
 public class CreateComputerController {
+
+  /** The create computer controller instance. */
   private static CreateComputerController createComputerControllerInstance = null;
 
+  /**
+   * Instantiates a new creates the computer controller.
+   */
   private CreateComputerController() {
     CreateComputerView view = CreateComputerView.getInstance();
     Validator validator = Validator.getInstance();
@@ -63,6 +72,11 @@ public class CreateComputerController {
     }
   }
 
+  /**
+   * Gets the single instance of CreateComputerController.
+   *
+   * @return single instance of CreateComputerController
+   */
   public static CreateComputerController getInstance() {
     if (createComputerControllerInstance == null) {
       createComputerControllerInstance = new CreateComputerController();

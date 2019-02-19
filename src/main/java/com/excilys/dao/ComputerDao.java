@@ -13,19 +13,41 @@ import com.excilys.dao.mappers.ComputerMapper;
 import com.excilys.dao.model.Computer;
 import com.excilys.persistance.utils.Connector;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ComputerDao.
+ */
 public class ComputerDao implements Dao<Computer> {
 
+  /** The computer dao instance. */
   private static ComputerDao computerDaoInstance = null;
 
+  /** The Constant GET_ONE. */
   static final String GET_ONE = "SELECT ID, NAME, INTRODUCED, DISCONTINUED, COMPANY_ID FROM computer WHERE ID = ? LIMIT 1";
+
+  /** The Constant GET_ALL. */
   static final String GET_ALL = "SELECT ID, NAME, INTRODUCED, DISCONTINUED, COMPANY_ID  FROM computer ORDER BY ID";
+
+  /** The Constant SAVE. */
   static final String SAVE = "INSERT INTO computer (NAME, INTRODUCED, DISCONTINUED, COMPANY_ID) VALUES (?,?,?,?)";
+
+  /** The Constant UPDATE. */
   static final String UPDATE = "UPDATE computer SET NAME = ?, INTRODUCED = ? , DISCONTINUED = ? , COMPANY_ID = ? WHERE ID = ?";
+
+  /** The Constant DELETE. */
   static final String DELETE = "DELETE FROM computer WHERE ID = ?";
 
+  /**
+   * Instantiates a new computer dao.
+   */
   private ComputerDao() {
   }
 
+  /**
+   * Gets the single instance of ComputerDao.
+   *
+   * @return single instance of ComputerDao
+   */
   public static ComputerDao getInstance() {
     if (computerDaoInstance == null) {
       computerDaoInstance = new ComputerDao();
@@ -33,6 +55,9 @@ public class ComputerDao implements Dao<Computer> {
     return computerDaoInstance;
   }
 
+  /* (non-Javadoc)
+   * @see com.excilys.dao.Dao#get(long)
+   */
   @Override
   public Optional<Computer> get(long id) {
     LoggerFactory.getLogger(this.getClass()).info("ComputerDao 'get' called");
@@ -51,6 +76,9 @@ public class ComputerDao implements Dao<Computer> {
     return Optional.of(resultItem);
   }
 
+  /* (non-Javadoc)
+   * @see com.excilys.dao.Dao#getAll()
+   */
   @Override
   public List<Computer> getAll() {
     LoggerFactory.getLogger(this.getClass()).info("ComputerDao 'getAll' called");
@@ -68,6 +96,9 @@ public class ComputerDao implements Dao<Computer> {
     return resultItems;
   }
 
+  /* (non-Javadoc)
+   * @see com.excilys.dao.Dao#save(java.lang.Object)
+   */
   @Override
   public void save(Computer computer) {
     LoggerFactory.getLogger(this.getClass()).info("ComputerDao 'save' called");
@@ -87,6 +118,9 @@ public class ComputerDao implements Dao<Computer> {
     }
   }
 
+  /* (non-Javadoc)
+   * @see com.excilys.dao.Dao#update(java.lang.Object)
+   */
   @Override
   public void update(Computer computer) {
     LoggerFactory.getLogger(this.getClass()).info("ComputerDao 'update' called");
@@ -107,6 +141,9 @@ public class ComputerDao implements Dao<Computer> {
     }
   }
 
+  /* (non-Javadoc)
+   * @see com.excilys.dao.Dao#delete(java.lang.Object)
+   */
   @Override
   public void delete(Computer computer) {
     LoggerFactory.getLogger(this.getClass()).info("ComputerDao 'delete' called");

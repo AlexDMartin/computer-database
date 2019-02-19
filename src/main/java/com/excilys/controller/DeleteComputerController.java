@@ -6,9 +6,18 @@ import com.excilys.dao.DaoFactory;
 import com.excilys.dao.model.Computer;
 import com.excilys.view.DeleteComputerView;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DeleteComputerController.
+ */
 public class DeleteComputerController {
+
+  /** The delete computer controller instance. */
   private static DeleteComputerController deleteComputerControllerInstance = null;
 
+  /**
+   * Instantiates a new delete computer controller.
+   */
   private DeleteComputerController() {
     DeleteComputerView view = DeleteComputerView.getInstance();
     Validator validator = Validator.getInstance();
@@ -30,6 +39,11 @@ public class DeleteComputerController {
     scan.close();
   }
 
+  /**
+   * Gets the single instance of DeleteComputerController.
+   *
+   * @return single instance of DeleteComputerController
+   */
   public static DeleteComputerController getInstance() {
     if (deleteComputerControllerInstance == null) {
       deleteComputerControllerInstance = new DeleteComputerController();
