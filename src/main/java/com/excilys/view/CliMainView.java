@@ -1,7 +1,5 @@
 package com.excilys.view;
 
-import java.util.Scanner;
-
 import org.slf4j.LoggerFactory;
 
 import com.excilys.controller.MenuController;
