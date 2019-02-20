@@ -76,6 +76,15 @@
   <!--   <property name="fileExtensions" value="java"/> -->
   <!-- </module> -->
 
+  <!-- Ignore filter -->
+  <module name="SuppressionCommentFilter">
+    <property name="offCommentFormat"
+        value="CHECKSTYLE_OFF: JAVADOC" />
+    <property name="onCommentFormat"
+        value="CHECKSTYLE_ON: JAVADOC" />
+    <property name="checkFormat" value="JavadocMethod" />
+  </module>
+
   <module name="TreeWalker">
 
     <!-- Checks for Javadoc comments.                     -->
@@ -183,13 +192,6 @@
     <!-- <module name="FinalParameters"/> -->
     <!-- <module name="TodoComment"/> -->
     <module name="UpperEll"/>
-
-    <!-- Ignore filter-->
-    <module name="SuppressionCommentFilter">
-        <property name="offCommentFormat" value="CHECKSTYLE_OFF: JAVADOC"/>
-        <property name="onCommentFormat" value="CHECKSTYLE_ON: JAVADOC"/>
-        <property name="checkFormat" value="JavadocMethod"/>
-    </module>
 
     <!-- <module name="SuppressionFilter">
         <property name="file" value="suppressions.xml"/>
