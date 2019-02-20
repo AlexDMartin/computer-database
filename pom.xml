@@ -21,10 +21,28 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>3.2.1</version>
 				<configuration>
-					<warSourceDirectory>WebContent</warSourceDirectory>
+	<warSourceDirectory>WebContent</warSourceDirectory>
 				</configuration>
 			</plugin>
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-checkstyle-plugin</artifactId>
+					<version>3.0.0</version>
+					<executions>
+						<execution>
+							<id>validate</id>
+							<phase>validate</phase>
+							<goals>
+								<goal>check</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 	<properties>
 		<slf4j.version>1.6.4</slf4j.version>
@@ -68,7 +86,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<reporting>
+	<!-- <reporting>
       <plugins>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -83,5 +101,5 @@
           </reportSets>
         </plugin>
       </plugins>
-    </reporting>
+    </reporting> -->
 </project>
