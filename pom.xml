@@ -69,7 +69,7 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.6</version>
+			<version>8.0.15</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/junit/junit -->
 		<dependency>
@@ -95,8 +95,8 @@
         <!-- https://mvnrepository.com/artifact/javax.servlet/servlet-api -->
         <dependency>
             <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
             <scope>provided</scope>
         </dependency>
         <!-- standard.jar --> 

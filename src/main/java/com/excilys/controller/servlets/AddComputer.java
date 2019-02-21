@@ -1,15 +1,19 @@
 package com.excilys.controller.servlets;
 
 import java.io.IOException;
+<<<<<<< HEAD
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+=======
+>>>>>>> Integrating web layout and fixing JDBC issues
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+<<<<<<< HEAD
 import javax.xml.bind.ValidationException;
 
 import org.slf4j.LoggerFactory;
@@ -19,10 +23,13 @@ import com.excilys.dao.model.Company;
 import com.excilys.dao.model.Computer;
 import com.excilys.service.ComputerService;
 import com.excilys.validator.Validator;
+=======
+>>>>>>> Integrating web layout and fixing JDBC issues
 
 /**
  * Servlet implementation class AddComputer
  */
+<<<<<<< HEAD
 @WebServlet(name = "Add", urlPatterns = { "/Add" })
 public class AddComputer extends HttpServlet {
   private static final long serialVersionUID = 1L;
@@ -91,5 +98,31 @@ public class AddComputer extends HttpServlet {
 
     request.getRequestDispatcher("view/addComputer.jsp").forward(request, response);
   }
+=======
+@WebServlet(name="Add", urlPatterns = {"/Add"})
+public class AddComputer extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public AddComputer() {
+        super();
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	  request.getRequestDispatcher("view/addComputer.jsp").forward(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request, response);
+	}
+>>>>>>> Integrating web layout and fixing JDBC issues
 
 }

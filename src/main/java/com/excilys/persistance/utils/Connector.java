@@ -41,14 +41,24 @@ public class Connector {
    * Instantiates a new connector.
    */
   private Connector() {
+    try
+    {
+        Class.forName("com.mysql.jdbc.Driver");
+    }
+    catch (ClassNotFoundException e)
+    {
+        System.out.println(e.toString());
+    }
     try {
       LoggerFactory.getLogger(this.getClass()).info("Connector instance created");
       Connection conn = null;
       Properties connectionProps = new Properties();
       connectionProps.put("user", this.userName);
       connectionProps.put("password", this.password);
+      LoggerFactory.getLogger(this.getClass()).warn("connection: "+ conn);
       conn = DriverManager.getConnection("jdbc:" + this.dbms + "://" + this.serverName + ":"
           + this.portNumber + "/" + this.databaseName, connectionProps);
+      LoggerFactory.getLogger(this.getClass()).warn("connection: "+ conn);
       LoggerFactory.getLogger(this.getClass()).info(
           "[CONNECTED] jdbc:" + this.dbms + "://" + this.serverName + ":" + this.portNumber + "/");
 
@@ -76,14 +86,14 @@ public class Connector {
    * @return the connection
    */
   public Connection getConnection() {
+    LoggerFactory.getLogger(this.getClass()).warn("Connection is " + this.connection);
     return this.connection;
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#finalize()
+  /**
+   * Closes the connection.
    */
-  @Override
-  public void finalize() {
+  public void closeConnection() {
     try {
       this.connection.close();
       LoggerFactory.getLogger(this.getClass()).info("Connection closed");
