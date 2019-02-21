@@ -6,22 +6,21 @@
 <title>Computer Database</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8">
-<!-- Bootstrap -->
-<link href="../css/bootstrap.min.css" rel="stylesheet" media="screen">
-<link href="../css/font-awesome.css" rel="stylesheet" media="screen">
-<link href="../css/main.css" rel="stylesheet" media="screen">
+<link href="<c:url value="/css/bootstrap.min.css" />" rel="stylesheet" media="screen">
+<link href="<c:url value="/css/font-awesome.css" />" rel="stylesheet" media="screen">
+<link href="<c:url value="/css/main.css" />" rel="stylesheet" media="screen">
 </head>
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="index.jsp"> Application - Computer Database </a>
+            <a class="navbar-brand" href="Dashboard"> Application - Computer Database </a>
         </div>
     </header>
 
     <section id="main">
         <div class="container">
             <h1 id="homeTitle">
-                121 Computers found
+                ${computerList.size()} Computers found
             </h1>
             <div id="actions" class="form-horizontal">
                 <div class="pull-left">
@@ -33,7 +32,7 @@
                     </form>
                 </div>
                 <div class="pull-right">
-                    <a class="btn btn-success" id="addComputer" href="addComputer.html">Add Computer</a> 
+                    <a class="btn btn-success" id="addComputer" href="Add">Add Computer</a> 
                     <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();">Edit</a>
                 </div>
             </div>
@@ -53,7 +52,7 @@
                         <th class="editMode" style="width: 60px; height: 22px;">
                             <input type="checkbox" id="selectall" /> 
                             <span style="vertical-align: top;">
-                                 -  <a href="#" id="deleteSelected" onclick="$.fn.deleteSelected();">
+                                 -  <a href="Delete" id="deleteSelected" onclick="$.fn.deleteSelected();">
                                         <i class="fa fa-trash-o fa-lg"></i>
                                     </a>
                             </span>
@@ -77,18 +76,20 @@
                 </thead>
                 <!-- Browse attribute computers -->
                 <tbody id="results">
+                	<c:forEach var="computer" items="${computerList}" varStatus="i">
                     <tr>
                         <td class="editMode">
                             <input type="checkbox" name="cb" class="cb" value="0">
                         </td>
                         <td>
-                            <a href="editComputer.html" onclick="">MacBook Pro</a>
+                            <a href="Edit" onclick="">${computer.getName()}</a>
                         </td>
-                        <td>2006-01-10</td>
-                        <td></td>
-                        <td>Apple Inc.</td>
+                        <td>${computer.getIntroduced()}</td>
+                        <td>${computer.getDiscontinued()}</td>
+                        <td>${computer.getCompany().getName()}</td>
 
-                    </tr>                  
+                    </tr>      
+                    </c:forEach>            
                 </tbody>
             </table>
         </div>
@@ -121,9 +122,9 @@
         </div>
 	</div>
     </footer>
-<script src="../js/jquery.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
-<script src="../js/dashboard.js"></script>
+<script src="<c:url value="/js/jquery.min.js" />"></script>
+<script src="<c:url value="/js/bootstrap.min.js" />"></script>
+<script src="<c:url value="/js/dashboard.js" />"></script>
 
 </body>
 </html>
