@@ -1,18 +1,22 @@
 package com.excilys.controller;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Scanner;
+
+import javax.xml.bind.ValidationException;
 
 import org.slf4j.LoggerFactory;
 
 import com.excilys.dao.DaoFactory;
 import com.excilys.dao.model.Company;
 import com.excilys.dao.model.Computer;
+import com.excilys.service.ComputerService;
+import com.excilys.validator.Validator;
 import com.excilys.view.UpdateComputerView;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class UpdateComputerController.
  */
@@ -25,55 +29,52 @@ public class UpdateComputerController {
    * Instantiates a new update computer controller.
    */
   private UpdateComputerController() {
-
     UpdateComputerView view = UpdateComputerView.getInstance();
     Validator validator = Validator.getInstance();
     Scanner scan = new Scanner(System.in);
-
+    
     view.askForId();
-
     long id = (long) scan.nextInt();
-    Computer computer = DaoFactory.getInstance().getComputerDao().get(id).get();
-
-    view.askForNewName(computer);
-
-    String nameInput = scan.next();
-
-    view.askForNewIntroduced(computer);
-
-    String introducedInput = scan.next();
-
-    view.askForNewDiscontinued(computer);
-
-    String discontinuedInput = scan.next();
-
-    boolean dateValidated = false;
-    Date introducedDate = null;
-    Date discontinuedDate = null;
+    Computer computer = ComputerService.getInstance().get(id).get();
 
     try {
-      introducedDate = new SimpleDateFormat("dd/MM/yyyy").parse(introducedInput);
-      discontinuedDate = new SimpleDateFormat("dd/MM/yyyy").parse(discontinuedInput);
-      dateValidated = validator.precedence(introducedDate, discontinuedDate);
-    } catch (Exception e) {
-      LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
-    }
-
-    view.askForNewCompany(computer);
-
-    long companyInput = (long) scan.nextInt();
-    Optional<Company> company = DaoFactory.getInstance().getCompanyDao().get(companyInput);
-    boolean companyExists = validator.companyExists(company);
-
-    if (dateValidated && companyExists) {
+      view.askForNewName(computer);
+      String nameInput = scan.next();
+      validator.validateName(nameInput);
       computer.setName(nameInput);
+      
+      view.askForNewIntroduced(computer);
+      String introducedInput = scan.next();
+      validator.validateDate(introducedInput);
+      Date introducedDate = new SimpleDateFormat("dd/MM/yyyy").parse(introducedInput);
+      
+      view.askForNewDiscontinued(computer);
+      String discontinuedInput = scan.next();
+      validator.validateDate(discontinuedInput);
+      Date discontinuedDate = new SimpleDateFormat("dd/MM/yyyy").parse(discontinuedInput);
+      validator.validatePrecedence(introducedDate, discontinuedDate);
       computer.setIntroduced(introducedDate);
       computer.setDiscontinued(discontinuedDate);
-      computer.setCompany(company.get());
 
-      DaoFactory.getInstance().getComputerDao().update(computer);
+      view.askForNewCompany(computer);
+      long companyInput = (long) scan.nextInt();
+      Optional<Company> company = DaoFactory.getInstance().getCompanyDao().get(companyInput);;
+      validator.validateCompany(company);
+      computer.setCompany(company.get());
+      
+      scan.close();   
+    } catch(ValidationException e) {
+      LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
+    } catch (ParseException e) {
+      // TODO Auto-generated catch block
+      LoggerFactory.getLogger(this.getClass()).warn("Failed to parse date");
     }
-    scan.close();
+    
+    try {
+      ComputerService.getInstance().save(computer);
+    } catch (Exception e) {
+      LoggerFactory.getLogger(this.getClass()).warn(e.getMessage()); 
+    }
   }
 
   /**
