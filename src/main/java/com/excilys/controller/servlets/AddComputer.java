@@ -3,6 +3,7 @@ package com.excilys.controller.servlets;
 import java.io.IOException;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -14,11 +15,17 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 >>>>>>> Implementing Adding form
+=======
+import java.text.SimpleDateFormat;
+import java.util.List;
+
+>>>>>>> origin/web-ui
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+<<<<<<< HEAD
 <<<<<<< HEAD
 import javax.xml.bind.ValidationException;
 
@@ -31,6 +38,8 @@ import com.excilys.service.ComputerService;
 import com.excilys.validator.Validator;
 =======
 >>>>>>> Integrating web layout and fixing JDBC issues
+=======
+>>>>>>> origin/web-ui
 
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +50,7 @@ import com.excilys.dao.model.Computer;
 /**
  * Servlet implementation class AddComputer
  */
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 @WebServlet(name = "Add", urlPatterns = { "/Add" })
@@ -116,6 +126,9 @@ public class AddComputer extends HttpServlet {
 =======
 @WebServlet(name = "Add", urlPatterns = { "/Add" })
 >>>>>>> Implementing Adding form
+=======
+@WebServlet(name = "Add", urlPatterns = { "/Add" })
+>>>>>>> origin/web-ui
 public class AddComputer extends HttpServlet {
   private static final long serialVersionUID = 1L;
 
@@ -179,6 +192,7 @@ public class AddComputer extends HttpServlet {
     computer.setCompany(company);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -194,6 +208,8 @@ public class AddComputer extends HttpServlet {
 	}
 >>>>>>> Integrating web layout and fixing JDBC issues
 =======
+=======
+>>>>>>> origin/web-ui
     
     // Add
     LoggerFactory.getLogger(this.getClass()).warn(computer.toString());// test 
@@ -201,6 +217,9 @@ public class AddComputer extends HttpServlet {
     
     request.getRequestDispatcher("view/addComputer.jsp").forward(request, response);
   }
+<<<<<<< HEAD
 >>>>>>> Implementing Adding form
+=======
+>>>>>>> origin/web-ui
 
 }
