@@ -49,7 +49,7 @@ public class EditComputer extends HttpServlet {
 	    request.getRequestDispatcher("view/editComputer.jsp").forward(request, response);
     } catch (Exception e) {
       LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
-      request.setAttribute("stacktrace", e.getStackTrace());
+      request.setAttribute("stacktrace", e.getMessage());
       request.getRequestDispatcher("view/404.jsp").forward(request, response);
     }  
 	}
@@ -81,11 +81,11 @@ public class EditComputer extends HttpServlet {
       computer.setCompany(company);
     } catch (ValidationException e) {
       LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
-      request.setAttribute("stacktrace", e.getStackTrace());
+      request.setAttribute("stacktrace", e.getMessage());
       request.getRequestDispatcher("view/500.jsp").forward(request, response);
     } catch (ParseException e) {
       LoggerFactory.getLogger(this.getClass()).warn("Unable to parse Date");
-      request.setAttribute("stacktrace", e.getStackTrace());
+      request.setAttribute("stacktrace", e.getMessage());
       request.getRequestDispatcher("view/500.jsp").forward(request, response);
     }
 
@@ -93,7 +93,7 @@ public class EditComputer extends HttpServlet {
       ComputerService.getInstance().update(computer);
     } catch (Exception e) {
       LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
-      request.setAttribute("stacktrace", e.getStackTrace());
+      request.setAttribute("stacktrace", e.getMessage());
       request.getRequestDispatcher("view/500.jsp").forward(request, response);
     }
 

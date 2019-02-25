@@ -21,7 +21,7 @@
 	            <div class="alert alert-danger">
 	                Error 404: Page not found. Too bad bitch!
 	                <br/>
-	                <!-- stacktrace -->
+	                ${stacktrace}
 	            </div>
 	        </div>
 	    </section>

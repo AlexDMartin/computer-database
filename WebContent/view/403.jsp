@@ -21,7 +21,7 @@
 				<div class="alert alert-danger">
 					Error 403: Access denied!
 					<br/>
-					<!-- stacktrace -->
+					${stacktrace}
 				</div>
 			</div>
 		</section>

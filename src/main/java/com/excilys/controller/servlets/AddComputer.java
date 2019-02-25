@@ -75,7 +75,7 @@ public class AddComputer extends HttpServlet {
       computer.setCompany(company);
     } catch (ValidationException e) {
       LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
-      request.setAttribute("stacktrace", e.getStackTrace());
+      request.setAttribute("stacktrace", e.getMessage());
       request.getRequestDispatcher("view/500.jsp").forward(request, response);
     } catch (ParseException e) {
       LoggerFactory.getLogger(this.getClass()).warn("Unable to parse Date");
@@ -87,7 +87,7 @@ public class AddComputer extends HttpServlet {
       ComputerService.getInstance().save(computer);
     } catch (Exception e) {
       LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
-      request.setAttribute("stacktrace", e.getStackTrace());
+      request.setAttribute("stacktrace", e.getMessage());
       request.getRequestDispatcher("view/500.jsp").forward(request, response);
     }
 
