@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import com.excilys.dao.DaoFactory;
 import com.excilys.dao.model.Computer;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ComputerService.
  */
@@ -35,7 +34,9 @@ public class ComputerService implements CallableService<Computer> {
     return computerServiceInstance;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.excilys.service.CallableService#get(long)
    */
   @Override
@@ -43,7 +44,9 @@ public class ComputerService implements CallableService<Computer> {
     return DaoFactory.getInstance().getComputerDao().get(id);
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.excilys.service.CallableService#getAll()
    */
   @Override
@@ -51,7 +54,9 @@ public class ComputerService implements CallableService<Computer> {
     return DaoFactory.getInstance().getComputerDao().getAll();
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.excilys.service.CallableService#save(java.lang.Object)
    */
   @Override
@@ -63,7 +68,9 @@ public class ComputerService implements CallableService<Computer> {
     }
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.excilys.service.CallableService#update(java.lang.Object)
    */
   @Override
@@ -71,7 +78,9 @@ public class ComputerService implements CallableService<Computer> {
     DaoFactory.getInstance().getComputerDao().update(computer);
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.excilys.service.CallableService#delete(java.lang.Object)
    */
   @Override

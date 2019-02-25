@@ -11,7 +11,6 @@ import com.excilys.dao.DaoFactory;
 import com.excilys.dao.model.Company;
 import com.excilys.dao.model.Computer;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ComputerMapper.
  */
@@ -41,13 +40,11 @@ public class ComputerMapper implements Mapper<Computer> {
   /**
    * Map.
    *
-   * @author Alex Martin
    * @param rs the rs
    * @return List<Computer>
    */
   @Override
   public List<Computer> map(ResultSet rs) {
-    LoggerFactory.getLogger(this.getClass()).info("Computer mapping triggered");
     List<Computer> list = new ArrayList<>();
 
     try {

@@ -2,7 +2,6 @@ package com.excilys.view;
 
 import com.excilys.dao.model.Computer;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DeleteComputerView.
  */

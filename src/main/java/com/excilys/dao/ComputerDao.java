@@ -13,7 +13,6 @@ import com.excilys.dao.mappers.ComputerMapper;
 import com.excilys.dao.model.Computer;
 import com.excilys.persistance.utils.Connector;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ComputerDao.
  */
@@ -55,7 +54,9 @@ public class ComputerDao implements Dao<Computer> {
     return computerDaoInstance;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.excilys.dao.Dao#get(long)
    */
   @Override
@@ -76,7 +77,9 @@ public class ComputerDao implements Dao<Computer> {
     return Optional.of(resultItem);
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.excilys.dao.Dao#getAll()
    */
   @Override
@@ -96,7 +99,9 @@ public class ComputerDao implements Dao<Computer> {
     return resultItems;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.excilys.dao.Dao#save(java.lang.Object)
    */
   @Override
@@ -118,7 +123,9 @@ public class ComputerDao implements Dao<Computer> {
     }
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.excilys.dao.Dao#update(java.lang.Object)
    */
   @Override
@@ -141,7 +148,9 @@ public class ComputerDao implements Dao<Computer> {
     }
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.excilys.dao.Dao#delete(java.lang.Object)
    */
   @Override

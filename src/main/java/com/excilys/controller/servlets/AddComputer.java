@@ -79,7 +79,7 @@ public class AddComputer extends HttpServlet {
       request.getRequestDispatcher("view/500.jsp").forward(request, response);
     } catch (ParseException e) {
       LoggerFactory.getLogger(this.getClass()).warn("Unable to parse Date");
-      request.setAttribute("stacktrace", e.getStackTrace());      
+      request.setAttribute("stacktrace", e.getStackTrace());
       request.getRequestDispatcher("view/500.jsp").forward(request, response);
     }
 

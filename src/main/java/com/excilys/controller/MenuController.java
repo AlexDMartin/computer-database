@@ -4,7 +4,6 @@ import java.util.Scanner;
 
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class MenuController.
  */

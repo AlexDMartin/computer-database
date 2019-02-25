@@ -12,7 +12,6 @@ import com.excilys.dao.mappers.CompanyMapper;
 import com.excilys.dao.model.Company;
 import com.excilys.persistance.utils.Connector;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class CompanyDao.
  */
@@ -54,12 +53,14 @@ public class CompanyDao implements Dao<Company> {
     return companyDaoInstance;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.excilys.dao.Dao#get(long)
    */
   @Override
   public Optional<Company> get(long id) {
-//    LoggerFactory.getLogger(this.getClass()).info("CompanyDao 'get' called");
+    LoggerFactory.getLogger(this.getClass()).info("CompanyDao 'get' called");
     Company resultItem = null;
 
     try {
@@ -75,7 +76,9 @@ public class CompanyDao implements Dao<Company> {
     return Optional.of(resultItem);
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.excilys.dao.Dao#getAll()
    */
   @Override
@@ -95,7 +98,9 @@ public class CompanyDao implements Dao<Company> {
     return resultItems;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.excilys.dao.Dao#save(java.lang.Object)
    */
   @Override
@@ -114,7 +119,9 @@ public class CompanyDao implements Dao<Company> {
     }
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.excilys.dao.Dao#update(java.lang.Object)
    */
   @Override
@@ -134,7 +141,9 @@ public class CompanyDao implements Dao<Company> {
     }
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.excilys.dao.Dao#delete(java.lang.Object)
    */
   @Override

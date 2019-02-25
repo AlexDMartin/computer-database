@@ -4,7 +4,6 @@ import org.slf4j.LoggerFactory;
 
 import com.excilys.controller.MenuController;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class CliMainView.
  */
@@ -37,5 +36,4 @@ public class CliMainView {
     }
     return cliMainViewInstance;
   }
-
 }

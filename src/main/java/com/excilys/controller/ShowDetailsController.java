@@ -3,11 +3,10 @@ package com.excilys.controller;
 import java.util.Optional;
 import java.util.Scanner;
 
-import com.excilys.dao.DaoFactory;
 import com.excilys.dao.model.Computer;
+import com.excilys.service.ComputerService;
 import com.excilys.view.ShowDetailsView;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ShowDetailsController.
  */
@@ -27,7 +26,7 @@ public class ShowDetailsController {
     long id = (long) scan.nextInt();
     scan.close();
 
-    Optional<Computer> computer = DaoFactory.getInstance().getComputerDao().get(id);
+    Optional<Computer> computer = ComputerService.getInstance().get(id);
     view.displayComputer(computer);
   }
 

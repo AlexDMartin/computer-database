@@ -4,8 +4,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.LoggerFactory;
-
 import com.excilys.dao.model.Company;
 
 // TODO: Auto-generated Javadoc
@@ -38,7 +36,6 @@ public class CompanyMapper implements Mapper<Company> {
   /**
    * Map.
    *
-   * @author Alex Martin
    * @param rs the rs
    * @return List<Company>
    */

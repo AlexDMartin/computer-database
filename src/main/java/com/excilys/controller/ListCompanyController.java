@@ -8,7 +8,6 @@ import com.excilys.dao.DaoFactory;
 import com.excilys.dao.model.Company;
 import com.excilys.view.ListCompanyView;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ListCompanyController.
  */

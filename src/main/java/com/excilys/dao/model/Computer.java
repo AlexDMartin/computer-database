@@ -2,7 +2,6 @@ package com.excilys.dao.model;
 
 import java.util.Date;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Computer.
  */
@@ -119,7 +118,9 @@ public class Computer {
     this.company = company;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.lang.Object#toString()
    */
   @Override

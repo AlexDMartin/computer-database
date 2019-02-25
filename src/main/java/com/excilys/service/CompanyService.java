@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import com.excilys.dao.DaoFactory;
 import com.excilys.dao.model.Company;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class CompanyService.
  */
@@ -35,7 +34,9 @@ public class CompanyService implements CallableService<Company> {
     return companyServiceInstance;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.excilys.service.CallableService#get(long)
    */
   @Override
@@ -43,7 +44,9 @@ public class CompanyService implements CallableService<Company> {
     return DaoFactory.getInstance().getCompanyDao().get(id);
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.excilys.service.CallableService#getAll()
    */
   @Override
@@ -51,7 +54,9 @@ public class CompanyService implements CallableService<Company> {
     return DaoFactory.getInstance().getCompanyDao().getAll();
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.excilys.service.CallableService#save(java.lang.Object)
    */
   @Override
@@ -63,7 +68,9 @@ public class CompanyService implements CallableService<Company> {
     }
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.excilys.service.CallableService#update(java.lang.Object)
    */
   @Override
@@ -72,7 +79,9 @@ public class CompanyService implements CallableService<Company> {
 
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.excilys.service.CallableService#delete(java.lang.Object)
    */
   @Override

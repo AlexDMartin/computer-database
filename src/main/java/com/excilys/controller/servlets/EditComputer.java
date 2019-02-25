@@ -25,46 +25,48 @@ import com.excilys.validator.Validator;
 /**
  * Servlet implementation class EditComputer
  */
-@WebServlet(name="Edit", urlPatterns = {"/Edit"})
+@WebServlet(name = "Edit", urlPatterns = { "/Edit" })
 public class EditComputer extends HttpServlet {
-       
-    /** 
-     * @see HttpServlet#HttpServlet()
-     */
-    public EditComputer() {
-        super();
-    }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	  try {	    
-	    long id = Long.parseLong(request.getParameter("id"));
-	    Optional<Computer> computer = ComputerService.getInstance().get(id);
-	    List<Company> companyList = CompanyService.getInstance().getAll();
-	    
-	    request.setAttribute("companyList", companyList);
-	    request.setAttribute("computer", computer.get());
-	    request.getRequestDispatcher("view/editComputer.jsp").forward(request, response);
+  /**
+   * @see HttpServlet#HttpServlet()
+   */
+  public EditComputer() {
+    super();
+  }
+
+  /**
+   * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+   */
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
+    try {
+      long id = Long.parseLong(request.getParameter("id"));
+      Optional<Computer> computer = ComputerService.getInstance().get(id);
+      List<Company> companyList = CompanyService.getInstance().getAll();
+
+      request.setAttribute("companyList", companyList);
+      request.setAttribute("computer", computer.get());
+      request.getRequestDispatcher("view/editComputer.jsp").forward(request, response);
     } catch (Exception e) {
       LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
       request.setAttribute("stacktrace", e.getMessage());
       request.getRequestDispatcher("view/404.jsp").forward(request, response);
-    }  
-	}
+    }
+  }
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	  Validator validator = Validator.getInstance();
+  /**
+   * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+   */
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
+    Validator validator = Validator.getInstance();
     Computer computer = new Computer();
     try {
       validator.validateId(request.getParameter("id"));
       int id = Integer.parseInt(request.getParameter("id"));
       computer.setId(id);
-      
+
       validator.validateName(request.getParameter("computerName"));
       computer.setName(request.getParameter("computerName"));
 
@@ -98,6 +100,6 @@ public class EditComputer extends HttpServlet {
     }
 
     request.getRequestDispatcher("Dashboard").forward(request, response);
-	}
+  }
 
 }

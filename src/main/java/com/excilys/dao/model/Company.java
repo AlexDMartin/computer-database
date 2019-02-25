@@ -1,6 +1,5 @@
 package com.excilys.dao.model;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Company.
  */
@@ -54,7 +53,9 @@ public class Company {
     this.name = name;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.lang.Object#toString()
    */
   @Override

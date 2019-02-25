@@ -3,7 +3,6 @@ package com.excilys.dao.mappers;
 import java.sql.ResultSet;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Interface Mapper.
  *

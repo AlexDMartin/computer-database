@@ -4,10 +4,10 @@ import java.util.Scanner;
 
 import com.excilys.dao.DaoFactory;
 import com.excilys.dao.model.Computer;
+import com.excilys.service.ComputerService;
 import com.excilys.validator.Validator;
 import com.excilys.view.DeleteComputerView;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DeleteComputerController.
  */
@@ -34,7 +34,7 @@ public class DeleteComputerController {
     String confirmationInput = scan.next();
 
     if (validator.isYes(confirmationInput)) {
-      DaoFactory.getInstance().getComputerDao().delete(computer);
+      ComputerService.getInstance().delete(computer);
     }
 
     scan.close();

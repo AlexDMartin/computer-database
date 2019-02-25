@@ -1,6 +1,5 @@
 package com.excilys.dao;
 
-// TODO: Auto-generated Javadoc
 /**
  * A factory for creating Dao objects.
  */

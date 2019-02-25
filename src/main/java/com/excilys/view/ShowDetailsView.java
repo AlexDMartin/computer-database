@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import com.excilys.dao.model.Computer;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ShowDetailsView.
  */

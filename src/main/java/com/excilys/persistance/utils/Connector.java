@@ -40,13 +40,10 @@ public class Connector {
    * Instantiates a new connector.
    */
   private Connector() {
-    try
-    {
-        Class.forName("com.mysql.jdbc.Driver");
-    }
-    catch (ClassNotFoundException e)
-    {
-        System.out.println(e.toString());
+    try {
+      Class.forName("com.mysql.jdbc.Driver");
+    } catch (ClassNotFoundException e) {
+      System.out.println(e.toString());
     }
     try {
       LoggerFactory.getLogger(this.getClass()).info("Connector instance created");

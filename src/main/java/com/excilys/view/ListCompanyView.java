@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.excilys.dao.model.Company;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ListCompanyView.
  */

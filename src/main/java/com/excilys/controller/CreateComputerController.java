@@ -44,7 +44,7 @@ public class CreateComputerController {
       String introducedInput = scan.next();
       validator.validateDate(introducedInput);
       Date introducedDate = new SimpleDateFormat("dd/MM/yyyy").parse(introducedInput);
-      
+
       view.askForDiscontinued();
       String discontinuedInput = scan.next();
       validator.validateDate(discontinuedInput);
@@ -55,21 +55,22 @@ public class CreateComputerController {
 
       view.askForCompany();
       long companyInput = (long) scan.nextInt();
-      Optional<Company> company = DaoFactory.getInstance().getCompanyDao().get(companyInput);;
+      Optional<Company> company = DaoFactory.getInstance().getCompanyDao().get(companyInput);
+      ;
       validator.validateCompany(company);
       computer.setCompany(company.get());
-      
+
       scan.close();
     } catch (ValidationException e) {
       LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
     } catch (ParseException e) {
       LoggerFactory.getLogger(this.getClass()).warn("Failed to parse date");
-    }    
+    }
 
     try {
       ComputerService.getInstance().save(computer);
     } catch (Exception e) {
-      LoggerFactory.getLogger(this.getClass()).warn(e.getMessage()); 
+      LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
     }
   }
 

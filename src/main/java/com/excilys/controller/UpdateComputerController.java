@@ -32,7 +32,7 @@ public class UpdateComputerController {
     UpdateComputerView view = UpdateComputerView.getInstance();
     Validator validator = Validator.getInstance();
     Scanner scan = new Scanner(System.in);
-    
+
     view.askForId();
     long id = (long) scan.nextInt();
     Computer computer = ComputerService.getInstance().get(id).get();
@@ -42,12 +42,12 @@ public class UpdateComputerController {
       String nameInput = scan.next();
       validator.validateName(nameInput);
       computer.setName(nameInput);
-      
+
       view.askForNewIntroduced(computer);
       String introducedInput = scan.next();
       validator.validateDate(introducedInput);
       Date introducedDate = new SimpleDateFormat("dd/MM/yyyy").parse(introducedInput);
-      
+
       view.askForNewDiscontinued(computer);
       String discontinuedInput = scan.next();
       validator.validateDate(discontinuedInput);
@@ -58,22 +58,23 @@ public class UpdateComputerController {
 
       view.askForNewCompany(computer);
       long companyInput = (long) scan.nextInt();
-      Optional<Company> company = DaoFactory.getInstance().getCompanyDao().get(companyInput);;
+      Optional<Company> company = DaoFactory.getInstance().getCompanyDao().get(companyInput);
+      ;
       validator.validateCompany(company);
       computer.setCompany(company.get());
-      
-      scan.close();   
-    } catch(ValidationException e) {
+
+      scan.close();
+    } catch (ValidationException e) {
       LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
     } catch (ParseException e) {
       // TODO Auto-generated catch block
       LoggerFactory.getLogger(this.getClass()).warn("Failed to parse date");
     }
-    
+
     try {
       ComputerService.getInstance().save(computer);
     } catch (Exception e) {
-      LoggerFactory.getLogger(this.getClass()).warn(e.getMessage()); 
+      LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
     }
   }
 

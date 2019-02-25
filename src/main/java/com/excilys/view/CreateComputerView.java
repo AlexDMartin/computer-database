@@ -1,6 +1,5 @@
 package com.excilys.view;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class CreateComputerView.
  */

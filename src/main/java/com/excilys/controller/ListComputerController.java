@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.slf4j.LoggerFactory;
 
-import com.excilys.dao.DaoFactory;
 import com.excilys.dao.model.Computer;
+import com.excilys.service.ComputerService;
 import com.excilys.view.ListComputerView;
 
 // TODO: Auto-generated Javadoc
@@ -22,7 +22,7 @@ public class ListComputerController {
    */
   private ListComputerController() {
     LoggerFactory.getLogger(this.getClass()).info("Listing Computers");
-    List<Computer> computerList = DaoFactory.getInstance().getComputerDao().getAll();
+    List<Computer> computerList = ComputerService.getInstance().getAll();
     ListComputerView.getInstance().render(computerList);
   }
 
