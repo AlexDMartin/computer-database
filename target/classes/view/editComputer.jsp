@@ -24,8 +24,8 @@
                     </div>
                     <h1>Edit Computer</h1>
 
-                    <form action="editComputer" method="POST">
-                        <input type="hidden" value="${computer.getId()}" id="id"/> <!-- TODO: Change this value with the computer id -->
+                    <form action="Edit" method="POST">
+                        <input type="hidden" value="${computer.getId()}" id="id" name="id"/> <!-- TODO: Change this value with the computer id -->
                         <fieldset>
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>
@@ -41,7 +41,7 @@
                             </div>
 							<div class="form-group">
 								<label for="companyId">Company</label> 
-								<select class="form-control" id="companyId">
+								<select class="form-control" id="companyId" name="companyId">
 									<c:forEach var="company" items="${companyList}" varStatus="i">
 										<option <c:if test = "${computer.getCompany().getId() == company.getId()}">selected=selected</c:if> value="${company.getId()}">${company.getName()}</option>
 									</c:forEach>
@@ -51,7 +51,7 @@
                         <div class="actions pull-right">
                             <input type="submit" value="Edit" class="btn btn-primary">
                             or
-                            <a href="dashboard" class="btn btn-default">Cancel</a>
+                            <a href="Dashboard" class="btn btn-default">Cancel</a>
                         </div>
                     </form>
                 </div>

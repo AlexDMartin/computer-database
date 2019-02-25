@@ -82,9 +82,30 @@ public class Validator {
   public boolean validateDate(String dateString) throws ValidationException {
     Pattern p = Pattern.compile("^([0-2][0-9]|(3)[0-1])(\\/)(((0)[0-9])|((1)[0-2]))(\\/)\\d{4}$");
     Matcher m = p.matcher(dateString);
+    if(!m.matches()) {  
+      throw new ValidationException("The date entered is not valid");
+    }
+    return true;
+  }
+
+  public boolean validateReversedDate(String dateString) throws ValidationException {
+    Pattern p = Pattern.compile("^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])$");
+    Matcher m = p.matcher(dateString);
     if(!m.matches()) {
       throw new ValidationException("The date entered is not valid");
     }
     return true;
+  }
+
+  public boolean validateId(String id) throws ValidationException {
+    if(id == null) {
+      throw new ValidationException("The id is null");
+    }
+    Pattern p = Pattern.compile("^-?\\d+$");
+    Matcher m = p.matcher(id);
+    if(!m.matches()) {
+      throw new ValidationException("The id entered is not valid");
+    }
+    return true;  
   }
 }

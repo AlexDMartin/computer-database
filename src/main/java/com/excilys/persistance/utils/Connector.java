@@ -7,7 +7,6 @@ import java.util.Properties;
 
 import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Connector.
  */
@@ -55,12 +54,8 @@ public class Connector {
       Properties connectionProps = new Properties();
       connectionProps.put("user", this.userName);
       connectionProps.put("password", this.password);
-      LoggerFactory.getLogger(this.getClass()).warn("connection: "+ conn);
       conn = DriverManager.getConnection("jdbc:" + this.dbms + "://" + this.serverName + ":"
           + this.portNumber + "/" + this.databaseName, connectionProps);
-      LoggerFactory.getLogger(this.getClass()).warn("connection: "+ conn);
-      LoggerFactory.getLogger(this.getClass()).info(
-          "[CONNECTED] jdbc:" + this.dbms + "://" + this.serverName + ":" + this.portNumber + "/");
 
       this.connection = conn;
     } catch (SQLException e) {
@@ -86,7 +81,6 @@ public class Connector {
    * @return the connection
    */
   public Connection getConnection() {
-    LoggerFactory.getLogger(this.getClass()).warn("Connection is " + this.connection);
     return this.connection;
   }
 

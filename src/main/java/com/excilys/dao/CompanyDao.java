@@ -59,7 +59,7 @@ public class CompanyDao implements Dao<Company> {
    */
   @Override
   public Optional<Company> get(long id) {
-    LoggerFactory.getLogger(this.getClass()).info("CompanyDao 'get' called");
+//    LoggerFactory.getLogger(this.getClass()).info("CompanyDao 'get' called");
     Company resultItem = null;
 
     try {

@@ -44,7 +44,6 @@ public class CompanyMapper implements Mapper<Company> {
    */
   @Override
   public List<Company> map(ResultSet rs) {
-    LoggerFactory.getLogger(this.getClass()).info("Company mapping triggered");
     if (rs == null) {
       return null;
     }
