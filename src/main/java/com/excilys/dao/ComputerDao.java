@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import org.slf4j.LoggerFactory;
 
+import com.excilys.controller.PaginationController;
 import com.excilys.dao.mappers.ComputerMapper;
 import com.excilys.dao.model.Computer;
 import com.excilys.persistance.utils.Connector;
@@ -25,8 +26,11 @@ public class ComputerDao implements Dao<Computer> {
   static final String GET_ONE = "SELECT ID, NAME, INTRODUCED, DISCONTINUED, COMPANY_ID FROM computer WHERE ID = ? LIMIT 1";
 
   /** The Constant GET_ALL. */
-  static final String GET_ALL = "SELECT ID, NAME, INTRODUCED, DISCONTINUED, COMPANY_ID  FROM computer ORDER BY ID";
+  static final String GET_ALL = "SELECT ID, NAME, INTRODUCED, DISCONTINUED, COMPANY_ID FROM computer ORDER BY ID";
 
+  /** The Constant GET_PAGINATED. */
+  static final String GET_PAGINATED = "SELECT ID, NAME, INTRODUCED, DISCONTINUED, COMPANY_ID FROM computer ORDER BY ID LIMIT ? OFFSET ?";
+  
   /** The Constant SAVE. */
   static final String SAVE = "INSERT INTO computer (NAME, INTRODUCED, DISCONTINUED, COMPANY_ID) VALUES (?,?,?,?)";
 
@@ -91,6 +95,29 @@ public class ComputerDao implements Dao<Computer> {
       PreparedStatement getAllStatement = Connector.getInstance().getConnection()
           .prepareStatement(GET_ALL);
       ResultSet rs = getAllStatement.executeQuery();
+      resultItems = ComputerMapper.getInstance().map(rs);
+    } catch (SQLException e) {
+      LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
+    }
+
+    return resultItems;
+  }
+  
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.excilys.dao.Dao#getAll()
+   */
+  public List<Computer> getAllPaginated(PaginationController paginationController) {
+    LoggerFactory.getLogger(this.getClass()).info("ComputerDao 'getAllPaginated' called");
+    List<Computer> resultItems = null;
+
+    try {
+      PreparedStatement getAllPaginatedStatement = Connector.getInstance().getConnection()
+          .prepareStatement(GET_PAGINATED);
+      getAllPaginatedStatement.setInt(1, paginationController.getLimit());
+      getAllPaginatedStatement.setInt(2, paginationController.getOffset());
+      ResultSet rs = getAllPaginatedStatement.executeQuery();
       resultItems = ComputerMapper.getInstance().map(rs);
     } catch (SQLException e) {
       LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());

@@ -84,22 +84,22 @@
 	<footer class="navbar-fixed-bottom">
 		<div class="container text-center">
 			<ul class="pagination">
-				<li><a href="#" aria-label="Previous"> <span
+				<li><a href="Dashboard?page=${page-1}&lpp=${lpp}" aria-label="Previous"> <span
 						aria-hidden="true">&laquo;</span>
 				</a></li>
-				<li><a href="#">1</a></li>
-				<li><a href="#">2</a></li>
-				<li><a href="#">3</a></li>
-				<li><a href="#">4</a></li>
-				<li><a href="#">5</a></li>
-				<li><a href="#" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+				<li><a href="Dashboard?page=${page}&lpp=${lpp}">${page}</a></li>
+				<li><a href="Dashboard?page=${page+1}&lpp=${lpp}">${page+1}</a></li>
+				<li><a href="Dashboard?page=${page+2}&lpp=${lpp}">${page+2}</a></li>
+				<li><a href="Dashboard?page=${page+3}&lpp=${lpp}">${page+3}</a></li>
+				<li><a href="Dashboard?page=${page+4}&lpp=${lpp}">${page+4}</a></li>
+				<li><a href="Dashboard?page=${page+1}&lpp=${lpp}" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 				</a></li>
 			</ul>
 
 			<div class="btn-group btn-group-sm pull-right" role="group">
-				<button type="button" class="btn btn-default">10</button>
-				<button type="button" class="btn btn-default">50</button>
-				<button type="button" class="btn btn-default">100</button>
+				<a href="Dashboard?page=${page}&lpp=10"><button type="button" class="btn btn-default">10</button></a>
+				<a href="Dashboard?page=${page}&lpp=50"><button type="button" class="btn btn-default">50</button></a>
+				<a href="Dashboard?page=${page}&lpp=100"><button type="button" class="btn btn-default">100</button></a>
 			</div>
 		</div>
 	</footer>

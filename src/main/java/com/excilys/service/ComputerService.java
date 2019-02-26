@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.slf4j.LoggerFactory;
 
+import com.excilys.controller.PaginationController;
 import com.excilys.dao.DaoFactory;
 import com.excilys.dao.model.Computer;
 
@@ -52,6 +53,15 @@ public class ComputerService implements CallableService<Computer> {
   @Override
   public List<Computer> getAll() {
     return DaoFactory.getInstance().getComputerDao().getAll();
+  }
+  
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.excilys.service.CallableService#getAll()
+   */
+  public List<Computer> getAllPaginated(PaginationController paginationController) {
+    return DaoFactory.getInstance().getComputerDao().getAllPaginated(paginationController);
   }
 
   /*
