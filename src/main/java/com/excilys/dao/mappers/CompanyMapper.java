@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 
 import com.excilys.dao.model.Company;
 import com.excilys.dao.model.CompanyBuilder;
+import com.excilys.dto.CompanyDTO;
+import com.excilys.dto.CompanyDTOBuilder;
+import com.excilys.dto.DTO;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -64,6 +67,23 @@ public class CompanyMapper implements Mapper<Company> {
     }
     return result;
   }
-  
-  
+
+  @Override
+  public DTO entityToDTO(Company company) {
+    CompanyDTOBuilder companyDTOBuilder = new CompanyDTOBuilder();
+    return companyDTOBuilder
+        .addId(Integer.toString(company.getId()))
+        .addName(company.getName())
+        .build();
+  }
+
+  @Override
+  public Company DTOToEntity(DTO dto) {
+    CompanyDTO companyDTO = (CompanyDTO) dto;
+    CompanyBuilder builder = new CompanyBuilder();
+    return builder
+        .addId(Integer.parseInt(companyDTO.getId()))
+        .addName(companyDTO.getName())
+        .build();
+  }
 }

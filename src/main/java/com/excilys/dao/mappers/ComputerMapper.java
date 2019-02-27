@@ -9,8 +9,12 @@ import org.slf4j.LoggerFactory;
 
 import com.excilys.dao.DaoFactory;
 import com.excilys.dao.model.Company;
+import com.excilys.dao.model.CompanyBuilder;
 import com.excilys.dao.model.Computer;
 import com.excilys.dao.model.ComputerBuilder;
+import com.excilys.dto.ComputerDTO;
+import com.excilys.dto.ComputerDTOBuilder;
+import com.excilys.dto.DTO;
 
 /**
  * The Class ComputerMapper.
@@ -77,6 +81,39 @@ public class ComputerMapper implements Mapper<Computer> {
     }
 
     return list;
+  }
+
+  @Override
+  public DTO entityToDTO(Computer computer) {
+    ComputerDTOBuilder computerDTOBuilder = new ComputerDTOBuilder();
+    return computerDTOBuilder
+        .addId(Integer.toString(computer.getId()))
+        .addName(computer.getName())
+        .addIntroduced(computer.getIntroduced().toString())
+        .addDiscontinued(computer.getDiscontinued().toString())
+        .addCompanyId(Integer.toString(computer.getCompany().getId()))
+        .addCompanyName(computer.getCompany().getName())
+        .build();
+  }
+
+  @Override
+  public Computer DTOToEntity(DTO dto) { 
+    
+    ComputerDTO computerDTO = (ComputerDTO) dto;
+    
+    CompanyBuilder companyBuilder = new CompanyBuilder();
+    Company company = companyBuilder
+        .addId(Integer.parseInt(computerDTO.getCompanyId()))
+        .addName(computerDTO.getCompanyName())
+        .build();
+    ComputerBuilder computerBuilder = new ComputerBuilder();
+    return computerBuilder
+        .addId(Integer.parseInt(computerDTO.getId()))
+        .addName(computerDTO.getName())
+        .addIntroduced(new Date(01,01,1984)) // TODO : Parse
+        .addDiscontinued(new Date(01,01,1985)) // TODO : Parse 
+        .addCompany(company) 
+        .build();
   }
 
 }

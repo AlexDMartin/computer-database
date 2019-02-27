@@ -3,6 +3,8 @@ package com.excilys.dao.mappers;
 import java.sql.ResultSet;
 import java.util.List;
 
+import com.excilys.dto.DTO;
+
 /**
  * The Interface Mapper.
  *
@@ -17,4 +19,8 @@ public interface Mapper<T> {
    * @return the list
    */
   List<T> map(ResultSet rs);
+  
+  DTO entityToDTO(T entity);
+  
+  T DTOToEntity(DTO dto);
 }

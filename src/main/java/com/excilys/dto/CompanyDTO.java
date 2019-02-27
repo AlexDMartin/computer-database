@@ -1,6 +1,6 @@
 package com.excilys.dto;
 
-public class CompanyDTO {
+public class CompanyDTO implements DTO {
  
   private String id;
   private String name;
