@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.LoggerFactory;
 
 import com.excilys.controller.PaginationController;
-import com.excilys.dao.DaoFactory;
 import com.excilys.dao.model.Computer;
 import com.excilys.service.ComputerService;
 

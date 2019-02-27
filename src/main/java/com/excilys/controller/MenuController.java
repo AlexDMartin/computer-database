@@ -4,6 +4,8 @@ import java.util.Scanner;
 
 import org.slf4j.LoggerFactory;
 
+import com.excilys.dao.model.MenuItem;
+
 /**
  * The Class MenuController.
  */
@@ -37,23 +39,24 @@ public class MenuController {
     Scanner scan = new Scanner(System.in);
     int input = scan.nextInt();
     LoggerFactory.getLogger(this.getClass()).info("User typed : " + input);
-    switch (input) {
-    case 1:
+    MenuItem inputMenuItem = MenuItem.valueOf(input).get();
+    switch (inputMenuItem) {
+    case LIST_COMPUTERS:
       ListComputerController.getInstance();
       break;
-    case 2:
+    case LIST_COMPANIES:
       ListCompanyController.getInstance();
       break;
-    case 3:
+    case SHOW_DETAILS:
       ShowDetailsController.getInstance();
       break;
-    case 4:
+    case CREATE_COMPUTER:
       CreateComputerController.getInstance();
       break;
-    case 5:
+    case UPDATE_COMPUTER:
       UpdateComputerController.getInstance();
       break;
-    case 6:
+    case DELETE_COMPUTER:
       DeleteComputerController.getInstance();
       break;
     default:
