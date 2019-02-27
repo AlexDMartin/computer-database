@@ -25,7 +25,12 @@ public class Computer {
   /**
    * Instantiates a new computer.
    */
-  public Computer() {
+  public Computer(int id, String name, Date introduced, Date discontinued, Company company) {
+    this.id = id;
+    this.name = name;
+    this.introduced = introduced;
+    this.discontinued = discontinued;
+    this.company = company;
   }
 
   /**

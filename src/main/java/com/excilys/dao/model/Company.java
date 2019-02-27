@@ -12,11 +12,15 @@ public class Company {
   private String name;
 
   /**
-   * Instantiates a new company.
+   * Controller.
+   * @param id
+   * @param name
    */
-  public Company() {
+  public Company(int id, String name) {
+    this.id = id;
+    this.name = name;
   }
-
+  
   /**
    * Gets the id.
    *
