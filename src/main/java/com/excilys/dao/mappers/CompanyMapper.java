@@ -64,4 +64,6 @@ public class CompanyMapper implements Mapper<Company> {
     }
     return result;
   }
+  
+  
 }
