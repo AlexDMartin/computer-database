@@ -4,7 +4,10 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.LoggerFactory;
+
 import com.excilys.dao.model.Company;
+import com.excilys.dao.model.CompanyBuilder;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -47,13 +50,17 @@ public class CompanyMapper implements Mapper<Company> {
     List<Company> result = new ArrayList<>();
     try {
       while (rs.next()) {
-        Company resultItem = new Company();
-        resultItem.setId(rs.getInt("ID"));
-        resultItem.setName(rs.getString("NAME"));
-        result.add(resultItem);
+        CompanyBuilder cb = new CompanyBuilder();
+        
+        Company company = cb
+            .addId(rs.getInt("ID"))
+            .addName(rs.getString("NAME"))
+            .build();
+        
+        result.add(company);
       }
     } catch (Exception e) {
-      System.out.println(e.getMessage());
+     LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
     }
     return result;
   }

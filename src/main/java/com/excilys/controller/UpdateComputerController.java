@@ -59,7 +59,7 @@ public class UpdateComputerController {
       view.askForNewCompany(computer);
       long companyInput = (long) scan.nextInt();
       Optional<Company> company = DaoFactory.getInstance().getCompanyDao().get(companyInput);
-      ;
+      
       validator.validateCompany(company);
       computer.setCompany(company.get());
 
@@ -67,7 +67,6 @@ public class UpdateComputerController {
     } catch (ValidationException e) {
       LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
     } catch (ParseException e) {
-      // TODO Auto-generated catch block
       LoggerFactory.getLogger(this.getClass()).warn("Failed to parse date");
     }
 

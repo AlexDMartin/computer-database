@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.excilys.dao.model.Company;
 import com.excilys.dao.model.Computer;
+import com.excilys.dao.model.ComputerBuilder;
 import com.excilys.service.CompanyService;
 import com.excilys.service.ComputerService;
 import com.excilys.validator.Validator;
@@ -25,6 +26,11 @@ import com.excilys.validator.Validator;
  */
 @WebServlet(name = "Add", urlPatterns = { "/Add" })
 public class AddComputer extends HttpServlet {
+
+  /**
+   * SerialVersionUID.
+   */
+  private static final long serialVersionUID = 86529706591354229L;
 
   /**
    * @see HttpServlet#HttpServlet()
@@ -57,22 +63,23 @@ public class AddComputer extends HttpServlet {
       throws ServletException, IOException {
 
     Validator validator = Validator.getInstance();
-    Computer computer = new Computer();
+    ComputerBuilder cb = new ComputerBuilder();
+    Computer computer = null;
     try {
-      validator.validateName(request.getParameter("computerName"));
-      computer.setName(request.getParameter("computerName"));
-
-      validator.validateReversedDate(request.getParameter("introduced"));
-      computer.setIntroduced(
-          new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("introduced")));
-
-      validator.validateReversedDate(request.getParameter("discontinued"));
-      computer.setDiscontinued(
-          new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("discontinued")));
-
+      
       long companyId = Long.parseLong(request.getParameter("companyId"));
       Company company = CompanyService.getInstance().get(companyId).get();
-      computer.setCompany(company);
+    
+      validator.validateName(request.getParameter("computerName"));
+      validator.validateReversedDate(request.getParameter("introduced"));
+      validator.validateReversedDate(request.getParameter("discontinued"));
+
+      computer = cb
+          .addName(request.getParameter("computerName"))
+          .addIntroduced(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("introduced")))
+          .addDiscontinued(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("discontinued")))
+          .addCompany(company)
+          .build();      
     } catch (ValidationException e) {
       LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
       request.setAttribute("stacktrace", e.getMessage());
@@ -84,7 +91,9 @@ public class AddComputer extends HttpServlet {
     }
 
     try {
-      ComputerService.getInstance().save(computer);
+      if(computer != null) {        
+        ComputerService.getInstance().save(computer);
+      }
     } catch (Exception e) {
       LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
       request.setAttribute("stacktrace", e.getMessage());

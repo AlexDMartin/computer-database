@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.excilys.dao.DaoFactory;
 import com.excilys.dao.model.Company;
 import com.excilys.dao.model.Computer;
+import com.excilys.dao.model.ComputerBuilder;
 
 /**
  * The Class ComputerMapper.
@@ -58,15 +59,18 @@ public class ComputerMapper implements Mapper<Computer> {
         if (companyId != 0) {
           company = DaoFactory.getInstance().getCompanyDao().get(companyId).get();
         }
+        
+        ComputerBuilder cb = new ComputerBuilder();
+        Computer computer = null;
+        computer = cb
+            .addId(id)
+            .addName(name)
+            .addIntroduced(introduced)
+            .addDiscontinued(discontinued)
+            .addCompany(company)
+            .build();
 
-        Computer computerItem = new Computer();
-        computerItem.setId(id);
-        computerItem.setName(name);
-        computerItem.setIntroduced(introduced);
-        computerItem.setDiscontinued(discontinued);
-        computerItem.setCompany(company);
-
-        list.add(computerItem);
+        list.add(computer);
       }
     } catch (Exception e) {
       LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
