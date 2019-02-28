@@ -30,12 +30,7 @@ public class DeleteComputerController {
 
     Computer computer = DaoFactory.getInstance().getComputerDao().get(id).get();
 
-    view.askForConfirmation(computer);
-    String confirmationInput = scan.next();
-
-    if (validator.isYes(confirmationInput)) {
-      ComputerService.getInstance().delete(computer);
-    }
+    ComputerService.getInstance().delete(computer);
 
     scan.close();
   }
