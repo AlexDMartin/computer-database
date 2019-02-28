@@ -1,32 +1,51 @@
 package com.excilys.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.dao.DaoFactory;
+import com.excilys.dao.mappers.CompanyMapper;
 import com.excilys.dao.model.Company;
+import com.excilys.dto.CompanyDTO;
+import com.excilys.service.CompanyService;
 import com.excilys.view.ListCompanyView;
 
 /**
- * The Class ListCompanyController.
+ * Displays the Company list.
  */
 public class ListCompanyController {
 
-  /** The list company controller instance. */
+  /** Singleton implementation of ListCompanyController. */
   private static ListCompanyController listCompanyControllerInstance = null;
-
+  /** Logger */
+  private Logger logger = LoggerFactory.getLogger(this.getClass());
+  /** Company service. */
+  CompanyService companyService = CompanyService.getInstance();
+  /** Mapper. */
+  CompanyMapper companyMapper = CompanyMapper.getInstance();
+  /** View */
+  ListCompanyView view = ListCompanyView.getInstance();
+  
   /**
-   * Instantiates a new list company controller.
+   * Singleton implementation of ListCompanyController.
    */
   private ListCompanyController() {
-    LoggerFactory.getLogger(this.getClass()).info("Listing Companies");
-    List<Company> companyList = DaoFactory.getInstance().getCompanyDao().getAll();
-    ListCompanyView.getInstance().render(companyList);
+    logger.info("List companies");
+    
+    List<Company> companyList = companyService.getAll();
+    List<CompanyDTO> companyDTOList = new ArrayList<CompanyDTO>();
+    
+    for(Company company: companyList) {
+      companyDTOList.add((CompanyDTO) this.companyMapper.entityToDTO(company));
+    }
+    
+    view.render(companyDTOList);
   }
 
   /**
-   * Gets the single instance of ListCompanyController.
+   * Singleton implementation of ListCompanyController.
    *
    * @return single instance of ListCompanyController
    */

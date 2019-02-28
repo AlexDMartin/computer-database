@@ -71,6 +71,7 @@ public class Validator {
    * @throws ValidationException
    */
   public boolean validateDate(String date) throws ValidationException {
+    if(date == null) return true;
     Pattern p = Pattern.compile("^([0-2][0-9]|(3)[0-1])(\\/)(((0)[0-9])|((1)[0-2]))(\\/)\\d{4}$");
     Matcher m = p.matcher(date);
     if (!m.matches()) {
@@ -85,9 +86,10 @@ public class Validator {
    * @return true if the date format matches date
    * @throws ValidationException
    */
-  public boolean validateReversedDate(String dateString) throws ValidationException {
+  public boolean validateReversedDate(String date) throws ValidationException {
+    if(date == null) return true;
     Pattern p = Pattern.compile("^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])$");
-    Matcher m = p.matcher(dateString);
+    Matcher m = p.matcher(date);
     if (!m.matches()) {
       throw new ValidationException("The date entered is not valid");
     }
@@ -113,12 +115,13 @@ public class Validator {
   /**
    * Validate that the company exists when it's called by the DAOs
    * @param company the company
-   * @return true if the company was found in the Optional
+   * @return true 
    */
-  public boolean validateCompany(Optional<Company> company) throws ValidationException {
-    if (!company.isPresent()) {
-      throw new ValidationException("Company doesn\'t exist.");
+  public boolean validateCompany(Company company) throws ValidationException {
+    if(company == null) return true;
+    if(validateId(Integer.toString(company.getId()))&& validateName(company.getName())) {      
+      return true;
     }
-    return true;
+    throw new ValidationException("Company is not valid");
   }
 }

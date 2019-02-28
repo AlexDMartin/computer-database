@@ -2,24 +2,24 @@ package com.excilys.view;
 
 import java.util.List;
 
-import com.excilys.dao.model.Company;
+import com.excilys.dto.CompanyDTO;
 
 /**
- * The Class ListCompanyView.
+ * View used to list all companies.
  */
 public class ListCompanyView {
 
-  /** The list company view instance. */
+  /** Singleton implementation of ListCompanyView. */
   private static ListCompanyView listCompanyViewInstance = null;
 
   /**
-   * Instantiates a new list company view.
+   * Singleton implementation of ListCompanyView.
    */
   private ListCompanyView() {
   }
 
   /**
-   * Gets the single instance of ListCompanyView.
+   * Singleton implementation of ListCompanyView.
    *
    * @return single instance of ListCompanyView
    */
@@ -31,13 +31,13 @@ public class ListCompanyView {
   }
 
   /**
-   * Render.
+   * Displays the view.
    *
-   * @param itemList the item list
+   * @param A list of CompanyDTO
    */
-  public void render(List<Company> itemList) {
-    for (Company item : itemList) {
-      System.out.println(item);
+  public void render(List<CompanyDTO> companyDTOList) {
+    for (CompanyDTO companyDTO : companyDTOList) {
+      System.out.println(companyDTO.getName() + " (" + companyDTO.getId() + ")");
     }
   }
 }

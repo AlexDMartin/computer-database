@@ -1,20 +1,24 @@
 package com.excilys.controller;
 
 import com.excilys.view.CliMainView;
+
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The Class CliRenderer.
+ * Entrypoint for the CLI Application.
  */
 public class CliRenderer {
 
+  private static Logger logger = LoggerFactory.getLogger(CliRenderer.class);
+  
   /**
-   * The main method.
+   * Entrypoint method for the CLI Application.
    *
    * @param args the arguments
    */
   public static void main(String[] args) {
-    LoggerFactory.getLogger(CliRenderer.class).info("Main Started");
+    logger.info("Main Started");
 
     CliMainView.getInstance();
   }

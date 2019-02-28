@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.bind.ValidationException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +21,7 @@ import com.excilys.dao.model.ComputerBuilder;
 import com.excilys.dto.ComputerDTO;
 import com.excilys.dto.ComputerDTOBuilder;
 import com.excilys.dto.DTO;
+import com.excilys.validator.Validator;
 
 /**
  * Contains all method to map different types to Company. 
@@ -49,7 +52,9 @@ public class ComputerMapper implements Mapper<Computer> {
   private Logger logger = LoggerFactory.getLogger(this.getClass()); 
   /** DaoFactory. */
   private DaoFactory daoFactory = DaoFactory.getInstance(); 
-
+  /** Validator. */
+  private Validator validator = Validator.getInstance();
+  
   /**
    * Take a ResulSet and returns a list of Computer,
    * useful to map items directly after a Database call.
@@ -95,13 +100,23 @@ public class ComputerMapper implements Mapper<Computer> {
   @Override
   public DTO entityToDTO(Computer computer) {
     ComputerDTOBuilder computerDTOBuilder = new ComputerDTOBuilder();
+    
+    String formattedIntroduced = (computer.getIntroduced() != null) ? new SimpleDateFormat("yyyy-MM-dd").format(computer.getIntroduced()) : null;
+    String formattedDiscontinued = (computer.getDiscontinued() != null) ? new SimpleDateFormat("yyyy-MM-dd").format(computer.getDiscontinued()) : null;
+    String formattedCompanyId = null;
+    String formattedCompanyName = null;
+    if(computer.getCompany() != null) {
+      formattedCompanyId = (new Integer(computer.getCompany().getId()) != null) ? Integer.toString(computer.getCompany().getId()): null;
+      formattedCompanyName = computer.getCompany().getName();
+    }
+    
     return computerDTOBuilder
         .addId(Integer.toString(computer.getId()))
         .addName(computer.getName())
-        .addIntroduced(computer.getIntroduced().toString())
-        .addDiscontinued(computer.getDiscontinued().toString())
-        .addCompanyId(Integer.toString(computer.getCompany().getId()))
-        .addCompanyName(computer.getCompany().getName())
+        .addIntroduced(formattedIntroduced)
+        .addDiscontinued(formattedDiscontinued)
+        .addCompanyId(formattedCompanyId)
+        .addCompanyName(formattedCompanyName)
         .build();
   }
 
@@ -116,8 +131,6 @@ public class ComputerMapper implements Mapper<Computer> {
     ComputerDTO computerDTO = (ComputerDTO) dto;
     
     CompanyBuilder companyBuilder = new CompanyBuilder();
-    ComputerBuilder computerBuilder = new ComputerBuilder();
-    
     Company company = companyBuilder
         .addId(Integer.parseInt(computerDTO.getCompanyId()))
         .addName(computerDTO.getCompanyName())
@@ -132,13 +145,27 @@ public class ComputerMapper implements Mapper<Computer> {
       logger.warn(e.getMessage());
     }
     
-    return computerBuilder
+    try {
+      validator.validateId(computerDTO.getId());
+      validator.validateName(computerDTO.getName());
+      validator.validateDate(computerDTO.getIntroduced());
+      validator.validateDate(computerDTO.getDiscontinued());
+      validator.validatePrecedence(parsedIntroduced, parsedDiscontinued);
+      validator.validateCompany(company);
+    } catch (ValidationException e) {
+      logger.warn(e.getMessage());
+    }
+    
+    ComputerBuilder computerBuilder = new ComputerBuilder();
+    Computer computer = computerBuilder
         .addId(Integer.parseInt(computerDTO.getId()))
         .addName(computerDTO.getName())
         .addIntroduced(parsedIntroduced) 
         .addDiscontinued(parsedDiscontinued)
         .addCompany(company) 
         .build();
+    
+    return computer;
   }
 
 }

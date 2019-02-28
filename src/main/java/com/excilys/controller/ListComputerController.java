@@ -1,33 +1,51 @@
 package com.excilys.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.excilys.dao.mappers.ComputerMapper;
 import com.excilys.dao.model.Computer;
+import com.excilys.dto.ComputerDTO;
 import com.excilys.service.ComputerService;
 import com.excilys.view.ListComputerView;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ListComputerController.
+ * Displays the Computer list.
  */
 public class ListComputerController {
 
-  /** The list computer controller instance. */
+  /** Singleton implementation of ListCompanyController. */
   private static ListComputerController listComputerControllerInstance = null;
-
+  /** Logger */
+  private Logger logger = LoggerFactory.getLogger(this.getClass());
+  /** Company service. */
+  ComputerService computerService = ComputerService.getInstance();
+  /** Mapper. */
+  ComputerMapper computerMapper = ComputerMapper.getInstance();
+  /** View */
+  ListComputerView view = ListComputerView.getInstance();
+  
   /**
-   * Instantiates a new list computer controller.
+   * Singleton implementation of ListCompanyController.
    */
   private ListComputerController() {
-    LoggerFactory.getLogger(this.getClass()).info("Listing Computers");
-    List<Computer> computerList = ComputerService.getInstance().getAll();
-    ListComputerView.getInstance().render(computerList);
+    logger.info("List computers");
+    
+    List<Computer> computerList = computerService.getAll();
+    List<ComputerDTO> computerDTOList = new ArrayList<ComputerDTO>();
+    
+    for(Computer computer: computerList) {
+      computerDTOList.add((ComputerDTO) this.computerMapper.entityToDTO(computer));
+    }
+    
+    view.render(computerDTOList);
   }
 
   /**
-   * Gets the single instance of ListComputerController.
+   * Singleton implementation of ListCompanyController.
    *
    * @return single instance of ListComputerController
    */

@@ -19,15 +19,15 @@ import com.excilys.validator.Validator;
 import com.excilys.view.CreateComputerView;
 
 /**
- * The Class CreateComputerController.
+ * Singleton implementation of CreateComputerController.
  */
 public class CreateComputerController {
 
-  /** The create computer controller instance. */
+  /** Singleton implementation of CreateComputerController. */
   private static CreateComputerController createComputerControllerInstance = null;
 
   /**
-   * Instantiates a new creates the computer controller.
+   * CreateComputerController Constructor.
    */
   private CreateComputerController() {
     CreateComputerView view = CreateComputerView.getInstance();
@@ -56,7 +56,7 @@ public class CreateComputerController {
       long companyInput = (long) scan.nextInt();
       Optional<Company> company = DaoFactory.getInstance().getCompanyDao().get(companyInput);
   
-      validator.validateCompany(company);
+      validator.validateCompany(company.get());
       
       computer = cb
       .addName(nameInput)
@@ -82,7 +82,7 @@ public class CreateComputerController {
   }
 
   /**
-   * Gets the single instance of CreateComputerController.
+   * Singleton implementation of CreateComputerController.
    *
    * @return single instance of CreateComputerController
    */

@@ -60,7 +60,7 @@ public class UpdateComputerController {
       long companyInput = (long) scan.nextInt();
       Optional<Company> company = DaoFactory.getInstance().getCompanyDao().get(companyInput);
       
-      validator.validateCompany(company);
+      validator.validateCompany(company.get());
       computer.setCompany(company.get());
 
       scan.close();

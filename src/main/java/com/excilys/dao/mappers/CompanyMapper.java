@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.ValidationException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +15,7 @@ import com.excilys.dao.model.CompanyBuilder;
 import com.excilys.dto.CompanyDTO;
 import com.excilys.dto.CompanyDTOBuilder;
 import com.excilys.dto.DTO;
+import com.excilys.validator.Validator;
 
 /**
  * Contains all method to map different types to Company. 
@@ -41,6 +44,8 @@ public class CompanyMapper implements Mapper<Company> {
   
   /** Logger. */
   private Logger logger = LoggerFactory.getLogger(this.getClass());
+  /** Validator */
+  private Validator validator = Validator.getInstance();
   
   /**
    * Take a ResulSet and returns a list of Company,
@@ -91,6 +96,14 @@ public class CompanyMapper implements Mapper<Company> {
   @Override
   public Company DTOToEntity(DTO dto) {
     CompanyDTO companyDTO = (CompanyDTO) dto;
+    
+    try {
+      validator.validateId(companyDTO.getId());
+      validator.validateName(companyDTO.getName());
+    } catch (ValidationException e) {
+      logger.warn(e.getMessage());
+    }
+    
     CompanyBuilder builder = new CompanyBuilder();
     return builder
         .addId(Integer.parseInt(companyDTO.getId()))
