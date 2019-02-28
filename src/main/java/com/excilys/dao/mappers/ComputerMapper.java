@@ -1,10 +1,14 @@
 package com.excilys.dao.mappers;
 
-import java.sql.Date;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.excilys.dao.DaoFactory;
@@ -17,21 +21,20 @@ import com.excilys.dto.ComputerDTOBuilder;
 import com.excilys.dto.DTO;
 
 /**
- * The Class ComputerMapper.
+ * Contains all method to map different types to Company. 
  */
 public class ComputerMapper implements Mapper<Computer> {
 
-  /** The computer mapper instance. */
+  /** Singleton implementation of ComputerMapper. */
   private static ComputerMapper computerMapperInstance = null;
-
+  
   /**
-   * Instantiates a new computer mapper.
+   * Singleton implementation of ComputerMapper.
    */
-  private ComputerMapper() {
-  }
-
+  private ComputerMapper() {}
+  
   /**
-   * Gets the single instance of ComputerMapper.
+   * Singleton implementation of ComputerMapper.
    *
    * @return single instance of ComputerMapper
    */
@@ -41,11 +44,16 @@ public class ComputerMapper implements Mapper<Computer> {
     }
     return computerMapperInstance;
   }
+  
+  /** Logger. */
+  private Logger logger = LoggerFactory.getLogger(this.getClass()); 
+  /** DaoFactory. */
+  private DaoFactory daoFactory = DaoFactory.getInstance(); 
 
   /**
-   * Map.
-   *
-   * @param rs the rs
+   * Take a ResulSet and returns a list of Computer,
+   * useful to map items directly after a Database call.
+   * @param ResultSet
    * @return List<Computer>
    */
   @Override
@@ -54,35 +62,36 @@ public class ComputerMapper implements Mapper<Computer> {
 
     try {
       while (rs.next()) {
-        int id = rs.getInt("ID");
-        String name = rs.getString("NAME");
-        Date introduced = rs.getDate("INTRODUCED");
-        Date discontinued = rs.getDate("DISCONTINUED");
+        ComputerBuilder cb = new ComputerBuilder();
+        
+        Computer computer = null;
         Company company = null;
-        int companyId = rs.getInt("COMPANY_ID");
-        if (companyId != 0) {
-          company = DaoFactory.getInstance().getCompanyDao().get(companyId).get();
+        if(rs.getInt("COMPANY_ID") > 0) {
+          company = this.daoFactory.getCompanyDao().get(rs.getInt("COMPANY_ID")).get();
         }
         
-        ComputerBuilder cb = new ComputerBuilder();
-        Computer computer = null;
         computer = cb
-            .addId(id)
-            .addName(name)
-            .addIntroduced(introduced)
-            .addDiscontinued(discontinued)
+            .addId(rs.getInt("ID"))
+            .addName(rs.getString("NAME"))
+            .addIntroduced(rs.getDate("INTRODUCED"))
+            .addDiscontinued(rs.getDate("DISCONTINUED"))
             .addCompany(company)
             .build();
 
         list.add(computer);
       }
-    } catch (Exception e) {
-      LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
+    } catch (SQLException e) {
+      logger.warn(e.getMessage());
     }
 
     return list;
   }
 
+  /**
+   * Transforms a Company entity into a CompanyDTO.
+   * @param Company
+   * @return CompanyDTO
+   */
   @Override
   public DTO entityToDTO(Computer computer) {
     ComputerDTOBuilder computerDTOBuilder = new ComputerDTOBuilder();
@@ -96,22 +105,38 @@ public class ComputerMapper implements Mapper<Computer> {
         .build();
   }
 
+  /**
+   * Transforms a CompanyDTO into a Company Entity.
+   * @param CompanyDTO
+   * @return Company
+   */
   @Override
   public Computer DTOToEntity(DTO dto) { 
     
     ComputerDTO computerDTO = (ComputerDTO) dto;
     
     CompanyBuilder companyBuilder = new CompanyBuilder();
+    ComputerBuilder computerBuilder = new ComputerBuilder();
+    
     Company company = companyBuilder
         .addId(Integer.parseInt(computerDTO.getCompanyId()))
         .addName(computerDTO.getCompanyName())
         .build();
-    ComputerBuilder computerBuilder = new ComputerBuilder();
+    
+    Date parsedIntroduced = null;
+    Date parsedDiscontinued = null;
+    try {
+      parsedIntroduced = new SimpleDateFormat("yyyy-MM-dd").parse(computerDTO.getIntroduced());
+      parsedDiscontinued= new SimpleDateFormat("yyyy-MM-dd").parse(computerDTO.getDiscontinued());
+    } catch (ParseException e) {
+      logger.warn(e.getMessage());
+    }
+    
     return computerBuilder
         .addId(Integer.parseInt(computerDTO.getId()))
         .addName(computerDTO.getName())
-        .addIntroduced(new Date(01,01,1984)) // TODO : Parse
-        .addDiscontinued(new Date(01,01,1985)) // TODO : Parse 
+        .addIntroduced(parsedIntroduced) 
+        .addDiscontinued(parsedDiscontinued)
         .addCompany(company) 
         .build();
   }

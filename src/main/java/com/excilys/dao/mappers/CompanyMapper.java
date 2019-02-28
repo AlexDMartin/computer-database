@@ -1,9 +1,11 @@
 package com.excilys.dao.mappers;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.excilys.dao.model.Company;
@@ -12,23 +14,21 @@ import com.excilys.dto.CompanyDTO;
 import com.excilys.dto.CompanyDTOBuilder;
 import com.excilys.dto.DTO;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class CompanyMapper.
+ * Contains all method to map different types to Company. 
  */
 public class CompanyMapper implements Mapper<Company> {
-
-  /** The company mapper instance. */
+  
+  /** Singleton implementation of CompanyMapper. */
   private static CompanyMapper companyMapperInstance = null;
 
   /**
-   * Instantiates a new company mapper.
+   * Singleton implementation of CompanyMapper.
    */
-  private CompanyMapper() {
-  }
-
+  private CompanyMapper() {}
+  
   /**
-   * Gets the single instance of CompanyMapper.
+   * Singleton implementation of CompanyMapper.
    *
    * @return single instance of CompanyMapper
    */
@@ -38,36 +38,42 @@ public class CompanyMapper implements Mapper<Company> {
     }
     return companyMapperInstance;
   }
-
+  
+  /** Logger. */
+  private Logger logger = LoggerFactory.getLogger(this.getClass());
+  
   /**
-   * Map.
-   *
-   * @param rs the rs
+   * Take a ResulSet and returns a list of Company,
+   * useful to map items directly after a Database call.
+   * @param ResultSet
    * @return List<Company>
    */
   @Override
-  public List<Company> map(ResultSet rs) {
-    if (rs == null) {
-      return null;
-    }
+  public List<Company> map(ResultSet resultSet) {
     List<Company> result = new ArrayList<>();
+    
     try {
-      while (rs.next()) {
+      while (resultSet.next()) {
         CompanyBuilder cb = new CompanyBuilder();
         
         Company company = cb
-            .addId(rs.getInt("ID"))
-            .addName(rs.getString("NAME"))
+            .addId(resultSet.getInt("ID"))
+            .addName(resultSet.getString("NAME"))
             .build();
         
         result.add(company);
       }
-    } catch (Exception e) {
-     LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
+    } catch (SQLException e) {
+     logger.warn(e.getMessage());
     }
     return result;
   }
 
+  /**
+   * Transforms a Company entity into a CompanyDTO.
+   * @param Company
+   * @return CompanyDTO
+   */
   @Override
   public DTO entityToDTO(Company company) {
     CompanyDTOBuilder companyDTOBuilder = new CompanyDTOBuilder();
@@ -77,6 +83,11 @@ public class CompanyMapper implements Mapper<Company> {
         .build();
   }
 
+  /**
+   * Transforms a CompanyDTO into a Company Entity.
+   * @param CompanyDTO
+   * @return Company
+   */
   @Override
   public Company DTOToEntity(DTO dto) {
     CompanyDTO companyDTO = (CompanyDTO) dto;
