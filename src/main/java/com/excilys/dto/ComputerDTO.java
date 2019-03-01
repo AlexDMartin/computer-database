@@ -5,16 +5,14 @@ public class ComputerDTO implements DTO{
   private String name;
   private String introduced;
   private String discontinued;
-  private String companyId;
-  private String companyName;
+  private CompanyDTO companyDTO;
   
-  public ComputerDTO(String id, String name, String introduced, String discontinued, String companyId, String companyName) {
+  public ComputerDTO(String id, String name, String introduced, String discontinued, CompanyDTO companyDTO) {
     this.id = id;
     this.name = name;
     this.introduced = introduced;
     this.discontinued = discontinued;
-    this.companyId = companyId;
-    this.companyName = companyName;
+    this.companyDTO = companyDTO;
   }
   
   public String getId() {
@@ -48,19 +46,11 @@ public class ComputerDTO implements DTO{
     this.discontinued = discontinued;
   }
   
-  public String getCompanyId() {
-    return companyId;
+  public CompanyDTO getCompanyDTO() {
+    return companyDTO;
   }
   
-  public void setCompanyId(String companyId) {
-    this.companyId = companyId;
-  }
-  
-  public String getCompanyName() {
-    return companyName;
-  }
-  
-  public void setCompanyname(String companyName) {
-    this.companyName = companyName;
+  public void setCompanyDTO(CompanyDTO companyDTO) {
+    this.companyDTO = companyDTO;
   }
 }

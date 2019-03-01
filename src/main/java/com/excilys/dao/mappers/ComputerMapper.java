@@ -18,6 +18,8 @@ import com.excilys.dao.model.Company;
 import com.excilys.dao.model.CompanyBuilder;
 import com.excilys.dao.model.Computer;
 import com.excilys.dao.model.ComputerBuilder;
+import com.excilys.dto.CompanyDTO;
+import com.excilys.dto.CompanyDTOBuilder;
 import com.excilys.dto.ComputerDTO;
 import com.excilys.dto.ComputerDTOBuilder;
 import com.excilys.dto.DTO;
@@ -103,11 +105,14 @@ public class ComputerMapper implements Mapper<Computer> {
     
     String formattedIntroduced = (computer.getIntroduced() != null) ? new SimpleDateFormat("yyyy-MM-dd").format(computer.getIntroduced()) : null;
     String formattedDiscontinued = (computer.getDiscontinued() != null) ? new SimpleDateFormat("yyyy-MM-dd").format(computer.getDiscontinued()) : null;
-    String formattedCompanyId = null;
-    String formattedCompanyName = null;
+    CompanyDTO companyDTO = null;
     if(computer.getCompany() != null) {
-      formattedCompanyId = (new Integer(computer.getCompany().getId()) != null) ? Integer.toString(computer.getCompany().getId()): null;
-      formattedCompanyName = computer.getCompany().getName();
+      String formattedCompanyId = (new Integer(computer.getCompany().getId()) != null) ? Integer.toString(computer.getCompany().getId()): null;
+      String formattedCompanyName = computer.getCompany().getName();
+      companyDTO = new CompanyDTOBuilder()
+        .addId(formattedCompanyId)
+        .addName(formattedCompanyName)
+        .build();     
     }
     
     return computerDTOBuilder
@@ -115,8 +120,7 @@ public class ComputerMapper implements Mapper<Computer> {
         .addName(computer.getName())
         .addIntroduced(formattedIntroduced)
         .addDiscontinued(formattedDiscontinued)
-        .addCompanyId(formattedCompanyId)
-        .addCompanyName(formattedCompanyName)
+        .addCompanyDTO(companyDTO)
         .build();
   }
 
@@ -132,9 +136,11 @@ public class ComputerMapper implements Mapper<Computer> {
     
     CompanyBuilder companyBuilder = new CompanyBuilder();
     Company company = companyBuilder
-        .addId(Integer.parseInt(computerDTO.getCompanyId()))
-        .addName(computerDTO.getCompanyName())
+        .addId(Integer.parseInt(computerDTO.getCompanyDTO().getId()))
+        .addName(computerDTO.getCompanyDTO().getName())
         .build();
+    
+    Integer formattedId = (computerDTO.getId() != null) ? Integer.parseInt(computerDTO.getId()): null;
     
     Date parsedIntroduced = null;
     Date parsedDiscontinued = null;
@@ -158,7 +164,7 @@ public class ComputerMapper implements Mapper<Computer> {
     
     ComputerBuilder computerBuilder = new ComputerBuilder();
     Computer computer = computerBuilder
-        .addId(Integer.parseInt(computerDTO.getId()))
+        .addId(formattedId)
         .addName(computerDTO.getName())
         .addIntroduced(parsedIntroduced) 
         .addDiscontinued(parsedDiscontinued)

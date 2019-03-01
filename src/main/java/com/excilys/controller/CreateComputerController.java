@@ -8,12 +8,17 @@ import java.util.Scanner;
 
 import javax.xml.bind.ValidationException;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.dao.DaoFactory;
+import com.excilys.dao.mappers.CompanyMapper;
+import com.excilys.dao.mappers.ComputerMapper;
 import com.excilys.dao.model.Company;
 import com.excilys.dao.model.Computer;
-import com.excilys.dao.model.ComputerBuilder;
+import com.excilys.dto.CompanyDTO;
+import com.excilys.dto.ComputerDTO;
+import com.excilys.dto.ComputerDTOBuilder;
+import com.excilys.service.CompanyService;
 import com.excilys.service.ComputerService;
 import com.excilys.validator.Validator;
 import com.excilys.view.CreateComputerView;
@@ -25,45 +30,72 @@ public class CreateComputerController {
 
   /** Singleton implementation of CreateComputerController. */
   private static CreateComputerController createComputerControllerInstance = null;
-
+  /** Computer Mapper. */
+  ComputerMapper computerMapper = ComputerMapper.getInstance();
+  /** Company Mapper. */
+  CompanyMapper companyMapper = CompanyMapper.getInstance();
+  /** View. */
+  CreateComputerView view = CreateComputerView.getInstance();
+  /** Validator. */
+  Validator validator = Validator.getInstance();
+  /** CompanyService. */
+  CompanyService companyService = CompanyService.getInstance();
+  /** Scanner. */
+  Scanner scan = new Scanner(System.in);
+  /** Logger */
+  Logger logger = LoggerFactory.getLogger(this.getClass());
+  
   /**
    * CreateComputerController Constructor.
    */
   private CreateComputerController() {
-    CreateComputerView view = CreateComputerView.getInstance();
-    Validator validator = Validator.getInstance();
-    ComputerBuilder cb = new ComputerBuilder();
-    Scanner scan = new Scanner(System.in);
-    
     Computer computer = null;
+    ComputerDTO computerDTO = null;
     try {
+      ComputerDTOBuilder computerDTOBuilder = new ComputerDTOBuilder();
+            
       view.askForName();
       String nameInput = scan.next();
-      validator.validateName(nameInput);
+      computerDTOBuilder.addName(nameInput);
 
       view.askForIntroduced();
       String introducedInput = scan.next();
-      validator.validateDate(introducedInput);
-      Date introducedDate = new SimpleDateFormat("dd/MM/yyyy").parse(introducedInput);
+      if(introducedInput != null) {        
+        computerDTOBuilder.addIntroduced(introducedInput);
+      }
 
       view.askForDiscontinued();
       String discontinuedInput = scan.next();
-      validator.validateDate(discontinuedInput);
-      Date discontinuedDate = new SimpleDateFormat("dd/MM/yyyy").parse(discontinuedInput);
-      validator.validatePrecedence(introducedDate, discontinuedDate);
+      if(discontinuedInput != null) {        
+        computerDTOBuilder.addDiscontinued(discontinuedInput);
+      }
 
       view.askForCompany();
-      long companyInput = (long) scan.nextInt();
-      Optional<Company> company = DaoFactory.getInstance().getCompanyDao().get(companyInput);
+      long companyInput = (long) scan.nextInt();        
+      Optional<Company> company = companyService.get(companyInput);
+      CompanyDTO companyDTO = null;
+      if(company.isPresent()) {        
+        companyDTO = (CompanyDTO) companyMapper.entityToDTO(company.get());
+        computerDTOBuilder.addCompanyDTO(companyDTO);
+      }
   
+      validator.validateName(nameInput);
+      validator.validateDate(introducedInput);
+      validator.validateDate(discontinuedInput);
       validator.validateCompany(company.get());
       
-      computer = cb
+      Date introducedDate = new SimpleDateFormat("dd/MM/yyyy").parse(introducedInput);
+      Date discontinuedDate = new SimpleDateFormat("dd/MM/yyyy").parse(discontinuedInput);
+      validator.validatePrecedence(introducedDate, discontinuedDate);
+    
+      computerDTO = computerDTOBuilder
       .addName(nameInput)
-      .addIntroduced(introducedDate)
-      .addDiscontinued(discontinuedDate)
-      .addCompany(company.get())
+      .addIntroduced(introducedInput)
+      .addDiscontinued(discontinuedInput)
+      .addCompanyDTO(companyDTO)
       .build();
+      
+      computer = computerMapper.DTOToEntity(computerDTO);
 
       scan.close();
     } catch (ValidationException e) {
@@ -73,11 +105,11 @@ public class CreateComputerController {
     }
 
     try {
-      if(computer != null) {        
+      if(computer != null) {
         ComputerService.getInstance().save(computer);
       }
     } catch (Exception e) {
-      LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
+      logger.warn(e.getMessage());
     }
   }
 

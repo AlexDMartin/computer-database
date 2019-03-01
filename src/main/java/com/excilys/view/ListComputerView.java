@@ -5,7 +5,7 @@ import java.util.List;
 import com.excilys.dto.ComputerDTO;
 
 /**
- * The Class ListComputerView.
+ * View used to list all computers
  */
 public class ListComputerView {
 
@@ -49,14 +49,10 @@ public class ListComputerView {
         line.append(", discontinued " + computerDTO.getDiscontinued());    
       }
      
-      if(computerDTO.getCompanyName() != null) {
-        line.append(", by company " + computerDTO.getCompanyName());
+      if(computerDTO.getCompanyDTO() != null) {
+        line.append(", by company " + computerDTO.getCompanyDTO().getName() + " (" + computerDTO.getCompanyDTO().getId() + ")");
       }
-      
-      if(computerDTO.getCompanyId() != null) {
-        line.append(" (" + computerDTO.getCompanyId() + ")");
-      }
-      
+     
       System.out.println(line.toString());
     }
   }

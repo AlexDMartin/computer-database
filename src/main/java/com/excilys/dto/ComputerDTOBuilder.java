@@ -6,11 +6,10 @@ public class ComputerDTOBuilder {
   private String name;
   private String introduced;
   private String discontinued;
-  private String companyId;
-  private String companyName;
+  private CompanyDTO companyDTO;
     
  public ComputerDTO build() {
-   return new ComputerDTO(this.id, this.name, this.introduced, this.discontinued, this.companyId, this.companyName);
+   return new ComputerDTO(this.id, this.name, this.introduced, this.discontinued, this.companyDTO);
  }
  
  public ComputerDTOBuilder addId(String id) {
@@ -33,13 +32,8 @@ public class ComputerDTOBuilder {
    return this;
  }
  
- public ComputerDTOBuilder addCompanyId(String companyId) {
-   this.companyId = companyId;
-   return this;
- }
- 
- public ComputerDTOBuilder addCompanyName(String companyName) {
-   this.companyName = companyName;
+ public ComputerDTOBuilder addCompanyDTO(CompanyDTO companyDTO) {
+   this.companyDTO = companyDTO;
    return this;
  }
 }
