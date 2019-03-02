@@ -136,7 +136,6 @@ public class ComputerMapper implements Mapper<Computer> {
     ComputerBuilder computerBuilder = new ComputerBuilder();
      
     try {
-        
     	validator.validateId(computerDTO.getId());
         if(computerDTO.getId() != null) {
         	computerBuilder.addId(Integer.parseInt(computerDTO.getId()));

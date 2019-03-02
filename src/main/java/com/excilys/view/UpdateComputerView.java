@@ -1,6 +1,7 @@
 package com.excilys.view;
 
 import com.excilys.dao.model.Computer;
+import com.excilys.dto.CompanyDTO;
 
 /**
  * The Class UpdateComputerView.
@@ -40,8 +41,8 @@ public class UpdateComputerView {
    *
    * @param computer the computer
    */
-  public void askForNewName(Computer computer) {
-    System.out.println("Enter new name (" + computer.getName() + "): ");
+  public void askForNewName(String name) {
+    System.out.println("Enter new name (" + name + "): ");
   }
 
   /**
@@ -49,8 +50,8 @@ public class UpdateComputerView {
    *
    * @param computer the computer
    */
-  public void askForNewIntroduced(Computer computer) {
-    System.out.println("Enter new introduced date (" + computer.getIntroduced() + "): ");
+  public void askForNewIntroduced(String introduced) {
+    System.out.println("Enter new introduced date (" + introduced + "): ");
   }
 
   /**
@@ -58,8 +59,8 @@ public class UpdateComputerView {
    *
    * @param computer the computer
    */
-  public void askForNewDiscontinued(Computer computer) {
-    System.out.println("Enter new discontinued date (" + computer.getDiscontinued() + "): ");
+  public void askForNewDiscontinued(String discontinued) {
+    System.out.println("Enter new discontinued date (" + discontinued + "): ");
   }
 
   /**
@@ -67,7 +68,7 @@ public class UpdateComputerView {
    *
    * @param computer the computer
    */
-  public void askForNewCompany(Computer computer) {
-    System.out.println("Enter new company id (" + computer.getCompany() + "): ");
+  public void askForNewCompany(CompanyDTO companyDTO) {
+    System.out.println("Enter new company id (" + companyDTO.getId() + "): ");
   }
 }
