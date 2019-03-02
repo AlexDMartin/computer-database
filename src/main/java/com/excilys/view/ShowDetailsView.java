@@ -1,8 +1,6 @@
 package com.excilys.view;
 
-import java.util.Optional;
-
-import com.excilys.dao.model.Computer;
+import com.excilys.dto.ComputerDTO;
 
 /**
  * The Class ShowDetailsView.
@@ -34,7 +32,7 @@ public class ShowDetailsView {
    * Ask for id.
    */
   public void askForId() {
-    System.out.println("Enter the id of the computer you want to display");
+    System.out.println("Enter the id of the computer you want to display :");
   }
 
   /**
@@ -42,7 +40,23 @@ public class ShowDetailsView {
    *
    * @param computer the computer
    */
-  public void displayComputer(Optional<Computer> computer) {
-    System.out.println(computer.get());
+  public void displayComputer(ComputerDTO computerDTO) {
+    StringBuilder line = new StringBuilder();
+    
+    line.append(computerDTO.getName() + " (" + computerDTO.getId() + ") ");
+    
+    if(computerDTO.getIntroduced() != null) {
+      line.append(", introduced " + computerDTO.getIntroduced());
+    }
+    
+    if(computerDTO.getDiscontinued() != null) {        
+      line.append(", discontinued " + computerDTO.getDiscontinued());    
+    }
+   
+    if(computerDTO.getCompanyDTO() != null) {
+      line.append(", by company " + computerDTO.getCompanyDTO().getName() + " (" + computerDTO.getCompanyDTO().getId() + ")");
+    }
+	  
+	System.out.println(line);
   }
 }

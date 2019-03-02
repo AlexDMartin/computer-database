@@ -17,7 +17,6 @@ import com.excilys.dao.model.Company;
 import com.excilys.dao.model.Computer;
 import com.excilys.dto.CompanyDTO;
 import com.excilys.dto.ComputerDTO;
-import com.excilys.dto.ComputerDTOBuilder;
 import com.excilys.service.CompanyService;
 import com.excilys.service.ComputerService;
 import com.excilys.validator.Validator;
