@@ -1,10 +1,8 @@
 package com.excilys.controller;
 
-import java.util.Scanner;
-
-import org.slf4j.LoggerFactory;
-
 import com.excilys.dao.model.MenuItem;
+import java.util.Scanner;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class MenuController.
@@ -17,8 +15,7 @@ public class MenuController {
   /**
    * Instantiates a new menu controller.
    */
-  private MenuController() {
-  }
+  private MenuController() {}
 
   /**
    * Gets the single instance of MenuController.
@@ -41,26 +38,26 @@ public class MenuController {
     LoggerFactory.getLogger(this.getClass()).info("User typed : " + input);
     MenuItem inputMenuItem = MenuItem.valueOf(input).get();
     switch (inputMenuItem) {
-    case LIST_COMPUTERS:
-      ListComputerController.getInstance();
-      break;
-    case LIST_COMPANIES:
-      ListCompanyController.getInstance();
-      break;
-    case SHOW_DETAILS:
-      ShowDetailsController.getInstance();
-      break;
-    case CREATE_COMPUTER:
-      CreateComputerController.getInstance();
-      break;
-    case UPDATE_COMPUTER:
-      UpdateComputerController.getInstance();
-      break;
-    case DELETE_COMPUTER:
-      DeleteComputerController.getInstance();
-      break;
-    default:
-      break;
+      case LIST_COMPUTERS:
+        ListComputerController.getInstance();
+        break;
+      case LIST_COMPANIES:
+        ListCompanyController.getInstance();
+        break;
+      case SHOW_DETAILS:
+        ShowDetailsController.getInstance();
+        break;
+      case CREATE_COMPUTER:
+        CreateComputerController.getInstance();
+        break;
+      case UPDATE_COMPUTER:
+        UpdateComputerController.getInstance();
+        break;
+      case DELETE_COMPUTER:
+        DeleteComputerController.getInstance();
+        break;
+      default:
+        break;
     }
     scan.close();
   }

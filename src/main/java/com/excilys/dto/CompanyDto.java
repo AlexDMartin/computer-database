@@ -1,15 +1,15 @@
 package com.excilys.dto;
 
-public class CompanyDTO implements DTO {
- 
+public class CompanyDto implements Dto {
+
   private String id;
   private String name;
-  
-  public CompanyDTO(String id, String name) {
+
+  public CompanyDto(String id, String name) {
     this.id = id;
     this.name = name;
   }
- 
+
   public String getId() {
     return id;
   }
@@ -24,5 +24,5 @@ public class CompanyDTO implements DTO {
 
   public void setName(String name) {
     this.name = name;
-  }  
+  }
 }

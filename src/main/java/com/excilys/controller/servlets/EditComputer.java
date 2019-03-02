@@ -1,20 +1,5 @@
 package com.excilys.controller.servlets;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Optional;
-
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.ValidationException;
-
-import org.slf4j.LoggerFactory;
-
 import com.excilys.dao.DaoFactory;
 import com.excilys.dao.model.Company;
 import com.excilys.dao.model.Computer;
@@ -22,11 +7,23 @@ import com.excilys.dao.model.ComputerBuilder;
 import com.excilys.service.CompanyService;
 import com.excilys.service.ComputerService;
 import com.excilys.validator.Validator;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Optional;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.ValidationException;
+import org.slf4j.LoggerFactory;
 
 /**
- * Servlet implementation class EditComputer
+ * Servlet implementation class EditComputer.
  */
-@WebServlet(name = "Edit", urlPatterns = { "/Edit" })
+@WebServlet(name = "Edit", urlPatterns = {"/Edit"})
 public class EditComputer extends HttpServlet {
 
   /**
@@ -35,6 +32,7 @@ public class EditComputer extends HttpServlet {
   private static final long serialVersionUID = 9089945397283880630L;
 
   /**
+   * Servlet used to edit computers.
    * @see HttpServlet#HttpServlet()
    */
   public EditComputer() {
@@ -42,6 +40,7 @@ public class EditComputer extends HttpServlet {
   }
 
   /**
+   * This doGet methods returns information to prefill the edition form.
    * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
    */
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -62,6 +61,7 @@ public class EditComputer extends HttpServlet {
   }
 
   /**
+   * This doPost method verify data sent by the user and tries to update the database.
    * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
    */
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -74,18 +74,18 @@ public class EditComputer extends HttpServlet {
       validator.validateName(request.getParameter("computerName"));
       validator.validateDate(request.getParameter("introduced"));
       validator.validateDate(request.getParameter("discontinued"));
-      
+
       long companyId = Long.parseLong(request.getParameter("companyId"));
       Company company = DaoFactory.getInstance().getCompanyDao().get(companyId).get();
-        
-      computer = cb
-          .addId(Integer.parseInt(request.getParameter("id")))
+
+      computer = cb.addId(Integer.parseInt(request.getParameter("id")))
           .addName(request.getParameter("computerName"))
-          .addIntroduced(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("introduced")))
-          .addDiscontinued(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("discontinued")))
-          .addCompany(company)
-          .build();
-        
+          .addIntroduced(
+              new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("introduced")))
+          .addDiscontinued(
+              new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("discontinued")))
+          .addCompany(company).build();
+
     } catch (ValidationException e) {
       LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
       request.setAttribute("stacktrace", e.getMessage());
@@ -97,7 +97,7 @@ public class EditComputer extends HttpServlet {
     }
 
     try {
-      if(computer != null) {        
+      if (computer != null) {
         ComputerService.getInstance().update(computer);
       }
     } catch (Exception e) {

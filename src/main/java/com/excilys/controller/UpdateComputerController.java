@@ -1,26 +1,23 @@
 package com.excilys.controller;
 
+import com.excilys.dao.mappers.CompanyMapper;
+import com.excilys.dao.mappers.ComputerMapper;
+import com.excilys.dao.model.Company;
+import com.excilys.dao.model.Computer;
+import com.excilys.dto.CompanyDto;
+import com.excilys.dto.ComputerDto;
+import com.excilys.service.CompanyService;
+import com.excilys.service.ComputerService;
+import com.excilys.validator.Validator;
+import com.excilys.view.UpdateComputerView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Scanner;
-
 import javax.xml.bind.ValidationException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.excilys.dao.mappers.CompanyMapper;
-import com.excilys.dao.mappers.ComputerMapper;
-import com.excilys.dao.model.Company;
-import com.excilys.dao.model.Computer;
-import com.excilys.dto.CompanyDTO;
-import com.excilys.dto.ComputerDTO;
-import com.excilys.service.CompanyService;
-import com.excilys.service.ComputerService;
-import com.excilys.validator.Validator;
-import com.excilys.view.UpdateComputerView;
 
 /**
  * Singleton implementation of UpdateComputerController.
@@ -43,76 +40,76 @@ public class UpdateComputerController {
   CompanyService companyService = CompanyService.getInstance();
   /** Scanner. */
   Scanner scan = new Scanner(System.in);
-  /** Logger */
+  /** Logger. */
   Logger logger = LoggerFactory.getLogger(this.getClass());
 
   /**
    * Singleton implementation of UpdateComputerController.
    */
   private UpdateComputerController() {
-	  	ComputerDTO computerDTO = null;
-	  	Computer computer = null;
-	  	
-	  	view.askForId();
-	    int id = scan.nextInt();
-	    computer = computerService.get(id).get();
-	    
-	    if(computer != null) {
-	    	computerDTO = (ComputerDTO) computerMapper.entityToDTO(computer);
-	    	try {
-	    		computerDTO.setId(computerDTO.getId());
-	    		
-	    		view.askForNewName(computerDTO.getName());
-	    		String nameInput = scan.next();
-	    		validator.validateName(nameInput);
-	    		computerDTO.setName(nameInput);
-	    		
-	    		view.askForNewIntroduced(computerDTO.getIntroduced());
-	    		String introducedInput = scan.next();
-	    		validator.validateDate(introducedInput);
-	    		Date introducedDate = null;
-	    		if(introducedInput != null) {        
-	    			computerDTO.setIntroduced(introducedInput);
-	    			introducedDate = new SimpleDateFormat("yyyy-MM-dd").parse(introducedInput);
-	    		}
-	    		
-	    		view.askForNewDiscontinued(computerDTO.getDiscontinued());
-	    		String discontinuedInput = scan.next();
-	    		validator.validateDate(discontinuedInput);
-	    		Date discontinuedDate = null;
-	    		if(discontinuedInput != null) {        
-	    			computerDTO.setDiscontinued(discontinuedInput);
-	    			discontinuedDate = new SimpleDateFormat("yyyy-MM-dd").parse(discontinuedInput);
-	    		}
-	    		validator.validatePrecedence(introducedDate, discontinuedDate);
-	    		
-	    		view.askForNewCompany(computerDTO.getCompanyDTO());
-	    		long companyInput = (long) scan.nextInt();        
-	    		Optional<Company> company = companyService.get(companyInput);
-	    		validator.validateCompany(company.get());
-	    		CompanyDTO companyDTO = null;
-	    		if(company.isPresent()) {        
-	    			companyDTO = (CompanyDTO) companyMapper.entityToDTO(company.get());
-	    			computerDTO.setCompanyDTO(companyDTO);
-	    		}
-	    		
-	    		computer = computerMapper.DTOToEntity(computerDTO);
-	    		
-	    		scan.close();
-	    	} catch (ValidationException e) {
-	    		logger.warn(e.getMessage());
-	    	} catch (ParseException e) {
-	    		logger.warn(e.getMessage());
-	    	}
-	    	
-	    	try {
-	    		if(computer != null) {
-	    			computerService.update(computer);
-	    		}
-	    	} catch (Exception e) {
-	    		logger.warn(e.getMessage());
-	    	}
-	    }
+    ComputerDto computerDto = null;
+    Computer computer = null;
+
+    view.askForId();
+    int id = scan.nextInt();
+    computer = computerService.get(id).get();
+
+    if (computer != null) {
+      computerDto = (ComputerDto) computerMapper.entityToDto(computer);
+      try {
+        computerDto.setId(computerDto.getId());
+
+        view.askForNewName(computerDto.getName());
+        String nameInput = scan.next();
+        validator.validateName(nameInput);
+        computerDto.setName(nameInput);
+
+        view.askForNewIntroduced(computerDto.getIntroduced());
+        String introducedInput = scan.next();
+        validator.validateDate(introducedInput);
+        Date introducedDate = null;
+        if (introducedInput != null) {
+          computerDto.setIntroduced(introducedInput);
+          introducedDate = new SimpleDateFormat("yyyy-MM-dd").parse(introducedInput);
+        }
+
+        view.askForNewDiscontinued(computerDto.getDiscontinued());
+        String discontinuedInput = scan.next();
+        validator.validateDate(discontinuedInput);
+        Date discontinuedDate = null;
+        if (discontinuedInput != null) {
+          computerDto.setDiscontinued(discontinuedInput);
+          discontinuedDate = new SimpleDateFormat("yyyy-MM-dd").parse(discontinuedInput);
+        }
+        validator.validatePrecedence(introducedDate, discontinuedDate);
+
+        view.askForNewCompany(computerDto.getCompanyDto());
+        long companyInput = (long) scan.nextInt();
+        Optional<Company> company = companyService.get(companyInput);
+        validator.validateCompany(company.get());
+        CompanyDto companyDto = null;
+        if (company.isPresent()) {
+          companyDto = (CompanyDto) companyMapper.entityToDto(company.get());
+          computerDto.setCompanyDto(companyDto);
+        }
+
+        computer = computerMapper.dtoToEntity(computerDto);
+
+        scan.close();
+      } catch (ValidationException e) {
+        logger.warn(e.getMessage());
+      } catch (ParseException e) {
+        logger.warn(e.getMessage());
+      }
+
+      try {
+        if (computer != null) {
+          computerService.update(computer);
+        }
+      } catch (Exception e) {
+        logger.warn(e.getMessage());
+      }
+    }
   }
 
   /**

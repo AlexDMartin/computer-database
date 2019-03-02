@@ -1,16 +1,14 @@
 package com.excilys.dao;
 
+import com.excilys.dao.mappers.CompanyMapper;
+import com.excilys.dao.model.Company;
+import com.excilys.persistance.utils.Connector;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
-
 import org.slf4j.LoggerFactory;
-
-import com.excilys.dao.mappers.CompanyMapper;
-import com.excilys.dao.model.Company;
-import com.excilys.persistance.utils.Connector;
 
 /**
  * The Class CompanyDao.
@@ -38,8 +36,7 @@ public class CompanyDao implements Dao<Company> {
   /**
    * Instantiates a new company dao.
    */
-  private CompanyDao() {
-  }
+  private CompanyDao() {}
 
   /**
    * Gets the single instance of CompanyDao.
@@ -64,8 +61,8 @@ public class CompanyDao implements Dao<Company> {
     Company resultItem = null;
 
     try {
-      PreparedStatement getStatement = Connector.getInstance().getConnection()
-          .prepareStatement(GET_ONE);
+      PreparedStatement getStatement =
+          Connector.getInstance().getConnection().prepareStatement(GET_ONE);
       getStatement.setLong(1, id);
       ResultSet rs = getStatement.executeQuery();
       resultItem = CompanyMapper.getInstance().map(rs).get(0);
@@ -87,8 +84,8 @@ public class CompanyDao implements Dao<Company> {
     List<Company> resultItems = null;
 
     try {
-      PreparedStatement getAllStatement = Connector.getInstance().getConnection()
-          .prepareStatement(GET_ALL);
+      PreparedStatement getAllStatement =
+          Connector.getInstance().getConnection().prepareStatement(GET_ALL);
       ResultSet rs = getAllStatement.executeQuery();
       resultItems = CompanyMapper.getInstance().map(rs);
     } catch (SQLException e) {
@@ -108,8 +105,8 @@ public class CompanyDao implements Dao<Company> {
     LoggerFactory.getLogger(this.getClass()).info("CompanyDao 'save' called");
 
     try {
-      PreparedStatement saveStatement = Connector.getInstance().getConnection()
-          .prepareStatement(UPDATE);
+      PreparedStatement saveStatement =
+          Connector.getInstance().getConnection().prepareStatement(UPDATE);
       saveStatement.setString(1, company.getName());
 
       int resultCode = saveStatement.executeUpdate();
@@ -129,8 +126,8 @@ public class CompanyDao implements Dao<Company> {
     LoggerFactory.getLogger(this.getClass()).info("Company update called");
 
     try {
-      PreparedStatement updateStatement = Connector.getInstance().getConnection()
-          .prepareStatement(UPDATE);
+      PreparedStatement updateStatement =
+          Connector.getInstance().getConnection().prepareStatement(UPDATE);
       updateStatement.setString(1, company.getName());
       updateStatement.setLong(1, company.getId());
 
@@ -151,8 +148,8 @@ public class CompanyDao implements Dao<Company> {
     LoggerFactory.getLogger(this.getClass()).info("Company delete called");
 
     try {
-      PreparedStatement deleteStatement = Connector.getInstance().getConnection()
-          .prepareStatement(DELETE);
+      PreparedStatement deleteStatement =
+          Connector.getInstance().getConnection().prepareStatement(DELETE);
       deleteStatement.setLong(1, company.getId());
 
       int resultCode = deleteStatement.executeUpdate();

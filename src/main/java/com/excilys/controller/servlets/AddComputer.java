@@ -1,30 +1,27 @@
 package com.excilys.controller.servlets;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.ValidationException;
-
-import org.slf4j.LoggerFactory;
-
 import com.excilys.dao.model.Company;
 import com.excilys.dao.model.Computer;
 import com.excilys.dao.model.ComputerBuilder;
 import com.excilys.service.CompanyService;
 import com.excilys.service.ComputerService;
 import com.excilys.validator.Validator;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.ValidationException;
+import org.slf4j.LoggerFactory;
 
 /**
- * Servlet implementation class AddComputer
+ * Servlet implementation class AddComputer.
  */
-@WebServlet(name = "Add", urlPatterns = { "/Add" })
+@WebServlet(name = "Add", urlPatterns = {"/Add"})
 public class AddComputer extends HttpServlet {
 
   /**
@@ -33,6 +30,7 @@ public class AddComputer extends HttpServlet {
   private static final long serialVersionUID = 86529706591354229L;
 
   /**
+   * The servlet used to add Computers.
    * @see HttpServlet#HttpServlet()
    */
   public AddComputer() {
@@ -40,6 +38,7 @@ public class AddComputer extends HttpServlet {
   }
 
   /**
+   * This doGetMethod needs to return the company list in order to populate the scrolling list.
    * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
    */
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -57,6 +56,7 @@ public class AddComputer extends HttpServlet {
   }
 
   /**
+   * This doPost method validates and adds the computer in the database.
    * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
    */
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -66,20 +66,20 @@ public class AddComputer extends HttpServlet {
     ComputerBuilder cb = new ComputerBuilder();
     Computer computer = null;
     try {
-      
+
       long companyId = Long.parseLong(request.getParameter("companyId"));
-      Company company = CompanyService.getInstance().get(companyId).get();
-    
+      final Company company = CompanyService.getInstance().get(companyId).get();
+
       validator.validateName(request.getParameter("computerName"));
       validator.validateDate(request.getParameter("introduced"));
       validator.validateDate(request.getParameter("discontinued"));
 
-      computer = cb
-          .addName(request.getParameter("computerName"))
-          .addIntroduced(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("introduced")))
-          .addDiscontinued(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("discontinued")))
-          .addCompany(company)
-          .build();      
+      computer = cb.addName(request.getParameter("computerName"))
+          .addIntroduced(
+              new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("introduced")))
+          .addDiscontinued(
+              new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("discontinued")))
+          .addCompany(company).build();
     } catch (ValidationException e) {
       LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
       request.setAttribute("stacktrace", e.getMessage());
@@ -91,7 +91,7 @@ public class AddComputer extends HttpServlet {
     }
 
     try {
-      if(computer != null) {        
+      if (computer != null) {
         ComputerService.getInstance().save(computer);
       }
     } catch (Exception e) {

@@ -1,6 +1,6 @@
 package com.excilys.view;
 
-import com.excilys.dto.ComputerDTO;
+import com.excilys.dto.ComputerDto;
 
 /**
  * The Class ShowDetailsView.
@@ -13,8 +13,7 @@ public class ShowDetailsView {
   /**
    * Instantiates a new show details view.
    */
-  private ShowDetailsView() {
-  }
+  private ShowDetailsView() {}
 
   /**
    * Gets the single instance of ShowDetailsView.
@@ -38,25 +37,26 @@ public class ShowDetailsView {
   /**
    * Display computer.
    *
-   * @param computer the computer
+   * @param computerDto the computer's data object
    */
-  public void displayComputer(ComputerDTO computerDTO) {
+  public void displayComputer(ComputerDto computerDto) {
     StringBuilder line = new StringBuilder();
-    
-    line.append(computerDTO.getName() + " (" + computerDTO.getId() + ") ");
-    
-    if(computerDTO.getIntroduced() != null) {
-      line.append(", introduced " + computerDTO.getIntroduced());
+
+    line.append(computerDto.getName() + " (" + computerDto.getId() + ") ");
+
+    if (computerDto.getIntroduced() != null) {
+      line.append(", introduced " + computerDto.getIntroduced());
     }
-    
-    if(computerDTO.getDiscontinued() != null) {        
-      line.append(", discontinued " + computerDTO.getDiscontinued());    
+
+    if (computerDto.getDiscontinued() != null) {
+      line.append(", discontinued " + computerDto.getDiscontinued());
     }
-   
-    if(computerDTO.getCompanyDTO() != null) {
-      line.append(", by company " + computerDTO.getCompanyDTO().getName() + " (" + computerDTO.getCompanyDTO().getId() + ")");
+
+    if (computerDto.getCompanyDto() != null) {
+      line.append(", by company " + computerDto.getCompanyDto().getName() + " ("
+          + computerDto.getCompanyDto().getId() + ")");
     }
-	  
-	System.out.println(line);
+
+    System.out.println(line);
   }
 }

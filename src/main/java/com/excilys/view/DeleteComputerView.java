@@ -13,8 +13,7 @@ public class DeleteComputerView {
   /**
    * Instantiates a new delete computer view.
    */
-  private DeleteComputerView() {
-  }
+  private DeleteComputerView() {}
 
   /**
    * Gets the single instance of DeleteComputerView.

@@ -1,18 +1,16 @@
 package com.excilys.dao;
 
+import com.excilys.controller.PaginationController;
+import com.excilys.dao.mappers.ComputerMapper;
+import com.excilys.dao.model.Computer;
+import com.excilys.persistance.utils.Connector;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
-
 import org.slf4j.LoggerFactory;
-
-import com.excilys.controller.PaginationController;
-import com.excilys.dao.mappers.ComputerMapper;
-import com.excilys.dao.model.Computer;
-import com.excilys.persistance.utils.Connector;
 
 /**
  * The Class ComputerDao.
@@ -23,19 +21,32 @@ public class ComputerDao implements Dao<Computer> {
   private static ComputerDao computerDaoInstance = null;
 
   /** The Constant GET_ONE. */
-  static final String GET_ONE = "SELECT ID, NAME, INTRODUCED, DISCONTINUED, COMPANY_ID FROM computer WHERE ID = ? LIMIT 1";
+  static final String GET_ONE =
+      "SELECT ID, NAME, INTRODUCED, DISCONTINUED, COMPANY_ID FROM computer WHERE ID = ? LIMIT 1";
 
   /** The Constant GET_ALL. */
-  static final String GET_ALL = "SELECT ID, NAME, INTRODUCED, DISCONTINUED, COMPANY_ID FROM computer ORDER BY ID";
+  static final String GET_ALL =
+      "SELECT ID, NAME, INTRODUCED, DISCONTINUED, COMPANY_ID FROM computer ORDER BY ID";
 
   /** The Constant GET_PAGINATED. */
-  static final String GET_PAGINATED = "SELECT ID, NAME, INTRODUCED, DISCONTINUED, COMPANY_ID FROM computer ORDER BY ID LIMIT ? OFFSET ?";
-  
+  static final String GET_PAGINATED =
+      "SELECT ID, NAME, INTRODUCED, DISCONTINUED, COMPANY_ID FROM computer "
+      + "ORDER BY ID "
+      + "LIMIT ? "
+      + "OFFSET ?";
+
   /** The Constant SAVE. */
-  static final String SAVE = "INSERT INTO computer (NAME, INTRODUCED, DISCONTINUED, COMPANY_ID) VALUES (?,?,?,?)";
+  static final String SAVE =
+      "INSERT INTO computer (NAME, INTRODUCED, DISCONTINUED, COMPANY_ID) VALUES (?,?,?,?)";
 
   /** The Constant UPDATE. */
-  static final String UPDATE = "UPDATE computer SET NAME = ?, INTRODUCED = ? , DISCONTINUED = ? , COMPANY_ID = ? WHERE ID = ?";
+  static final String UPDATE =
+      "UPDATE computer SET "
+      + "NAME = ?"
+      + ", INTRODUCED = ? "
+      + ", DISCONTINUED = ? "
+      + ", COMPANY_ID = ? "
+      + "WHERE ID = ?";
 
   /** The Constant DELETE. */
   static final String DELETE = "DELETE FROM computer WHERE ID = ?";
@@ -43,8 +54,7 @@ public class ComputerDao implements Dao<Computer> {
   /**
    * Instantiates a new computer dao.
    */
-  private ComputerDao() {
-  }
+  private ComputerDao() {}
 
   /**
    * Gets the single instance of ComputerDao.
@@ -69,8 +79,8 @@ public class ComputerDao implements Dao<Computer> {
     Computer resultItem = null;
 
     try {
-      PreparedStatement getStatement = Connector.getInstance().getConnection()
-          .prepareStatement(GET_ONE);
+      PreparedStatement getStatement =
+          Connector.getInstance().getConnection().prepareStatement(GET_ONE);
       getStatement.setLong(1, id);
       ResultSet rs = getStatement.executeQuery();
       resultItem = ComputerMapper.getInstance().map(rs).get(0);
@@ -92,8 +102,8 @@ public class ComputerDao implements Dao<Computer> {
     List<Computer> resultItems = null;
 
     try {
-      PreparedStatement getAllStatement = Connector.getInstance().getConnection()
-          .prepareStatement(GET_ALL);
+      PreparedStatement getAllStatement =
+          Connector.getInstance().getConnection().prepareStatement(GET_ALL);
       ResultSet rs = getAllStatement.executeQuery();
       resultItems = ComputerMapper.getInstance().map(rs);
     } catch (SQLException e) {
@@ -102,19 +112,19 @@ public class ComputerDao implements Dao<Computer> {
 
     return resultItems;
   }
-  
-  /*
-   * (non-Javadoc)
+
+  /**
+   * Gets a list of computer based on a pagination.
    * 
-   * @see com.excilys.dao.Dao#getAll()
+   * @param paginationController A pagination controller
    */
   public List<Computer> getAllPaginated(PaginationController paginationController) {
     LoggerFactory.getLogger(this.getClass()).info("ComputerDao 'getAllPaginated' called");
     List<Computer> resultItems = null;
 
     try {
-      PreparedStatement getAllPaginatedStatement = Connector.getInstance().getConnection()
-          .prepareStatement(GET_PAGINATED);
+      PreparedStatement getAllPaginatedStatement =
+          Connector.getInstance().getConnection().prepareStatement(GET_PAGINATED);
       getAllPaginatedStatement.setInt(1, paginationController.getLimit());
       getAllPaginatedStatement.setInt(2, paginationController.getOffset());
       ResultSet rs = getAllPaginatedStatement.executeQuery();
@@ -136,8 +146,8 @@ public class ComputerDao implements Dao<Computer> {
     LoggerFactory.getLogger(this.getClass()).info("ComputerDao 'save' called");
 
     try {
-      PreparedStatement saveStatement = Connector.getInstance().getConnection()
-          .prepareStatement(SAVE);
+      PreparedStatement saveStatement =
+          Connector.getInstance().getConnection().prepareStatement(SAVE);
       saveStatement.setString(1, computer.getName());
       saveStatement.setTimestamp(2, new Timestamp(computer.getIntroduced().getTime()));
       saveStatement.setTimestamp(3, new Timestamp(computer.getDiscontinued().getTime()));
@@ -160,8 +170,8 @@ public class ComputerDao implements Dao<Computer> {
     LoggerFactory.getLogger(this.getClass()).info("ComputerDao 'update' called");
 
     try {
-      PreparedStatement updateStatement = Connector.getInstance().getConnection()
-          .prepareStatement(UPDATE);
+      PreparedStatement updateStatement =
+          Connector.getInstance().getConnection().prepareStatement(UPDATE);
       updateStatement.setString(1, computer.getName());
       updateStatement.setTimestamp(2, new Timestamp(computer.getIntroduced().getTime()));
       updateStatement.setTimestamp(3, new Timestamp(computer.getDiscontinued().getTime()));
@@ -185,8 +195,8 @@ public class ComputerDao implements Dao<Computer> {
     LoggerFactory.getLogger(this.getClass()).info("ComputerDao 'delete' called");
 
     try {
-      PreparedStatement deleteStatement = Connector.getInstance().getConnection()
-          .prepareStatement(DELETE);
+      PreparedStatement deleteStatement =
+          Connector.getInstance().getConnection().prepareStatement(DELETE);
       deleteStatement.setLong(1, computer.getId());
 
       int resultCode = deleteStatement.executeUpdate();

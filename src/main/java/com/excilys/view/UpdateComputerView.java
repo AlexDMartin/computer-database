@@ -1,6 +1,6 @@
 package com.excilys.view;
 
-import com.excilys.dto.CompanyDTO;
+import com.excilys.dto.CompanyDto;
 
 /**
  * The Class UpdateComputerView.
@@ -13,8 +13,7 @@ public class UpdateComputerView {
   /**
    * Instantiates a new update computer view.
    */
-  private UpdateComputerView() {
-  }
+  private UpdateComputerView() {}
 
   /**
    * Gets the single instance of UpdateComputerView.
@@ -38,7 +37,7 @@ public class UpdateComputerView {
   /**
    * Ask for new name.
    *
-   * @param computer the computer
+   * @param name The name of the computer
    */
   public void askForNewName(String name) {
     System.out.println("Enter new name (" + name + "): ");
@@ -47,7 +46,7 @@ public class UpdateComputerView {
   /**
    * Ask for new introduced.
    *
-   * @param computer the computer
+   * @param introduced the computer's introduction date
    */
   public void askForNewIntroduced(String introduced) {
     System.out.println("Enter new introduced date (" + introduced + "): ");
@@ -56,7 +55,7 @@ public class UpdateComputerView {
   /**
    * Ask for new discontinued.
    *
-   * @param computer the computer
+   * @param discontinued the computer's discontinuation date
    */
   public void askForNewDiscontinued(String discontinued) {
     System.out.println("Enter new discontinued date (" + discontinued + "): ");
@@ -65,9 +64,9 @@ public class UpdateComputerView {
   /**
    * Ask for new company.
    *
-   * @param computer the computer
+   * @param companyDto the computer's company data object
    */
-  public void askForNewCompany(CompanyDTO companyDTO) {
-    System.out.println("Enter new company id (" + companyDTO.getId() + "): ");
+  public void askForNewCompany(CompanyDto companyDto) {
+    System.out.println("Enter new company id (" + companyDto.getId() + "): ");
   }
 }

@@ -1,9 +1,8 @@
 package com.excilys.dao.mappers;
 
+import com.excilys.dto.Dto;
 import java.sql.ResultSet;
 import java.util.List;
-
-import com.excilys.dto.DTO;
 
 /**
  * The Interface Mapper.
@@ -13,24 +12,27 @@ import com.excilys.dto.DTO;
 public interface Mapper<T> {
 
   /**
-   * Take a ResulSet and returns a list of the generic type,
-   * useful to map items directly after a Database call.
-   * @param ResultSet
-   * @return List<Company>
+   * Take a ResulSet and returns a list of the generic type, useful to map items directly after a
+   * Database call.
+   * 
+   * @param resultSet Any ResultSet
+   * @return List&lt;Company&gt;
    */
-  List<T> map(ResultSet rs);
-  
+  List<T> map(ResultSet resultSet);
+
   /**
    * Transforms an Entity into a DTO.
-   * @param T
+   * 
+   * @param entity Any entity
    * @return DTO
    */
-  DTO entityToDTO(T entity);
-  
+  Dto entityToDto(T entity);
+
   /**
    * Transforms DTO into an Entity.
-   * @param DTO
+   * 
+   * @param dto Any data object
    * @return T
    */
-  T DTOToEntity(DTO dto);
+  T dtoToEntity(Dto dto);
 }

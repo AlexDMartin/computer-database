@@ -1,13 +1,11 @@
 package com.excilys.service;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.slf4j.LoggerFactory;
-
 import com.excilys.controller.PaginationController;
 import com.excilys.dao.DaoFactory;
 import com.excilys.dao.model.Computer;
+import java.util.List;
+import java.util.Optional;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class ComputerService.
@@ -20,8 +18,7 @@ public class ComputerService implements CallableService<Computer> {
   /**
    * Instantiates a new computer service.
    */
-  private ComputerService() {
-  }
+  private ComputerService() {}
 
   /**
    * Gets the single instance of ComputerService.
@@ -54,7 +51,7 @@ public class ComputerService implements CallableService<Computer> {
   public List<Computer> getAll() {
     return DaoFactory.getInstance().getComputerDao().getAll();
   }
-  
+
   /*
    * (non-Javadoc)
    * 

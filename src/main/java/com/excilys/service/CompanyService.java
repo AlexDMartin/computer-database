@@ -1,12 +1,10 @@
 package com.excilys.service;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.slf4j.LoggerFactory;
-
 import com.excilys.dao.DaoFactory;
 import com.excilys.dao.model.Company;
+import java.util.List;
+import java.util.Optional;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class CompanyService.
@@ -19,8 +17,7 @@ public class CompanyService implements CallableService<Company> {
   /**
    * Instantiates a new company service.
    */
-  private CompanyService() {
-  }
+  private CompanyService() {}
 
   /**
    * Gets the single instance of CompanyService.

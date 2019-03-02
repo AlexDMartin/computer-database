@@ -4,8 +4,8 @@ import com.excilys.dao.mappers.CompanyMapper;
 import com.excilys.dao.mappers.ComputerMapper;
 import com.excilys.dao.model.Company;
 import com.excilys.dao.model.Computer;
-import com.excilys.dto.CompanyDTO;
-import com.excilys.dto.ComputerDTOBuilder;
+import com.excilys.dto.CompanyDto;
+import com.excilys.dto.ComputerDtoBuilder;
 import com.excilys.service.CompanyService;
 import com.excilys.service.ComputerService;
 import com.excilys.validator.Validator;
@@ -49,19 +49,19 @@ public class CreateComputerController {
   private CreateComputerController() {
     Computer computer = null;
     try {
-      ComputerDTOBuilder computerDTOBuilder = new ComputerDTOBuilder();
+      ComputerDtoBuilder computerDtoBuilder = new ComputerDtoBuilder();
 
       view.askForName();
       String nameInput = scan.next();
       validator.validateName(nameInput);
-      computerDTOBuilder.addName(nameInput);
+      computerDtoBuilder.addName(nameInput);
 
       view.askForIntroduced();
       String introducedInput = scan.next();
       validator.validateDate(introducedInput);
       Date introducedDate = null;
       if (introducedInput != null) {
-        computerDTOBuilder.addIntroduced(introducedInput);
+        computerDtoBuilder.addIntroduced(introducedInput);
         introducedDate = new SimpleDateFormat("yyyy-MM-dd").parse(introducedInput);
       }
 
@@ -70,7 +70,7 @@ public class CreateComputerController {
       validator.validateDate(discontinuedInput);
       Date discontinuedDate = null;
       if (discontinuedInput != null) {
-        computerDTOBuilder.addDiscontinued(discontinuedInput);
+        computerDtoBuilder.addDiscontinued(discontinuedInput);
         discontinuedDate = new SimpleDateFormat("yyyy-MM-dd").parse(discontinuedInput);
       }
       validator.validatePrecedence(introducedDate, discontinuedDate);
@@ -79,13 +79,13 @@ public class CreateComputerController {
       long companyInput = (long) scan.nextInt();
       Optional<Company> company = companyService.get(companyInput);
       validator.validateCompany(company.get());
-      CompanyDTO companyDTO = null;
+      CompanyDto companyDto = null;
       if (company.isPresent()) {
-        companyDTO = (CompanyDTO) companyMapper.entityToDTO(company.get());
-        computerDTOBuilder.addCompanyDTO(companyDTO);
+        companyDto = (CompanyDto) companyMapper.entityToDto(company.get());
+        computerDtoBuilder.addCompanyDto(companyDto);
       }
 
-      computer = computerMapper.DTOToEntity(computerDTOBuilder.build());
+      computer = computerMapper.dtoToEntity(computerDtoBuilder.build());
 
       scan.close();
     } catch (ValidationException e) {

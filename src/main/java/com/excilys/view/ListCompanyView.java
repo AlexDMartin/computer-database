@@ -1,8 +1,7 @@
 package com.excilys.view;
 
+import com.excilys.dto.CompanyDto;
 import java.util.List;
-
-import com.excilys.dto.CompanyDTO;
 
 /**
  * View used to list all companies.
@@ -15,8 +14,7 @@ public class ListCompanyView {
   /**
    * Singleton implementation of ListCompanyView.
    */
-  private ListCompanyView() {
-  }
+  private ListCompanyView() {}
 
   /**
    * Singleton implementation of ListCompanyView.
@@ -33,11 +31,11 @@ public class ListCompanyView {
   /**
    * Displays the view.
    *
-   * @param A list of CompanyDTO
+   * @param companyDtoList A list of CompanyDto
    */
-  public void render(List<CompanyDTO> companyDTOList) {
-    for (CompanyDTO companyDTO : companyDTOList) {
-      System.out.println(companyDTO.getName() + " (" + companyDTO.getId() + ")");
+  public void render(List<CompanyDto> companyDtoList) {
+    for (CompanyDto companyDto : companyDtoList) {
+      System.out.println(companyDto.getName() + " (" + companyDto.getId() + ")");
     }
   }
 }

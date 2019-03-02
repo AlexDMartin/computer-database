@@ -1,8 +1,7 @@
 package com.excilys.view;
 
-import org.slf4j.LoggerFactory;
-
 import com.excilys.controller.MenuController;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class CliMainView.

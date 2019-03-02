@@ -1,11 +1,10 @@
 package com.excilys.view;
 
+import com.excilys.dto.ComputerDto;
 import java.util.List;
 
-import com.excilys.dto.ComputerDTO;
-
 /**
- * View used to list all computers
+ * View used to list all computers.
  */
 public class ListComputerView {
 
@@ -15,8 +14,7 @@ public class ListComputerView {
   /**
    * Singleton implementation of ListComputerView.
    */
-  private ListComputerView() {
-  }
+  private ListComputerView() {}
 
   /**
    * Singleton implementation of ListComputerView.
@@ -33,26 +31,27 @@ public class ListComputerView {
   /**
    * Displays the view.
    *
-   * @param A list of ComputerDTOs
+   * @param computerDtoList A list of ComputerDTO
    */
-  public void render(List<ComputerDTO> computerDTOList) {
-    for (ComputerDTO computerDTO : computerDTOList) {
+  public void render(List<ComputerDto> computerDtoList) {
+    for (ComputerDto computerDto : computerDtoList) {
       StringBuilder line = new StringBuilder();
-      
-      line.append(computerDTO.getName() + " (" + computerDTO.getId() + ") ");
-     
-      if(computerDTO.getIntroduced() != null) {
-        line.append(", introduced " + computerDTO.getIntroduced());
+
+      line.append(computerDto.getName() + " (" + computerDto.getId() + ") ");
+
+      if (computerDto.getIntroduced() != null) {
+        line.append(", introduced " + computerDto.getIntroduced());
       }
-      
-      if(computerDTO.getDiscontinued() != null) {        
-        line.append(", discontinued " + computerDTO.getDiscontinued());    
+
+      if (computerDto.getDiscontinued() != null) {
+        line.append(", discontinued " + computerDto.getDiscontinued());
       }
-     
-      if(computerDTO.getCompanyDTO() != null) {
-        line.append(", by company " + computerDTO.getCompanyDTO().getName() + " (" + computerDTO.getCompanyDTO().getId() + ")");
+
+      if (computerDto.getCompanyDto() != null) {
+        line.append(", by company " + computerDto.getCompanyDto().getName() + " ("
+            + computerDto.getCompanyDto().getId() + ")");
       }
-     
+
       System.out.println(line.toString());
     }
   }

@@ -1,13 +1,12 @@
 package com.excilys.controller;
 
-import java.util.Optional;
-import java.util.Scanner;
-
 import com.excilys.dao.mappers.ComputerMapper;
 import com.excilys.dao.model.Computer;
-import com.excilys.dto.ComputerDTO;
+import com.excilys.dto.ComputerDto;
 import com.excilys.service.ComputerService;
 import com.excilys.view.ShowDetailsView;
+import java.util.Optional;
+import java.util.Scanner;
 
 /**
  * Singleton implementation of ShowDetailsController.
@@ -24,22 +23,22 @@ public class ShowDetailsController {
   ShowDetailsView view = ShowDetailsView.getInstance();
   /** Scanner. */
   Scanner scan = new Scanner(System.in);
-  
+
   /**
    * Singleton implementation of ShowDetailsController.
    */
   private ShowDetailsController() {
-    
+
     view.askForId();
 
     int id = scan.nextInt();
     scan.close();
 
     Optional<Computer> computer = computerService.get(id);
-    
-    if(computer.isPresent()) {   
-    	ComputerDTO computerDTO = (ComputerDTO) computerMapper.entityToDTO(computer.get());
-    	view.displayComputer(computerDTO);
+
+    if (computer.isPresent()) {
+      ComputerDto computerDto = (ComputerDto) computerMapper.entityToDto(computer.get());
+      view.displayComputer(computerDto);
     }
   }
 

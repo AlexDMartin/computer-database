@@ -13,14 +13,15 @@ public class Company {
 
   /**
    * Controller.
-   * @param id
-   * @param name
+   * 
+   * @param id The id of the company
+   * @param name The name of the company
    */
   public Company(int id, String name) {
     this.id = id;
     this.name = name;
   }
-  
+
   /**
    * Gets the id.
    *

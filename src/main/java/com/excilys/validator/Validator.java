@@ -1,16 +1,14 @@
 package com.excilys.validator;
 
+import com.excilys.dao.model.Company;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.xml.bind.ValidationException;
 
-import com.excilys.dao.model.Company;
-
 /**
- * Implements all methods to validate user inputs in the application.
- * All methods return true if the string passed to the method is valid, or throw a ValidationException otherwise.
+ * Implements all methods to validate user inputs in the application. All methods return true if the
+ * string passed to the method is valid, or throw a ValidationException otherwise.
  */
 public class Validator {
 
@@ -31,11 +29,12 @@ public class Validator {
     }
     return validatorInstance;
   }
-  
+
   /**
    * Validate ids.
-   * @param String id
-   * @return true if the id valid 
+   * 
+   * @param id Any id
+   * @return true if the id valid
    * @throws ValidationException if the id is invalid
    */
   public boolean validateId(String id) throws ValidationException {
@@ -52,60 +51,67 @@ public class Validator {
 
   /**
    * Validate names.
-   * @param String name
+   * 
+   * @param name Any name
    * @return true if the name is valid
    * @throws ValidationException if the name is invalid
    */
   public boolean validateName(String name) throws ValidationException {
-    if (name == null||name.isEmpty()) {
+    if (name == null || name.isEmpty()) {
       throw new ValidationException("Computer's name shouldn\'t be null nor empty.");
     }
     return true;
   }
-   
+
   /**
-   * Validate date format to match "yyyy-MM-dd"
-   * @param String date
+   * Validate date format to match "yyyy-MM-dd".
+   * 
+   * @param date Any date
    * @return true if the date format matches date
-   * @throws ValidationException
+   * @throws ValidationException Validation exception
    */
   public boolean validateDate(String date) throws ValidationException {
-    if(date == null) return true;
+    if (date == null) {
+      return true;
+    }
     Pattern p = Pattern.compile("^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])$");
     Matcher m = p.matcher(date);
     if (!m.matches()) {
-      throw new ValidationException("The date entered is not valid (\"yyyy-MM-dd\")") ;
+      throw new ValidationException("The date entered is not valid (\"yyyy-MM-dd\")");
     }
     return true;
   }
-  
+
   /**
-   * Validate the fact that the introduced is before the discontinuation date
-   * @param introduced
-   * @param discontinued
+   * Validate the fact that the introduced is before the discontinuation date.
+   * 
+   * @param introduced The introduction date of the computer
+   * @param discontinued The discontinuation date of the computer
    * @return true if the introduction date is before the discontinuation date
-   * @throws ValidationException
+   * @throws ValidationException Validation exception
    */
-  public boolean validatePrecedence(Date introduced, Date discontinued)
-		  throws ValidationException {
-	if(introduced == null || discontinued == null) {
-		return true;
-	}
-	if (introduced.after(discontinued)) {
-	  throw new ValidationException(
-	      "Introduction date is more recent than the discontinuation date.");
-	}
+  public boolean validatePrecedence(Date introduced, Date discontinued) throws ValidationException {
+    if (introduced == null || discontinued == null) {
+      return true;
+    }
+    if (introduced.after(discontinued)) {
+      throw new ValidationException(
+          "Introduction date is more recent than the discontinuation date.");
+    }
     return true;
   }
-  
+
   /**
-   * Validate that the company exists when it's called by the DAOs
+   * Validate that the company exists when it's called by the DAOs.
+   * 
    * @param company the company
-   * @return true 
+   * @return true
    */
   public boolean validateCompany(Company company) throws ValidationException {
-    if(company == null) return true;
-    if(validateId(Integer.toString(company.getId()))&& validateName(company.getName())) {      
+    if (company == null) {      
+      return true;
+    }
+    if (validateId(Integer.toString(company.getId())) && validateName(company.getName())) {
       return true;
     }
     throw new ValidationException("Company is not valid");

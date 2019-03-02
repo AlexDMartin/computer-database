@@ -11,8 +11,7 @@ public class CreateComputerView {
   /**
    * Instantiates a new creates the computer view.
    */
-  private CreateComputerView() {
-  }
+  private CreateComputerView() {}
 
   /**
    * Gets the single instance of CreateComputerView.

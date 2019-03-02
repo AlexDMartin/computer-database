@@ -11,8 +11,7 @@ public class DaoFactory {
   /**
    * Instantiates a new dao factory.
    */
-  private DaoFactory() {
-  }
+  private DaoFactory() {}
 
   /**
    * Gets the single instance of DaoFactory.
