@@ -1,6 +1,5 @@
 package com.excilys.view;
 
-import com.excilys.dao.model.Computer;
 import com.excilys.dto.CompanyDTO;
 
 /**
