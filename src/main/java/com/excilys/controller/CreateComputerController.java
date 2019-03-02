@@ -1,16 +1,5 @@
 package com.excilys.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Optional;
-import java.util.Scanner;
-
-import javax.xml.bind.ValidationException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.excilys.dao.mappers.CompanyMapper;
 import com.excilys.dao.mappers.ComputerMapper;
 import com.excilys.dao.model.Company;
@@ -21,6 +10,14 @@ import com.excilys.service.CompanyService;
 import com.excilys.service.ComputerService;
 import com.excilys.validator.Validator;
 import com.excilys.view.CreateComputerView;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Optional;
+import java.util.Scanner;
+import javax.xml.bind.ValidationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Singleton implementation of CreateComputerController.
@@ -43,9 +40,9 @@ public class CreateComputerController {
   CompanyService companyService = CompanyService.getInstance();
   /** Scanner. */
   Scanner scan = new Scanner(System.in);
-  /** Logger */
+  /** Logger. */
   Logger logger = LoggerFactory.getLogger(this.getClass());
-  
+
   /**
    * CreateComputerController Constructor.
    */
@@ -53,7 +50,7 @@ public class CreateComputerController {
     Computer computer = null;
     try {
       ComputerDTOBuilder computerDTOBuilder = new ComputerDTOBuilder();
-            
+
       view.askForName();
       String nameInput = scan.next();
       validator.validateName(nameInput);
@@ -63,7 +60,7 @@ public class CreateComputerController {
       String introducedInput = scan.next();
       validator.validateDate(introducedInput);
       Date introducedDate = null;
-      if(introducedInput != null) {        
+      if (introducedInput != null) {
         computerDTOBuilder.addIntroduced(introducedInput);
         introducedDate = new SimpleDateFormat("yyyy-MM-dd").parse(introducedInput);
       }
@@ -72,22 +69,22 @@ public class CreateComputerController {
       String discontinuedInput = scan.next();
       validator.validateDate(discontinuedInput);
       Date discontinuedDate = null;
-      if(discontinuedInput != null) {        
+      if (discontinuedInput != null) {
         computerDTOBuilder.addDiscontinued(discontinuedInput);
         discontinuedDate = new SimpleDateFormat("yyyy-MM-dd").parse(discontinuedInput);
       }
       validator.validatePrecedence(introducedDate, discontinuedDate);
-      
+
       view.askForCompany();
-      long companyInput = (long) scan.nextInt();        
+      long companyInput = (long) scan.nextInt();
       Optional<Company> company = companyService.get(companyInput);
       validator.validateCompany(company.get());
       CompanyDTO companyDTO = null;
-      if(company.isPresent()) {        
+      if (company.isPresent()) {
         companyDTO = (CompanyDTO) companyMapper.entityToDTO(company.get());
         computerDTOBuilder.addCompanyDTO(companyDTO);
       }
-      
+
       computer = computerMapper.DTOToEntity(computerDTOBuilder.build());
 
       scan.close();
@@ -98,7 +95,7 @@ public class CreateComputerController {
     }
 
     try {
-      if(computer != null) {
+      if (computer != null) {
         computerService.save(computer);
       }
     } catch (Exception e) {
