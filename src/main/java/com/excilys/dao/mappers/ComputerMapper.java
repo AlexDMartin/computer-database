@@ -133,45 +133,50 @@ public class ComputerMapper implements Mapper<Computer> {
   public Computer DTOToEntity(DTO dto) { 
     
     ComputerDTO computerDTO = (ComputerDTO) dto;
-    
-    CompanyBuilder companyBuilder = new CompanyBuilder();
-    Company company = companyBuilder
-        .addId(Integer.parseInt(computerDTO.getCompanyDTO().getId()))
-        .addName(computerDTO.getCompanyDTO().getName())
-        .build();
-    
-    Integer formattedId = (computerDTO.getId() != null) ? Integer.parseInt(computerDTO.getId()): null;
-    
-    Date parsedIntroduced = null;
-    Date parsedDiscontinued = null;
-    try {
-      parsedIntroduced = new SimpleDateFormat("yyyy-MM-dd").parse(computerDTO.getIntroduced());
-      parsedDiscontinued= new SimpleDateFormat("yyyy-MM-dd").parse(computerDTO.getDiscontinued());
-    } catch (ParseException e) {
-      logger.warn(e.getMessage());
-    }
-    
-    try {
-      validator.validateId(computerDTO.getId());
-      validator.validateName(computerDTO.getName());
-      validator.validateDate(computerDTO.getIntroduced());
-      validator.validateDate(computerDTO.getDiscontinued());
-      validator.validatePrecedence(parsedIntroduced, parsedDiscontinued);
-      validator.validateCompany(company);
-    } catch (ValidationException e) {
-      logger.warn(e.getMessage());
-    }
-    
     ComputerBuilder computerBuilder = new ComputerBuilder();
-    Computer computer = computerBuilder
-        .addId(formattedId)
-        .addName(computerDTO.getName())
-        .addIntroduced(parsedIntroduced) 
-        .addDiscontinued(parsedDiscontinued)
-        .addCompany(company) 
-        .build();
+     
+    try {
+        
+    	validator.validateId(computerDTO.getId());
+        if(computerDTO.getId() != null) {
+        	computerBuilder.addId(Integer.parseInt(computerDTO.getId()));
+        }
+        
+        validator.validateName(computerDTO.getName());
+        computerBuilder.addName(computerDTO.getName());
+        
+        Date parsedIntroduced = null;
+        Date parsedDiscontinued = null;
+        try {
+            parsedIntroduced = new SimpleDateFormat("yyyy-MM-dd").parse(computerDTO.getIntroduced());
+            parsedDiscontinued= new SimpleDateFormat("yyyy-MM-dd").parse(computerDTO.getDiscontinued());
+        } catch (ParseException e) {
+        	logger.warn(e.getMessage());
+        }
+
+        validator.validateDate(computerDTO.getIntroduced());
+        validator.validateDate(computerDTO.getDiscontinued());
+        validator.validatePrecedence(parsedIntroduced, parsedDiscontinued);
+        computerBuilder
+	        .addIntroduced(parsedIntroduced)
+	        .addDiscontinued(parsedDiscontinued);
+        
+        
+        Company company = null;
+        if(computerDTO.getCompanyDTO() != null) {
+    	 CompanyBuilder companyBuilder = new CompanyBuilder();
+    	    company = companyBuilder
+    	        .addId(Integer.parseInt(computerDTO.getCompanyDTO().getId()))
+    	        .addName(computerDTO.getCompanyDTO().getName())
+    	        .build();
+        }
+        validator.validateCompany(company);
+        computerBuilder.addCompany(company);
+      } catch (ValidationException e) {
+        logger.warn(e.getMessage());
+      } 
     
-    return computer;
+    return computerBuilder.build();
   }
 
 }

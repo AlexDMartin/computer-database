@@ -16,7 +16,6 @@ import com.excilys.dao.mappers.ComputerMapper;
 import com.excilys.dao.model.Company;
 import com.excilys.dao.model.Computer;
 import com.excilys.dto.CompanyDTO;
-import com.excilys.dto.ComputerDTO;
 import com.excilys.dto.ComputerDTOBuilder;
 import com.excilys.service.CompanyService;
 import com.excilys.service.ComputerService;
@@ -38,6 +37,8 @@ public class CreateComputerController {
   CreateComputerView view = CreateComputerView.getInstance();
   /** Validator. */
   Validator validator = Validator.getInstance();
+  /** ComputerService. */
+  ComputerService computerService = ComputerService.getInstance();
   /** CompanyService. */
   CompanyService companyService = CompanyService.getInstance();
   /** Scanner. */
@@ -50,63 +51,55 @@ public class CreateComputerController {
    */
   private CreateComputerController() {
     Computer computer = null;
-    ComputerDTO computerDTO = null;
     try {
       ComputerDTOBuilder computerDTOBuilder = new ComputerDTOBuilder();
             
       view.askForName();
       String nameInput = scan.next();
+      validator.validateName(nameInput);
       computerDTOBuilder.addName(nameInput);
 
       view.askForIntroduced();
       String introducedInput = scan.next();
+      validator.validateDate(introducedInput);
+      Date introducedDate = null;
       if(introducedInput != null) {        
         computerDTOBuilder.addIntroduced(introducedInput);
+        introducedDate = new SimpleDateFormat("yyyy-MM-dd").parse(introducedInput);
       }
 
       view.askForDiscontinued();
       String discontinuedInput = scan.next();
+      validator.validateDate(discontinuedInput);
+      Date discontinuedDate = null;
       if(discontinuedInput != null) {        
         computerDTOBuilder.addDiscontinued(discontinuedInput);
+        discontinuedDate = new SimpleDateFormat("yyyy-MM-dd").parse(discontinuedInput);
       }
-
+      validator.validatePrecedence(introducedDate, discontinuedDate);
+      
       view.askForCompany();
       long companyInput = (long) scan.nextInt();        
       Optional<Company> company = companyService.get(companyInput);
+      validator.validateCompany(company.get());
       CompanyDTO companyDTO = null;
       if(company.isPresent()) {        
         companyDTO = (CompanyDTO) companyMapper.entityToDTO(company.get());
         computerDTOBuilder.addCompanyDTO(companyDTO);
       }
-  
-      validator.validateName(nameInput);
-      validator.validateDate(introducedInput);
-      validator.validateDate(discontinuedInput);
-      validator.validateCompany(company.get());
       
-      Date introducedDate = new SimpleDateFormat("dd/MM/yyyy").parse(introducedInput);
-      Date discontinuedDate = new SimpleDateFormat("dd/MM/yyyy").parse(discontinuedInput);
-      validator.validatePrecedence(introducedDate, discontinuedDate);
-    
-      computerDTO = computerDTOBuilder
-      .addName(nameInput)
-      .addIntroduced(introducedInput)
-      .addDiscontinued(discontinuedInput)
-      .addCompanyDTO(companyDTO)
-      .build();
-      
-      computer = computerMapper.DTOToEntity(computerDTO);
+      computer = computerMapper.DTOToEntity(computerDTOBuilder.build());
 
       scan.close();
     } catch (ValidationException e) {
-      LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
+      logger.warn(e.getMessage());
     } catch (ParseException e) {
-      LoggerFactory.getLogger(this.getClass()).warn("Failed to parse date");
+      logger.warn(e.getMessage());
     }
 
     try {
       if(computer != null) {
-        ComputerService.getInstance().save(computer);
+        computerService.save(computer);
       }
     } catch (Exception e) {
       logger.warn(e.getMessage());

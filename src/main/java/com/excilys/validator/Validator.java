@@ -1,7 +1,6 @@
 package com.excilys.validator;
 
 import java.util.Date;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,7 +40,7 @@ public class Validator {
    */
   public boolean validateId(String id) throws ValidationException {
     if (id == null) {
-      throw new ValidationException("The id is null");
+      return true;
     }
     Pattern p = Pattern.compile("^-?\\d+$");
     Matcher m = p.matcher(id);
@@ -63,35 +62,19 @@ public class Validator {
     }
     return true;
   }
-  
-  /**
-   * Validate date format to match "dd/MM/yyyy"
-   * @param String date
-   * @return true if the date format matches date
-   * @throws ValidationException
-   */
-  public boolean validateDate(String date) throws ValidationException {
-    if(date == null) return true;
-    Pattern p = Pattern.compile("^([0-2][0-9]|(3)[0-1])(\\/)(((0)[0-9])|((1)[0-2]))(\\/)\\d{4}$");
-    Matcher m = p.matcher(date);
-    if (!m.matches()) {
-      throw new ValidationException("The date entered is not valid");
-    }
-    return true;
-  }
-  
+   
   /**
    * Validate date format to match "yyyy-MM-dd"
    * @param String date
    * @return true if the date format matches date
    * @throws ValidationException
    */
-  public boolean validateReversedDate(String date) throws ValidationException {
+  public boolean validateDate(String date) throws ValidationException {
     if(date == null) return true;
     Pattern p = Pattern.compile("^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])$");
     Matcher m = p.matcher(date);
     if (!m.matches()) {
-      throw new ValidationException("The date entered is not valid");
+      throw new ValidationException("The date entered is not valid (\"yyyy-MM-dd\")") ;
     }
     return true;
   }
@@ -104,11 +87,14 @@ public class Validator {
    * @throws ValidationException
    */
   public boolean validatePrecedence(Date introduced, Date discontinued)
-      throws ValidationException {
-    if (introduced.after(discontinued)) {
-      throw new ValidationException(
-          "Introduction date is more recent than the discontinuation date.");
-    }
+		  throws ValidationException {
+	if(introduced == null || discontinued == null) {
+		return true;
+	}
+	if (introduced.after(discontinued)) {
+	  throw new ValidationException(
+	      "Introduction date is more recent than the discontinuation date.");
+	}
     return true;
   }
   

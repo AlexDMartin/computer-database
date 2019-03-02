@@ -1,42 +1,46 @@
 package com.excilys.controller;
 
+import java.util.Optional;
 import java.util.Scanner;
 
-import com.excilys.dao.DaoFactory;
 import com.excilys.dao.model.Computer;
 import com.excilys.service.ComputerService;
-import com.excilys.validator.Validator;
 import com.excilys.view.DeleteComputerView;
 
 /**
- * The Class DeleteComputerController.
+ * Singleton implementation of DeleteComputerController.
  */
 public class DeleteComputerController {
 
-  /** The delete computer controller instance. */
+  /** Singleton implementation of DeleteComputerController. */
   private static DeleteComputerController deleteComputerControllerInstance = null;
-
+  /** ComputerService */
+  ComputerService computerService = ComputerService.getInstance();
+  /** View. */
+  DeleteComputerView view = DeleteComputerView.getInstance();
+  /** Scanner. */
+  Scanner scan = new Scanner(System.in);
+  
   /**
-   * Instantiates a new delete computer controller.
+   * Singleton implementation of DeleteComputerController.
    */
   private DeleteComputerController() {
-    DeleteComputerView view = DeleteComputerView.getInstance();
-    Validator validator = Validator.getInstance();
 
     view.askForId();
 
-    Scanner scan = new Scanner(System.in);
-    long id = (long) scan.nextInt();
+    int id = scan.nextInt();
 
-    Computer computer = DaoFactory.getInstance().getComputerDao().get(id).get();
-
-    ComputerService.getInstance().delete(computer);
+    Optional<Computer> computer = computerService.get(id);
+    
+    if(computer.isPresent()) {
+    	ComputerService.getInstance().delete(computer.get());
+    }
 
     scan.close();
   }
 
   /**
-   * Gets the single instance of DeleteComputerController.
+   * Singleton implementation of DeleteComputerController.
    *
    * @return single instance of DeleteComputerController
    */

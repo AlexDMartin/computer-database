@@ -72,8 +72,8 @@ public class EditComputer extends HttpServlet {
     try {
       validator.validateId(request.getParameter("id"));
       validator.validateName(request.getParameter("computerName"));
-      validator.validateReversedDate(request.getParameter("introduced"));
-      validator.validateReversedDate(request.getParameter("discontinued"));
+      validator.validateDate(request.getParameter("introduced"));
+      validator.validateDate(request.getParameter("discontinued"));
       
       long companyId = Long.parseLong(request.getParameter("companyId"));
       Company company = DaoFactory.getInstance().getCompanyDao().get(companyId).get();

@@ -71,8 +71,8 @@ public class AddComputer extends HttpServlet {
       Company company = CompanyService.getInstance().get(companyId).get();
     
       validator.validateName(request.getParameter("computerName"));
-      validator.validateReversedDate(request.getParameter("introduced"));
-      validator.validateReversedDate(request.getParameter("discontinued"));
+      validator.validateDate(request.getParameter("introduced"));
+      validator.validateDate(request.getParameter("discontinued"));
 
       computer = cb
           .addName(request.getParameter("computerName"))
