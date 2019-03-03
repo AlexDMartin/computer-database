@@ -5,11 +5,11 @@
 <head>
 <title>Computer Database</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="../computer-database/css/bootstrap.min.css" rel="stylesheet"
+<link href="<c:url value="/css/bootstrap.min.css" />" rel="stylesheet"
 	media="screen">
-<link href="../computer-database/css/font-awesome.css" rel="stylesheet"
+<link href="<c:url value="/css/font-awesome.css" />" rel="stylesheet"
 	media="screen">
-<link href="../computer-database/css/main.css" rel="stylesheet"
+<link href="<c:url value="/css/main.css" />" rel="stylesheet"
 	media="screen">
 </head>
 <body>
@@ -29,7 +29,6 @@
 
 					<form action="Edit" method="POST">
 						<input type="hidden" value="${computer.getId()}" id="id" name="id" />
-						<!-- TODO: Change this value with the computer id -->
 						<fieldset>
 							<div class="form-group">
 								<label for="computerName">Computer name</label> <input
