@@ -158,12 +158,12 @@ public class ComputerMapper implements Mapper<Computer> {
 
 
       Company company = null;
+      validator.validateCompany((CompanyDto) computerDto.getCompanyDto());
       if (computerDto.getCompanyDto() != null) {
         CompanyBuilder companyBuilder = new CompanyBuilder();
         company = companyBuilder.addId(Integer.parseInt(computerDto.getCompanyDto().getId()))
             .addName(computerDto.getCompanyDto().getName()).build();
       }
-      validator.validateCompany(company);
       computerBuilder.addCompany(company);
     } catch (ValidationException e) {
       logger.warn(e.getMessage());

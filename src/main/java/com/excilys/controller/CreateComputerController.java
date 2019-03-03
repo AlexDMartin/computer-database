@@ -78,12 +78,12 @@ public class CreateComputerController {
       view.askForCompany();
       long companyInput = (long) scan.nextInt();
       Optional<Company> company = companyService.get(companyInput);
-      validator.validateCompany(company.get());
       CompanyDto companyDto = null;
       if (company.isPresent()) {
         companyDto = (CompanyDto) companyMapper.entityToDto(company.get());
         computerDtoBuilder.addCompanyDto(companyDto);
       }
+      validator.validateCompany(companyDto);
 
       computer = computerMapper.dtoToEntity(computerDtoBuilder.build());
 

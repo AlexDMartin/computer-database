@@ -48,6 +48,8 @@
 		<taglibs.version>1.2.5</taglibs.version>
 		<!-- JSTL -->
 		<jstl.version>1.2</jstl.version>
+		<!-- HikariCP -->
+		<hikaricp.version>2.7.0</hikaricp.version>
 	<!-- Config files -->
 		<!-- Checkstyle -->
 		<checkstyle.config.location>src/main/resources/checkstyle.xml</checkstyle.config.location>
@@ -126,6 +128,11 @@
 		    <artifactId>jstl</artifactId>
 		    <version>${jstl.version}</version>
 		</dependency>
+		 <dependency>
+	        <groupId>com.zaxxer</groupId>
+	        <artifactId>HikariCP</artifactId>
+	        <version>3.3.1</version>
+	    </dependency>
 	</dependencies>
 	
 	<reporting>

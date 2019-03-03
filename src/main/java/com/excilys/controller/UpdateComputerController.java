@@ -86,12 +86,13 @@ public class UpdateComputerController {
         view.askForNewCompany(computerDto.getCompanyDto());
         long companyInput = (long) scan.nextInt();
         Optional<Company> company = companyService.get(companyInput);
-        validator.validateCompany(company.get());
+        
         CompanyDto companyDto = null;
         if (company.isPresent()) {
           companyDto = (CompanyDto) companyMapper.entityToDto(company.get());
           computerDto.setCompanyDto(companyDto);
         }
+        validator.validateCompany(companyDto);
 
         computer = computerMapper.dtoToEntity(computerDto);
 

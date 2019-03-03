@@ -1,6 +1,6 @@
 package com.excilys.validator;
 
-import com.excilys.dao.model.Company;
+import com.excilys.dto.CompanyDto;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,7 +41,7 @@ public class Validator {
     if (id == null) {
       return true;
     }
-    Pattern p = Pattern.compile("^-?\\d+$");
+    Pattern p = Pattern.compile("^\\d+$");
     Matcher m = p.matcher(id);
     if (!m.matches()) {
       throw new ValidationException("The id entered is not valid");
@@ -71,7 +71,7 @@ public class Validator {
    * @throws ValidationException Validation exception
    */
   public boolean validateDate(String date) throws ValidationException {
-    if (date == null) {
+    if (date == null || date.isEmpty()) {
       return true;
     }
     Pattern p = Pattern.compile("^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])$");
@@ -104,16 +104,14 @@ public class Validator {
   /**
    * Validate that the company exists when it's called by the DAOs.
    * 
-   * @param company the company
+   * @param companyDto the company Data transfer Object
    * @return true
    */
-  public boolean validateCompany(Company company) throws ValidationException {
-    if (company == null) {      
+  public boolean validateCompany(CompanyDto companyDto) throws ValidationException {
+    if (companyDto == null) {      
       return true;
     }
-    if (validateId(Integer.toString(company.getId())) && validateName(company.getName())) {
-      return true;
-    }
-    throw new ValidationException("Company is not valid");
+    return validateId(companyDto.getId()) 
+        && validateName(companyDto.getName());
   }
 }
