@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -17,8 +18,16 @@ import org.slf4j.LoggerFactory;
  */
 @WebServlet(name = "Dashboard", urlPatterns = {"/", "/dashboard"})
 public class IndexServlet extends HttpServlet {
+  
+  /** SerialVersionUID. */
   private static final long serialVersionUID = 1L;
-
+  /** ComputerService. */
+  ComputerService computerService = ComputerService.getInstance();
+  /** Logger. */
+  Logger logger = LoggerFactory.getLogger(this.getClass());
+  /** PaginationController. */
+  PaginationController paginationController = PaginationController.getInstance();
+  
   /**
    * Default constructor.
    */
@@ -35,8 +44,6 @@ public class IndexServlet extends HttpServlet {
     String pageString = request.getParameter("page");
     String lppString = request.getParameter("lpp");
     List<Computer> computerList = null;
-
-    PaginationController paginationController = PaginationController.getInstance();
 
     if (lppString != null && lppString != "") {
       paginationController.setLimit(Integer.parseInt(lppString));
@@ -56,9 +63,9 @@ public class IndexServlet extends HttpServlet {
     }
 
     try {
-      computerList = ComputerService.getInstance().getAllPaginated(paginationController);
+      computerList = computerService.getAllPaginated(paginationController);
     } catch (Exception e) {
-      LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
+      logger.warn(e.getMessage());
     }
 
     request.setAttribute("computerList", computerList);

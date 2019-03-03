@@ -1,21 +1,24 @@
 package com.excilys.controller.servlets;
 
+import com.excilys.dao.mappers.CompanyMapper;
+import com.excilys.dao.mappers.ComputerMapper;
 import com.excilys.dao.model.Company;
 import com.excilys.dao.model.Computer;
-import com.excilys.dao.model.ComputerBuilder;
+import com.excilys.dto.CompanyDto;
+import com.excilys.dto.ComputerDto;
+import com.excilys.dto.ComputerDtoBuilder;
 import com.excilys.service.CompanyService;
 import com.excilys.service.ComputerService;
-import com.excilys.validator.Validator;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.ValidationException;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -24,13 +27,22 @@ import org.slf4j.LoggerFactory;
 @WebServlet(name = "Add", urlPatterns = {"/Add"})
 public class AddComputer extends HttpServlet {
 
-  /**
-   * SerialVersionUID.
-   */
+  /** SerialVersionUID. */
   private static final long serialVersionUID = 86529706591354229L;
+  /** ComputerService. */
+  ComputerService computerService = ComputerService.getInstance();
+  /** ComputerMapper. */
+  ComputerMapper computerMapper = ComputerMapper.getInstance();
+  /** CompanyService. */
+  CompanyService companyService = CompanyService.getInstance();
+  /** CompanyMapper. */
+  CompanyMapper companyMapper = CompanyMapper.getInstance();
+  /** Logger. */
+  Logger logger = LoggerFactory.getLogger(this.getClass());
 
   /**
    * The servlet used to add Computers.
+   * 
    * @see HttpServlet#HttpServlet()
    */
   public AddComputer() {
@@ -39,19 +51,20 @@ public class AddComputer extends HttpServlet {
 
   /**
    * This doGetMethod needs to return the company list in order to populate the scrolling list.
+   * 
    * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
    */
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    List<Company> companyList = null;
     try {
-      companyList = CompanyService.getInstance().getAll();
+      List<Company> companyList = new ArrayList<Company>();
+      companyList = companyService.getAll();
+      request.setAttribute("companyList", companyList);
     } catch (Exception e) {
-      LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
+      logger.warn(e.getMessage());
       request.setAttribute("stacktrace", e.getStackTrace());
     }
 
-    request.setAttribute("companyList", companyList);
     request.getRequestDispatcher("view/addComputer.jsp").forward(request, response);
   }
 
@@ -61,46 +74,47 @@ public class AddComputer extends HttpServlet {
    */
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-
-    Validator validator = Validator.getInstance();
-    ComputerBuilder cb = new ComputerBuilder();
-    Computer computer = null;
     try {
+      ComputerDtoBuilder computerDtoBuilder = new ComputerDtoBuilder();
 
-      long companyId = Long.parseLong(request.getParameter("companyId"));
-      final Company company = CompanyService.getInstance().get(companyId).get();
+      if (request.getParameter("companyId") != null) {
+        logger.debug("companyId" + request.getParameter("companyId"));
+        long companyId = Long.parseLong(request.getParameter("companyId"));
+        Optional<Company> company = companyService.get(companyId);
+        CompanyDto companyDto = null;
+        if (company.isPresent()) {
+          companyDto = (CompanyDto) companyMapper.entityToDto(company.get());
+        }
+        computerDtoBuilder.addCompanyDto(companyDto);
+      }
 
-      validator.validateName(request.getParameter("computerName"));
-      validator.validateDate(request.getParameter("introduced"));
-      validator.validateDate(request.getParameter("discontinued"));
+      logger.debug("computerName" + request.getParameter("computerName"));
+      computerDtoBuilder.addName(request.getParameter("computerName"));
+      
+      logger.debug("introduced" + request.getParameter("introduced"));
+      if (request.getParameter("introduced") != null) {
+        computerDtoBuilder.addIntroduced(request.getParameter("introduced"));
+      }
+      
+      logger.debug("discontinued" + request.getParameter("discontinued"));
+      if (request.getParameter("discontinued") != null) {
+        computerDtoBuilder.addDiscontinued(request.getParameter("discontinued"));
+      }
 
-      computer = cb.addName(request.getParameter("computerName"))
-          .addIntroduced(
-              new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("introduced")))
-          .addDiscontinued(
-              new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("discontinued")))
-          .addCompany(company).build();
-    } catch (ValidationException e) {
-      LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
-      request.setAttribute("stacktrace", e.getMessage());
-      request.getRequestDispatcher("view/500.jsp").forward(request, response);
-    } catch (ParseException e) {
-      LoggerFactory.getLogger(this.getClass()).warn("Unable to parse Date");
-      request.setAttribute("stacktrace", e.getStackTrace());
-      request.getRequestDispatcher("view/500.jsp").forward(request, response);
-    }
+      ComputerDto computerDto = null;
+      computerDto = computerDtoBuilder.build();
 
-    try {
-      if (computer != null) {
-        ComputerService.getInstance().save(computer);
+      if (computerDto != null) {
+        Computer computer = computerMapper.dtoToEntity(computerDto);
+        computerService.save(computer);
       }
     } catch (Exception e) {
-      LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
+      logger.warn(e.getMessage());
       request.setAttribute("stacktrace", e.getMessage());
       request.getRequestDispatcher("view/500.jsp").forward(request, response);
-    }
+      return;
+    } 
 
     request.getRequestDispatcher("Dashboard").forward(request, response);
   }
-
 }
