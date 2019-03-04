@@ -25,7 +25,7 @@
 			<div class="row">
 				<div class="col-xs-8 col-xs-offset-2 box">
 					<h1>Add Computer</h1>
-					<form action="Add" method="POST">
+					<form id="addform"  action="Add" method="POST">
 						<fieldset>
 							<div class="form-group">
 								<label for="computerName">Computer name</label> <input
@@ -35,12 +35,12 @@
 							<div class="form-group">
 								<label for="introduced">Introduced date</label> <input
 									type="date" class="form-control" id="introduced"
-									placeholder="Introduced date" name="introduced">
+									placeholder="Introduced date" name="introduced" min="1970-01-01">
 							</div>
 							<div class="form-group">
 								<label for="discontinued">Discontinued date</label> <input
 									type="date" class="form-control" id="discontinued"
-									placeholder="Discontinued date" name="discontinued">
+									placeholder="Discontinued date" name="discontinued" min="1970-01-01">
 							</div>
 							<div class="form-group">
 								<label for="companyId">Company</label> <select
@@ -60,5 +60,8 @@
 			</div>
 		</div>
 	</section>
+	<script src="<c:url value="/js/jquery.min.js" />" ></script>
+	<script src="<c:url value="/js/jquery.validate.min.js" />"></script>
+	<script src="<c:url value="/js/validation/AddValidator.js" />" ></script>
 </body>
 </html>

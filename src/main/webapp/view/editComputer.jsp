@@ -27,7 +27,7 @@
 						${computer.getId()}</div>
 					<h1>Edit Computer</h1>
 
-					<form action="Edit" method="POST">
+					<form id="editform" action="Edit" method="POST">
 						<input type="hidden" value="${computer.getId()}" id="id" name="id" />
 						<fieldset>
 							<div class="form-group">
@@ -67,5 +67,8 @@
 			</div>
 		</div>
 	</section>
+	<script src="<c:url value="/js/jquery.min.js" />" ></script>
+	<script src="<c:url value="/js/jquery.validate.min.js" />"></script>
+	<script src="<c:url value="/js/validation/EditValidator.js" />" ></script>
 </body>
 </html>
