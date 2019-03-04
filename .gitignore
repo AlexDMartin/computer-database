@@ -2,6 +2,9 @@
 # Created by https://www.gitignore.io/api/java,eclipse
 # Edit at https://www.gitignore.io/?templates=java,eclipse
 
+# Hikari configuration file (must remain private)#
+src/main/resources/hikari.properties
+
 ### Eclipse ###
 
 .metadata

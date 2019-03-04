@@ -1,66 +1,43 @@
 package com.excilys.persistance.utils;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 /**
- * The Class Connector.
+ * Singleton implementation of Connector.
  */
 public class Connector {
 
   /** The connector instance. */
   private static Connector connectorInstance = null;
-
-  /** The connection. */
-  private Connection connection;
-
-  /** The database name. */
-  private String databaseName = "computer-database-db";
-
-  /** The user name. */
-  private String userName = "admincdb";
-
-  /** The password. */
-  private String password = "qwerty1234";
-
-  /** The dbms. */
-  private String dbms = "mysql";
-
-  /** The server name. */
-  private String serverName = "localhost";
-
-  /** The port number. */
-  private int portNumber = 3306;
+  /** Logger. */
+  private static Logger logger = LoggerFactory.getLogger(Connector.class);
+  /** Connection. */
+  private static Connection connection;
+  /** Hikari Config. */
+  private static HikariConfig config;
+  /** Hikari DataSource. */
+  private static HikariDataSource dataSource;
 
   /**
-   * Instantiates a new connector.
+   * Singleton implementation of Connector.
    */
   private Connector() {
+    Connector.config = new HikariConfig("/hikari.properties");
+    Connector.dataSource = new HikariDataSource(Connector.config);
     try {
-      Class.forName("com.mysql.jdbc.Driver");
-    } catch (ClassNotFoundException e) {
-      System.out.println(e.toString());
-    }
-    try {
-      LoggerFactory.getLogger(this.getClass()).info("Connector instance created");
-      Connection conn = null;
-      Properties connectionProps = new Properties();
-      connectionProps.put("user", this.userName);
-      connectionProps.put("password", this.password);
-      conn = DriverManager.getConnection("jdbc:" + this.dbms + "://" + this.serverName + ":"
-          + this.portNumber + "/" + this.databaseName, connectionProps);
-
-      this.connection = conn;
+      Connector.connection = Connector.dataSource.getConnection();
     } catch (SQLException e) {
-      LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
+      logger.warn(e.getMessage());
     }
   }
 
   /**
-   * Gets the single instance of Connector.
+   * Singleton implementation of Connector.
    *
    * @return single instance of Connector
    */
@@ -75,20 +52,9 @@ public class Connector {
    * Gets the connection.
    *
    * @return the connection
+   * @throws SQLException
    */
-  public Connection getConnection() {
-    return this.connection;
-  }
-
-  /**
-   * Closes the connection.
-   */
-  public void closeConnection() {
-    try {
-      this.connection.close();
-      LoggerFactory.getLogger(this.getClass()).info("Connection closed");
-    } catch (SQLException e) {
-      LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
-    }
+  public Connection getConnection() throws SQLException {
+    return Connector.connection;
   }
 }
