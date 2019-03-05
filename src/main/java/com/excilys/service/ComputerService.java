@@ -1,11 +1,13 @@
 package com.excilys.service;
 
-import com.excilys.controller.PaginationController;
-import com.excilys.dao.DaoFactory;
-import com.excilys.dao.model.Computer;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.excilys.controller.PaginationController;
+import com.excilys.dao.ComputerDao;
+import com.excilys.dao.DaoFactory;
+import com.excilys.dao.model.Computer;
 
 /**
  * The Class ComputerService.
@@ -14,7 +16,11 @@ public class ComputerService implements CallableService<Computer> {
 
   /** The computer service instance. */
   private static ComputerService computerServiceInstance = null;
-
+  /** ComputerDao. */
+  private static ComputerDao computerDao = DaoFactory.getInstance().getComputerDao();
+  /** Logger. */
+  private static Logger logger = LoggerFactory.getLogger(ComputerService.class);
+  
   /**
    * Instantiates a new computer service.
    */
@@ -39,7 +45,7 @@ public class ComputerService implements CallableService<Computer> {
    */
   @Override
   public Optional<Computer> get(long id) {
-    return DaoFactory.getInstance().getComputerDao().get(id);
+    return computerDao.get(id);
   }
 
   /*
@@ -58,9 +64,14 @@ public class ComputerService implements CallableService<Computer> {
    * @see com.excilys.service.CallableService#getAll()
    */
   public List<Computer> getAllPaginated(PaginationController paginationController) {
-    return DaoFactory.getInstance().getComputerDao().getAllPaginated(paginationController);
+    return computerDao.getAllPaginated(paginationController);
   }
 
+
+  public List<Computer> getAllSearchedPaginated(String filter, PaginationController paginationController) {
+    return computerDao.getAllSearchedPaginated(filter, paginationController);
+  }
+  
   /*
    * (non-Javadoc)
    * 
@@ -69,9 +80,9 @@ public class ComputerService implements CallableService<Computer> {
   @Override
   public void save(Computer t) throws Exception {
     try {
-      DaoFactory.getInstance().getComputerDao().save(t);
+      computerDao.save(t);
     } catch (Exception e) {
-      LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
+      logger.warn(e.getMessage());
     }
   }
 
@@ -82,7 +93,7 @@ public class ComputerService implements CallableService<Computer> {
    */
   @Override
   public void update(Computer computer) {
-    DaoFactory.getInstance().getComputerDao().update(computer);
+    computerDao.update(computer);
   }
 
   /*
@@ -92,7 +103,7 @@ public class ComputerService implements CallableService<Computer> {
    */
   @Override
   public void delete(Computer computer) {
-    DaoFactory.getInstance().getComputerDao().delete(computer);
+    computerDao.delete(computer);
   }
 
 }

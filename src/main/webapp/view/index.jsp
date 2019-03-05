@@ -23,12 +23,14 @@
 
 	<section id="main">
 		<div class="container">
-			<h1 id="homeTitle">${computerList.size()}Computers found</h1>
+			<h1 id="homeTitle">${requestCount} Computers found</h1>
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
-					<form id="searchForm" action="#" method="GET" class="form-inline">
-
-						<input type="search" id="searchbox" name="search"
+					<form id="searchForm" action="Search" method="GET" class="form-inline">
+						<input type="hidden" value="${pageType}" />
+						<input type="hidden" value="${lpp}" />
+						<input type="hidden" value="${page}" />
+						<input type="search" id="searchbox" name="filter"
 							class="form-control" placeholder="Search name" /> <input
 							type="submit" id="searchsubmit" value="Filter by name"
 							class="btn btn-primary" />
@@ -84,22 +86,48 @@
 	<footer class="navbar-fixed-bottom">
 		<div class="container text-center">
 			<ul class="pagination">
-				<li><a href="Dashboard?page=${page-1}&lpp=${lpp}" aria-label="Previous"> <span
-						aria-hidden="true">&laquo;</span>
-				</a></li>
-				<li><a href="Dashboard?page=${page}&lpp=${lpp}">${page}</a></li>
-				<li><a href="Dashboard?page=${page+1}&lpp=${lpp}">${page+1}</a></li>
-				<li><a href="Dashboard?page=${page+2}&lpp=${lpp}">${page+2}</a></li>
-				<li><a href="Dashboard?page=${page+3}&lpp=${lpp}">${page+3}</a></li>
-				<li><a href="Dashboard?page=${page+4}&lpp=${lpp}">${page+4}</a></li>
-				<li><a href="Dashboard?page=${page+1}&lpp=${lpp}" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
-				</a></li>
+				<c:choose>
+					<c:when test="${pageType == 'search'}">
+						<li><a href="Search?filter=${filter}&page=${page-1}&lpp=${lpp}" aria-label="Previous"> <span
+							aria-hidden="true">&laquo;</span>
+						</a></li>
+						<li><a href="Search?filter=${filter}&page=${page}&lpp=${lpp}">${page}</a></li>
+						<li><a href="Search?filter=${filter}&page=${page+1}&lpp=${lpp}">${page+1}</a></li>
+						<li><a href="Search?filter=${filter}&page=${page+2}&lpp=${lpp}">${page+2}</a></li>
+						<li><a href="Search?filter=${filter}&page=${page+3}&lpp=${lpp}">${page+3}</a></li>
+						<li><a href="Search?filter=${filter}&page=${page+4}&lpp=${lpp}">${page+4}</a></li>
+						<li><a href="Search?filter=${filter}&page=${page+1}&lpp=${lpp}" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+						</a></li>
+					</c:when>
+					<c:otherwise>
+					<li><a href="Dashboard?page=${page-1}&lpp=${lpp}" aria-label="Previous"> <span
+							aria-hidden="true">&laquo;</span>
+					</a></li>
+						<li><a href="Dashboard?page=${page}&lpp=${lpp}">${page}</a></li>
+						<li><a href="Dashboard?page=${page+1}&lpp=${lpp}">${page+1}</a></li>
+						<li><a href="Dashboard?page=${page+2}&lpp=${lpp}">${page+2}</a></li>
+						<li><a href="Dashboard?page=${page+3}&lpp=${lpp}">${page+3}</a></li>
+						<li><a href="Dashboard?page=${page+4}&lpp=${lpp}">${page+4}</a></li>
+						<li><a href="Dashboard?page=${page+1}&lpp=${lpp}" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+						</a></li>
+					</c:otherwise>
+				</c:choose>	
 			</ul>
 
 			<div class="btn-group btn-group-sm pull-right" role="group">
-				<a href="Dashboard?page=${page}&lpp=10"><button type="button" class="btn btn-default">10</button></a>
-				<a href="Dashboard?page=${page}&lpp=50"><button type="button" class="btn btn-default">50</button></a>
-				<a href="Dashboard?page=${page}&lpp=100"><button type="button" class="btn btn-default">100</button></a>
+			<c:choose>
+				<c:when test="${pageType == 'search'}">
+					<a href="Search?filter=${filter}&page=${page}&lpp=10"><button type="button" class="btn btn-default">10</button></a>
+					<a href="Search?filter=${filter}&page=${page}&lpp=50"><button type="button" class="btn btn-default">50</button></a>
+					<a href="Search?filter=${filter}&page=${page}&lpp=100"><button type="button" class="btn btn-default">100</button></a>
+				</c:when>
+				<c:otherwise>
+					<a href="Dashboard?page=${page}&lpp=10"><button type="button" class="btn btn-default">10</button></a>
+					<a href="Dashboard?page=${page}&lpp=50"><button type="button" class="btn btn-default">50</button></a>
+					<a href="Dashboard?page=${page}&lpp=100"><button type="button" class="btn btn-default">100</button></a>
+				</c:otherwise>
+			</c:choose>
+				
 			</div>
 		</div>
 	</footer>

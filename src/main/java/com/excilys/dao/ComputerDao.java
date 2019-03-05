@@ -1,16 +1,18 @@
 package com.excilys.dao;
 
-import com.excilys.controller.PaginationController;
-import com.excilys.dao.mappers.ComputerMapper;
-import com.excilys.dao.model.Computer;
-import com.excilys.persistance.utils.Connector;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.excilys.controller.PaginationController;
+import com.excilys.dao.mappers.ComputerMapper;
+import com.excilys.dao.model.Computer;
+import com.excilys.persistance.utils.Connector;
 
 /**
  * The Class ComputerDao.
@@ -19,28 +21,42 @@ public class ComputerDao implements Dao<Computer> {
 
   /** The computer dao instance. */
   private static ComputerDao computerDaoInstance = null;
-
+  /** Logger. */
+  private static Logger logger = LoggerFactory.getLogger(ComputerDao.class);
+  /** Connector. */
+  private static Connector connector = Connector.getInstance();
+  /** ComputerMapper. */
+  private static ComputerMapper computerMapper = ComputerMapper.getInstance();
+  
   /** The Constant GET_ONE. */
-  static final String GET_ONE =
+  private static final String GET_ONE =
       "SELECT ID, NAME, INTRODUCED, DISCONTINUED, COMPANY_ID FROM computer WHERE ID = ? LIMIT 1";
 
   /** The Constant GET_ALL. */
-  static final String GET_ALL =
+  private static final String GET_ALL =
       "SELECT ID, NAME, INTRODUCED, DISCONTINUED, COMPANY_ID FROM computer ORDER BY ID";
 
   /** The Constant GET_PAGINATED. */
-  static final String GET_PAGINATED =
+  private static final String GET_PAGINATED =
       "SELECT ID, NAME, INTRODUCED, DISCONTINUED, COMPANY_ID FROM computer "
       + "ORDER BY ID "
       + "LIMIT ? "
       + "OFFSET ?";
+  
+  /** The Constant GET_SEARCHED_PAGINATED */
+  private static final String GET_SEARCHED_PAGINATED=
+      "SELECT computer.ID, computer.NAME, INTRODUCED, DISCONTINUED, COMPANY_ID FROM computer LEFT JOIN company ON computer.ID = company.ID "
+      + "WHERE computer.NAME LIKE ? OR company.NAME LIKE ? "
+      + "ORDER BY computer.ID "
+      + "LIMIT ? "
+      + "OFFSET ?";
 
   /** The Constant SAVE. */
-  static final String SAVE =
+  private static final String SAVE =
       "INSERT INTO computer (NAME, INTRODUCED, DISCONTINUED, COMPANY_ID) VALUES (?,?,?,?)";
 
   /** The Constant UPDATE. */
-  static final String UPDATE =
+  private static final String UPDATE =
       "UPDATE computer SET "
       + "NAME = ?"
       + ", INTRODUCED = ? "
@@ -49,7 +65,7 @@ public class ComputerDao implements Dao<Computer> {
       + "WHERE ID = ?";
 
   /** The Constant DELETE. */
-  static final String DELETE = "DELETE FROM computer WHERE ID = ?";
+  private static final String DELETE = "DELETE FROM computer WHERE ID = ?";
 
   /**
    * Instantiates a new computer dao.
@@ -75,17 +91,16 @@ public class ComputerDao implements Dao<Computer> {
    */
   @Override
   public Optional<Computer> get(long id) {
-    LoggerFactory.getLogger(this.getClass()).info("ComputerDao 'get' called");
     Computer resultItem = null;
 
     try {
       PreparedStatement getStatement =
-          Connector.getInstance().getConnection().prepareStatement(GET_ONE);
+          connector.getConnection().prepareStatement(GET_ONE);
       getStatement.setLong(1, id);
       ResultSet rs = getStatement.executeQuery();
-      resultItem = ComputerMapper.getInstance().map(rs).get(0);
+      resultItem = computerMapper.map(rs).get(0);
     } catch (SQLException e) {
-      LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
+      logger.warn(e.getMessage());
     }
 
     return Optional.of(resultItem);
@@ -98,16 +113,15 @@ public class ComputerDao implements Dao<Computer> {
    */
   @Override
   public List<Computer> getAll() {
-    LoggerFactory.getLogger(this.getClass()).info("ComputerDao 'getAll' called");
     List<Computer> resultItems = null;
 
     try {
       PreparedStatement getAllStatement =
-          Connector.getInstance().getConnection().prepareStatement(GET_ALL);
+         connector.getConnection().prepareStatement(GET_ALL);
       ResultSet rs = getAllStatement.executeQuery();
-      resultItems = ComputerMapper.getInstance().map(rs);
+      resultItems = computerMapper.map(rs);
     } catch (SQLException e) {
-      LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
+      logger.warn(e.getMessage());
     }
 
     return resultItems;
@@ -119,18 +133,17 @@ public class ComputerDao implements Dao<Computer> {
    * @param paginationController A pagination controller
    */
   public List<Computer> getAllPaginated(PaginationController paginationController) {
-    LoggerFactory.getLogger(this.getClass()).info("ComputerDao 'getAllPaginated' called");
-    List<Computer> resultItems = null;
+    List<Computer> resultItems = new ArrayList<Computer>();
 
     try {
       PreparedStatement getAllPaginatedStatement =
-          Connector.getInstance().getConnection().prepareStatement(GET_PAGINATED);
+          connector.getConnection().prepareStatement(GET_PAGINATED);
       getAllPaginatedStatement.setInt(1, paginationController.getLimit());
       getAllPaginatedStatement.setInt(2, paginationController.getOffset());
       ResultSet rs = getAllPaginatedStatement.executeQuery();
-      resultItems = ComputerMapper.getInstance().map(rs);
+      resultItems = computerMapper.map(rs);
     } catch (SQLException e) {
-      LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
+      logger.warn(e.getMessage());
     }
 
     return resultItems;
@@ -143,20 +156,18 @@ public class ComputerDao implements Dao<Computer> {
    */
   @Override
   public void save(Computer computer) {
-    LoggerFactory.getLogger(this.getClass()).info("ComputerDao 'save' called");
-
     try {
       PreparedStatement saveStatement =
-          Connector.getInstance().getConnection().prepareStatement(SAVE);
+          connector.getConnection().prepareStatement(SAVE);
       saveStatement.setString(1, computer.getName());
       saveStatement.setTimestamp(2, new Timestamp(computer.getIntroduced().getTime()));
       saveStatement.setTimestamp(3, new Timestamp(computer.getDiscontinued().getTime()));
       saveStatement.setInt(4, computer.getCompany().getId());
 
       int resultCode = saveStatement.executeUpdate();
-      LoggerFactory.getLogger(this.getClass()).info("Save operated on " + resultCode + " row(s)");
+      logger.info("Save operated on " + resultCode + " row(s)");
     } catch (SQLException e) {
-      LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
+      logger.warn(e.getMessage());
     }
   }
 
@@ -167,11 +178,9 @@ public class ComputerDao implements Dao<Computer> {
    */
   @Override
   public void update(Computer computer) {
-    LoggerFactory.getLogger(this.getClass()).info("ComputerDao 'update' called");
-
     try {
       PreparedStatement updateStatement =
-          Connector.getInstance().getConnection().prepareStatement(UPDATE);
+          connector.getConnection().prepareStatement(UPDATE);
       updateStatement.setString(1, computer.getName());
       updateStatement.setTimestamp(2, new Timestamp(computer.getIntroduced().getTime()));
       updateStatement.setTimestamp(3, new Timestamp(computer.getDiscontinued().getTime()));
@@ -179,7 +188,7 @@ public class ComputerDao implements Dao<Computer> {
       updateStatement.setInt(5, computer.getId());
 
       int resultCode = updateStatement.executeUpdate();
-      LoggerFactory.getLogger(this.getClass()).info("Update operated on " + resultCode + " row(s)");
+      logger.info("Update operated on " + resultCode + " row(s)");
     } catch (SQLException e) {
       LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
     }
@@ -192,17 +201,35 @@ public class ComputerDao implements Dao<Computer> {
    */
   @Override
   public void delete(Computer computer) {
-    LoggerFactory.getLogger(this.getClass()).info("ComputerDao 'delete' called");
-
     try {
       PreparedStatement deleteStatement =
-          Connector.getInstance().getConnection().prepareStatement(DELETE);
+          connector.getConnection().prepareStatement(DELETE);
       deleteStatement.setLong(1, computer.getId());
 
       int resultCode = deleteStatement.executeUpdate();
-      LoggerFactory.getLogger(this.getClass()).info("Delete operated on " + resultCode + " row(s)");
+      logger.info("Delete operated on " + resultCode + " row(s)");
     } catch (SQLException e) {
-      LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
+      logger.warn(e.getMessage());
     }
+  }
+
+  public List<Computer> getAllSearchedPaginated(String filter, PaginationController paginationController) {
+    List<Computer> resultItems = new ArrayList<Computer>();
+
+    try {
+      PreparedStatement getAllSearchedPaginatedStatement =
+          connector.getConnection().prepareStatement(GET_SEARCHED_PAGINATED);
+      String filterWithPercents = "%" + filter + "%";
+      getAllSearchedPaginatedStatement.setString(1, filterWithPercents);
+      getAllSearchedPaginatedStatement.setString(2, filterWithPercents);
+      getAllSearchedPaginatedStatement.setInt(3, paginationController.getLimit());
+      getAllSearchedPaginatedStatement.setInt(4, paginationController.getOffset());
+      ResultSet rs = getAllSearchedPaginatedStatement.executeQuery();
+      resultItems = computerMapper.map(rs);
+    } catch (SQLException e) {
+      logger.warn(e.getMessage());
+    }
+
+    return resultItems;
   }
 }
