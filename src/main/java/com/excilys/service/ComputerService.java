@@ -105,5 +105,13 @@ public class ComputerService implements CallableService<Computer> {
   public void delete(Computer computer) {
     computerDao.delete(computer);
   }
+  
+  public int countAllComputer() {
+    return computerDao.countAllComputer();
+  }
+  
+  public int countAllComputerByCriteria(String criteria) {
+    return computerDao.countAllComputerByCriteria(criteria);
+  }
 
 }

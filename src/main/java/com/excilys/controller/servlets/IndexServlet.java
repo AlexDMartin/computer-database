@@ -64,12 +64,15 @@ public class IndexServlet extends HttpServlet {
     paginationController.setPage(page);
     paginationController.setLinePerPage(lpp);
 
+    int count = 0;
     try {
       computerList = computerService.getAllPaginated(paginationController);
+      count = computerService.countAllComputer(); 
     } catch (Exception e) {
       logger.warn(e.getMessage());
     }
 
+    request.setAttribute("count", count);
     request.setAttribute("computerList", computerList);
     request.setAttribute("paginationController", paginationController);
     request.getRequestDispatcher("view/index.jsp").forward(request, response);

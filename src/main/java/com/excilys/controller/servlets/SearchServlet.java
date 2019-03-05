@@ -66,8 +66,10 @@ public class SearchServlet extends HttpServlet {
       paginationController.setLinePerPage(lpp);
       
       String filterString = request.getParameter("filter");
+      int count = 0;
       try {
         computerList = computerService.getAllSearchedPaginated(filterString, paginationController);
+        count = computerService.countAllComputerByCriteria(filterString); 
       } catch (Exception e) {
         logger.warn(e.getMessage());
         request.setAttribute("stacktrace", e.getMessage());
@@ -76,6 +78,7 @@ public class SearchServlet extends HttpServlet {
       }
       
       request.setAttribute("filter", filterString);
+      request.setAttribute("count", count);
       request.setAttribute("pageType", "search");
       request.setAttribute("paginationController", paginationController);
       request.setAttribute("computerList", computerList);

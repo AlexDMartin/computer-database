@@ -66,7 +66,16 @@ public class ComputerDao implements Dao<Computer> {
 
   /** The Constant DELETE. */
   private static final String DELETE = "DELETE FROM computer WHERE ID = ?";
-
+  
+  /** The Constant COUNT_ALL_COMPUTERS */
+  private static final String COUNT_ALL_COMPUTERS = "SELECT COUNT(ID) FROM computer";
+  
+  /** The Constant COUNT_ALL_COMPUTERS_BY_CRITERIA */
+  private static final String COUNT_ALL_COMPUTERS_BY_CRITERIA = "SELECT COUNT(computer.ID) "
+      + "FROM computer "
+      + "LEFT JOIN company ON computer.ID = company.ID "
+      + "WHERE computer.NAME LIKE ? OR company.NAME LIKE ? ";
+  
   /**
    * Instantiates a new computer dao.
    */
@@ -231,5 +240,49 @@ public class ComputerDao implements Dao<Computer> {
     }
 
     return resultItems;
+  }
+
+  /**
+   * Counts all Computers
+   * @return the total of computers
+   */
+  public int countAllComputer() {
+    int count = 0;
+    try {
+      PreparedStatement countAllComputersStatement =
+         connector.getConnection().prepareStatement(COUNT_ALL_COMPUTERS);
+      ResultSet rs = countAllComputersStatement.executeQuery();
+      if(rs.next()){
+        count = Integer.parseInt(rs.getString(1));
+      }
+    } catch (SQLException e) {
+      logger.warn(e.getMessage());
+    }
+
+    return count;
+  }
+  
+  /**
+   * Counts all Computers by criteria
+   * @param criteria
+   * @return the total of computers 
+   */
+  public int countAllComputerByCriteria(String criteria) {
+    int count = 0;
+    try {
+      String filter = "%" + criteria + "%";
+      PreparedStatement countAllComputersByCriteriaStatement =
+         connector.getConnection().prepareStatement(COUNT_ALL_COMPUTERS_BY_CRITERIA);
+      countAllComputersByCriteriaStatement.setString(1, filter);
+      countAllComputersByCriteriaStatement.setString(2, filter);
+      ResultSet rs = countAllComputersByCriteriaStatement.executeQuery();
+      if(rs.next()){
+        count = Integer.parseInt(rs.getString(1));
+      }
+    } catch (SQLException e) {
+      logger.warn(e.getMessage());
+    }
+
+    return count;
   }
 }

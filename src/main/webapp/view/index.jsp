@@ -23,7 +23,7 @@
 
 	<section id="main">
 		<div class="container">
-			<h1 id="homeTitle">${requestCount} Computers found</h1>
+			<h1 id="homeTitle">${count} Computers found</h1>
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
 					<form id="searchForm" action="Search" method="GET" class="form-inline">
