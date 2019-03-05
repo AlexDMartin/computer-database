@@ -7,8 +7,16 @@ public class PaginationController {
 
   private static PaginationController paginationControllerInstance = null;
 
+  private int page;
+  private int linePerPage;
+  
   private int limit;
   private int offset;
+  
+  private int previous;
+  private int[] pages = new int[5];
+  private int next;
+  
 
   private PaginationController() {}
   
@@ -26,35 +34,107 @@ public class PaginationController {
   }
 
   /**
-   * Getter for limit.
+   * Getter for line Per Page.
+   * @return the limit
+   */
+  public int getLinePerPage() {
+    return linePerPage;
+  }
+
+  /**
+   * Setter for Line Per Page.
+   * @param linePerPage the line per page to set
+   */
+  public void setLinePerPage(int linePerPage) {
+    this.offset = linePerPage * (this.page - 1);
+    this.limit = linePerPage;
+    this.linePerPage = linePerPage;
+  }
+
+  /**
+   * Getter for page.
+   * @return the page
+   */
+  public int getPage() {
+    return page;
+  }
+
+  /**
+   * Setter for page.
+   * @param page the page to set
+   */
+  public void setPage(int page) {
+    if(page == 1) {
+      this.previous = page;
+      pages[0] = page;
+      pages[1] = page + 1;
+      pages[2] = page + 2;
+      pages[3] = page + 3;
+      pages[4] = page + 4;
+      this.next = page + 1;
+    } else {
+      if(page == 2) {
+        previous = page - 1;
+        pages[0] = page - 1;
+        pages[1] = page;
+        pages[2] = page + 1;
+        pages[3] = page + 2;
+        pages[4] = page + 3;
+        next = page + 1;
+      }
+      else {
+        previous = page - 1;
+        pages[0] = page - 2;
+        pages[1] = page - 1;
+        pages[2] = page;
+        pages[3] = page + 1;
+        pages[4] = page + 2;
+        next = page + 1; 
+      }
+    }
+    
+    this.page = page;
+  }
+  
+  /**
+   * Getter for the offset
+   * @return the Offset 
+   */
+  public int getOffset() {
+    return offset;
+  }
+  
+  /**
+   * Getter for the limit
    * @return the limit
    */
   public int getLimit() {
     return limit;
   }
-
+  
   /**
-   * Setter for limit.
-   * @param limit the limit to set
+   * Getter for the pages
+   * @return an array that have 5 elements
    */
-  public void setLimit(int limit) {
-    this.limit = limit;
+  public int[] getPages() {
+    return pages;
   }
 
   /**
-   * Getter for offset.
-   * @return the offset
+   * Getter for the previous page
+   * @return the previous page number
    */
-  public int getOffset() {
-    return offset;
+  public int getPrevious() {
+    return previous;
   }
-
+  
   /**
-   * Setter for offset.
-   * @param offset the offset to set
+   * Getter for the next page
+   * @return the next page number
    */
-  public void setOffset(int offset) {
-    this.offset = offset;
+  public int getNext() {
+    return next;
   }
+  
 
 }

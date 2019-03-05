@@ -27,9 +27,9 @@
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
 					<form id="searchForm" action="Search" method="GET" class="form-inline">
-						<input type="hidden" value="${pageType}" />
-						<input type="hidden" value="${lpp}" />
-						<input type="hidden" value="${page}" />
+						<input type="hidden" name="request" value="new" />
+						<input type="hidden" name="lpp" value="${paginationController.getLinePerPage()}" />
+						<input type="hidden" name="page" value="${paginationController.getPage()}" />
 						<input type="search" id="searchbox" name="filter"
 							class="form-control" placeholder="Search name" /> <input
 							type="submit" id="searchsubmit" value="Filter by name"
@@ -88,27 +88,27 @@
 			<ul class="pagination">
 				<c:choose>
 					<c:when test="${pageType == 'search'}">
-						<li><a href="Search?filter=${filter}&page=${page-1}&lpp=${lpp}" aria-label="Previous"> <span
+						<li><a href="Search?filter=${filter}&page=${paginationController.getPrevious()}&lpp=${paginationController.getLinePerPage()}" aria-label="Previous"> <span
 							aria-hidden="true">&laquo;</span>
 						</a></li>
-						<li><a href="Search?filter=${filter}&page=${page}&lpp=${lpp}">${page}</a></li>
-						<li><a href="Search?filter=${filter}&page=${page+1}&lpp=${lpp}">${page+1}</a></li>
-						<li><a href="Search?filter=${filter}&page=${page+2}&lpp=${lpp}">${page+2}</a></li>
-						<li><a href="Search?filter=${filter}&page=${page+3}&lpp=${lpp}">${page+3}</a></li>
-						<li><a href="Search?filter=${filter}&page=${page+4}&lpp=${lpp}">${page+4}</a></li>
-						<li><a href="Search?filter=${filter}&page=${page+1}&lpp=${lpp}" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+						<li><a href="Search?filter=${filter}&page=${paginationController.getPages()[0]}&lpp=${paginationController.getLinePerPage()}">${paginationController.getPages()[0]}</a></li>
+						<li><a href="Search?filter=${filter}&page=${paginationController.getPages()[1]}&lpp=${paginationController.getLinePerPage()}">${paginationController.getPages()[1]}</a></li>
+						<li><a href="Search?filter=${filter}&page=${paginationController.getPages()[2]}&lpp=${paginationController.getLinePerPage()}">${paginationController.getPages()[2]}</a></li>
+						<li><a href="Search?filter=${filter}&page=${paginationController.getPages()[3]}&lpp=${paginationController.getLinePerPage()}">${paginationController.getPages()[3]}</a></li>
+						<li><a href="Search?filter=${filter}&page=${paginationController.getPages()[4]}&lpp=${paginationController.getLinePerPage()}">${paginationController.getPages()[4]}</a></li>
+						<li><a href="Search?filter=${filter}&page=${paginationController.getNext()}&lpp=${paginationController.getLinePerPage()}" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 						</a></li>
 					</c:when>
 					<c:otherwise>
-					<li><a href="Dashboard?page=${page-1}&lpp=${lpp}" aria-label="Previous"> <span
+					<li><a href="Dashboard?page=${paginationController.getPrevious()}&lpp=${paginationController.getLinePerPage()}" aria-label="Previous"> <span
 							aria-hidden="true">&laquo;</span>
 					</a></li>
-						<li><a href="Dashboard?page=${page}&lpp=${lpp}">${page}</a></li>
-						<li><a href="Dashboard?page=${page+1}&lpp=${lpp}">${page+1}</a></li>
-						<li><a href="Dashboard?page=${page+2}&lpp=${lpp}">${page+2}</a></li>
-						<li><a href="Dashboard?page=${page+3}&lpp=${lpp}">${page+3}</a></li>
-						<li><a href="Dashboard?page=${page+4}&lpp=${lpp}">${page+4}</a></li>
-						<li><a href="Dashboard?page=${page+1}&lpp=${lpp}" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+						<li><a href="Dashboard?page=${paginationController.getPages()[0]}&lpp=${paginationController.getLinePerPage()}">${paginationController.getPages()[0]}</a></li>
+						<li><a href="Dashboard?page=${paginationController.getPages()[1]}&lpp=${paginationController.getLinePerPage()}">${paginationController.getPages()[1]}</a></li>
+						<li><a href="Dashboard?page=${paginationController.getPages()[2]}&lpp=${paginationController.getLinePerPage()}">${paginationController.getPages()[2]}</a></li>
+						<li><a href="Dashboard?page=${paginationController.getPages()[3]}&lpp=${paginationController.getLinePerPage()}">${paginationController.getPages()[3]}</a></li>
+						<li><a href="Dashboard?page=${paginationController.getPages()[4]}&lpp=${paginationController.getLinePerPage()}">${paginationController.getPages()[4]}</a></li>
+						<li><a href="Dashboard?page=${paginationController.getNext()}&lpp=${paginationController.getLinePerPage()}" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 						</a></li>
 					</c:otherwise>
 				</c:choose>	
@@ -117,14 +117,14 @@
 			<div class="btn-group btn-group-sm pull-right" role="group">
 			<c:choose>
 				<c:when test="${pageType == 'search'}">
-					<a href="Search?filter=${filter}&page=${page}&lpp=10"><button type="button" class="btn btn-default">10</button></a>
-					<a href="Search?filter=${filter}&page=${page}&lpp=50"><button type="button" class="btn btn-default">50</button></a>
-					<a href="Search?filter=${filter}&page=${page}&lpp=100"><button type="button" class="btn btn-default">100</button></a>
+					<a href="Search?filter=${filter}&page=${paginationController.getPage()}&lpp=10"><button type="button" class="btn btn-default">10</button></a>
+					<a href="Search?filter=${filter}&page=${paginationController.getPage()}&lpp=50"><button type="button" class="btn btn-default">50</button></a>
+					<a href="Search?filter=${filter}&page=${paginationController.getPage()}&lpp=100"><button type="button" class="btn btn-default">100</button></a>
 				</c:when>
 				<c:otherwise>
-					<a href="Dashboard?page=${page}&lpp=10"><button type="button" class="btn btn-default">10</button></a>
-					<a href="Dashboard?page=${page}&lpp=50"><button type="button" class="btn btn-default">50</button></a>
-					<a href="Dashboard?page=${page}&lpp=100"><button type="button" class="btn btn-default">100</button></a>
+					<a href="Dashboard?page=${paginationController.getPage()}&lpp=10"><button type="button" class="btn btn-default">10</button></a>
+					<a href="Dashboard?page=${paginationController.getPage()}&lpp=50"><button type="button" class="btn btn-default">50</button></a>
+					<a href="Dashboard?page=${paginationController.getPage()}&lpp=100"><button type="button" class="btn btn-default">100</button></a>
 				</c:otherwise>
 			</c:choose>
 				

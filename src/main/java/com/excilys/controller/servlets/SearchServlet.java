@@ -22,6 +22,10 @@ public class SearchServlet extends HttpServlet {
   
     /** SerialVersionUID. */
 	private static final long serialVersionUID = 1L;
+	/** Default line per page. */
+	private static final int DEFAULT_LPP = 10;
+	/** Default page*/
+	private static final int DEFAULT_PAGE = 1;
     /** ComputerService. */
 	private static ComputerService computerService = ComputerService.getInstance();
     /** Pagination Controller. */
@@ -40,36 +44,40 @@ public class SearchServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-      String lppString = request.getParameter("lpp");
+
+      List<Computer> computerList = new ArrayList<Computer>();
+      
+      int page = (
+          request.getParameter("request") == "new" || 
+          request.getParameter("page") == null || 
+          request.getParameter("page").isEmpty()
+          ) 
+              ? DEFAULT_PAGE 
+              : Integer.parseInt(request.getParameter("page"));
+      
+      int lpp = (
+          request.getParameter("lpp") == null || 
+          request.getParameter("lpp").isEmpty()
+          ) 
+              ? DEFAULT_LPP 
+              : Integer.parseInt(request.getParameter("lpp"));
+          
+      paginationController.setPage(page);
+      paginationController.setLinePerPage(lpp);
+      
       String filterString = request.getParameter("filter");
-      String pageString = request.getParameter("page");
-      
-      if (lppString != null && lppString != "") {
-        paginationController.setLimit(Integer.parseInt(lppString));
-        request.setAttribute("lpp", Integer.parseInt(lppString));
-      } else {
-        paginationController.setLimit(10);
-        request.setAttribute("lpp", 10);
-      }
-      
-      if (request.getParameter("pageType") == "search" && pageString != null && pageString != "") {
-        paginationController
-            .setOffset((Integer.parseInt(pageString) - 1) * Integer.parseInt(lppString));
-        request.setAttribute("page", Integer.parseInt(pageString));
-      } else {
-        paginationController.setOffset(0);
-        request.setAttribute("page", 1);
-      }
-      
-      List<Computer> computerList = new ArrayList<Computer>(); 
       try {
         computerList = computerService.getAllSearchedPaginated(filterString, paginationController);
       } catch (Exception e) {
         logger.warn(e.getMessage());
+        request.setAttribute("stacktrace", e.getMessage());
+        request.getRequestDispatcher("view/500.jsp").forward(request, response);
+        return;
       }
       
-      request.setAttribute("pageType", "search");
       request.setAttribute("filter", filterString);
+      request.setAttribute("pageType", "search");
+      request.setAttribute("paginationController", paginationController);
       request.setAttribute("computerList", computerList);
       request.getRequestDispatcher("view/index.jsp").forward(request, response);
 	}

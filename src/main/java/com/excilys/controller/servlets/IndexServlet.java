@@ -1,8 +1,5 @@
 package com.excilys.controller.servlets;
 
-import com.excilys.controller.PaginationController;
-import com.excilys.dao.model.Computer;
-import com.excilys.service.ComputerService;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -12,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.excilys.controller.PaginationController;
+import com.excilys.dao.model.Computer;
+import com.excilys.service.ComputerService;
 
 /**
  * Servlet implementation class IndexServlet.
@@ -21,6 +21,10 @@ public class IndexServlet extends HttpServlet {
   
   /** SerialVersionUID. */
   private static final long serialVersionUID = 1L;
+  /** Default line per page. */
+  private static final int DEFAULT_LPP = 10;
+  /** Default page. */
+  private static final int DEFAULT_PAGE = 1;
   /** ComputerService. */
   ComputerService computerService = ComputerService.getInstance();
   /** Logger. */
@@ -41,26 +45,24 @@ public class IndexServlet extends HttpServlet {
    */
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    String pageString = request.getParameter("page");
-    String lppString = request.getParameter("lpp");
     List<Computer> computerList = null;
 
-    if (lppString != null && lppString != "") {
-      paginationController.setLimit(Integer.parseInt(lppString));
-      request.setAttribute("lpp", Integer.parseInt(lppString));
-    } else {
-      paginationController.setLimit(10);
-      request.setAttribute("lpp", 10);
-    }
-
-    if (pageString != null && pageString != "") {
-      paginationController
-          .setOffset((Integer.parseInt(pageString) - 1) * Integer.parseInt(lppString));
-      request.setAttribute("page", Integer.parseInt(pageString));
-    } else {
-      paginationController.setOffset(0);
-      request.setAttribute("page", 1);
-    }
+    int page = (
+        request.getParameter("page") == null || 
+        request.getParameter("page").isEmpty()
+        )  
+            ? DEFAULT_PAGE 
+            : Integer.parseInt(request.getParameter("page"));
+    
+    int lpp = (
+        request.getParameter("lpp") == null || 
+        request.getParameter("lpp").isEmpty()
+        ) 
+            ? DEFAULT_LPP 
+            : Integer.parseInt(request.getParameter("lpp"));
+    
+    paginationController.setPage(page);
+    paginationController.setLinePerPage(lpp);
 
     try {
       computerList = computerService.getAllPaginated(paginationController);
@@ -69,6 +71,7 @@ public class IndexServlet extends HttpServlet {
     }
 
     request.setAttribute("computerList", computerList);
+    request.setAttribute("paginationController", paginationController);
     request.getRequestDispatcher("view/index.jsp").forward(request, response);
   }
 
