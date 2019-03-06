@@ -44,7 +44,7 @@
 			</div>
 		</div>
 
-		<form id="deleteForm" action="#" method="POST">
+		<form id="deleteForm" action="Delete" method="POST">
 			<input type="hidden" name="selection" value="">
 		</form>
 
@@ -54,7 +54,7 @@
 					<tr>
 						<th class="editMode" style="width: 60px; height: 22px;"><input
 							type="checkbox" id="selectall" /> <span
-							style="vertical-align: top;"> - <a href="Delete"
+							style="vertical-align: top;"> - <a href="#"
 								id="deleteSelected" onclick="$.fn.deleteSelected();"> <i
 									class="fa fa-trash-o fa-lg"></i>
 							</a>
@@ -69,7 +69,7 @@
 					<c:forEach var="computer" items="${computerList}" varStatus="i">
 						<tr>
 							<td class="editMode"><input type="checkbox" name="cb"
-								class="cb" value="0"></td>
+								class="cb" value="${computer.getId()}"></td>
 							<td><a href="Edit?id=${computer.getId()}" onclick="">${computer.getName()}</a>
 							</td>
 							<td>${computer.getIntroduced()}</td>
