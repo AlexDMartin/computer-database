@@ -8,7 +8,7 @@ import com.excilys.dto.CompanyDto;
 import com.excilys.dto.ComputerDto;
 import com.excilys.service.CompanyService;
 import com.excilys.service.ComputerService;
-import com.excilys.validation.Validation;
+import com.excilys.validation.ComputerValidation;
 import com.excilys.view.UpdateComputerView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,7 +33,7 @@ public class UpdateComputerController {
   /** View. */
   UpdateComputerView view = UpdateComputerView.getInstance();
   /** Validator. */
-  Validation validator = Validation.getInstance();
+  ComputerValidation validator = ComputerValidation.getInstance();
   /** ComputerService. */
   ComputerService computerService = ComputerService.getInstance();
   /** CompanyService. */

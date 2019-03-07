@@ -8,7 +8,7 @@ import com.excilys.dto.CompanyDto;
 import com.excilys.dto.ComputerDtoBuilder;
 import com.excilys.service.CompanyService;
 import com.excilys.service.ComputerService;
-import com.excilys.validation.Validation;
+import com.excilys.validation.ComputerValidation;
 import com.excilys.view.CreateComputerView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,7 +33,7 @@ public class CreateComputerController {
   /** View. */
   CreateComputerView view = CreateComputerView.getInstance();
   /** Validator. */
-  Validation validator = Validation.getInstance();
+  ComputerValidation validator = ComputerValidation.getInstance();
   /** ComputerService. */
   ComputerService computerService = ComputerService.getInstance();
   /** CompanyService. */

@@ -5,7 +5,7 @@ import com.excilys.dao.model.CompanyBuilder;
 import com.excilys.dto.CompanyDto;
 import com.excilys.dto.CompanyDtoBuilder;
 import com.excilys.dto.Dto;
-import com.excilys.validation.Validation;
+import com.excilys.validation.ComputerValidation;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class CompanyMapper implements Mapper<Company> {
   /** Logger. */
   private Logger logger = LoggerFactory.getLogger(this.getClass());
   /** Validator. */
-  private Validation validator = Validation.getInstance();
+  private ComputerValidation validator = ComputerValidation.getInstance();
 
   /**
    * Take a ResulSet and returns a list of Company, useful to map items directly after a Database
