@@ -11,7 +11,7 @@ public class CompanyValidation {
 
   private CompanyValidation() {}
 
-  public CompanyValidation getInstance() {
+  public static CompanyValidation getInstance() {
 
     if (companyValidationInstance == null) {
       companyValidationInstance = new CompanyValidation();

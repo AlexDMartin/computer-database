@@ -1,16 +1,5 @@
 package com.excilys.dao.mappers;
 
-import com.excilys.dao.DaoFactory;
-import com.excilys.dao.model.Company;
-import com.excilys.dao.model.CompanyBuilder;
-import com.excilys.dao.model.Computer;
-import com.excilys.dao.model.ComputerBuilder;
-import com.excilys.dto.CompanyDto;
-import com.excilys.dto.CompanyDtoBuilder;
-import com.excilys.dto.ComputerDto;
-import com.excilys.dto.ComputerDtoBuilder;
-import com.excilys.dto.Dto;
-import com.excilys.validation.ComputerValidation;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -18,9 +7,20 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.xml.bind.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.excilys.dao.CompanyDao;
+import com.excilys.dao.DaoFactory;
+import com.excilys.dao.model.Company;
+import com.excilys.dao.model.Computer;
+import com.excilys.dao.model.ComputerBuilder;
+import com.excilys.dto.CompanyDto;
+import com.excilys.dto.ComputerDto;
+import com.excilys.dto.ComputerDtoBuilder;
+import com.excilys.dto.Dto;
+import com.excilys.exception.validation.ValidationException;
+import com.excilys.exception.validation.computer.ComputerValidationException;
+import com.excilys.validation.ComputerValidation;
 
 /**
  * Contains all method to map different types to Company.
@@ -29,30 +29,14 @@ public class ComputerMapper implements Mapper<Computer> {
 
   /** Singleton implementation of ComputerMapper. */
   private static ComputerMapper computerMapperInstance = null;
-
-  /**
-   * Singleton implementation of ComputerMapper.
-   */
-  private ComputerMapper() {}
-
-  /**
-   * Singleton implementation of ComputerMapper.
-   *
-   * @return single instance of ComputerMapper
-   */
-  public static ComputerMapper getInstance() {
-    if (computerMapperInstance == null) {
-      computerMapperInstance = new ComputerMapper();
-    }
-    return computerMapperInstance;
-  }
-
   /** Logger. */
   private Logger logger = LoggerFactory.getLogger(this.getClass());
   /** DaoFactory. */
-  private DaoFactory daoFactory = DaoFactory.getInstance();
-  /** Validator. */
-  private ComputerValidation validator = ComputerValidation.getInstance();
+  private static CompanyDao companyDao = DaoFactory.getInstance().getCompanyDao();
+  /** ComputerValidation. */
+  private static ComputerValidation computerValidation = ComputerValidation.getInstance();
+  /** CompanyMapper */
+  private static CompanyMapper companyMapper = CompanyMapper.getInstance();
 
   /**
    * Take a ResulSet and returns a list of Computer, useful to map items directly after a Database
@@ -72,13 +56,12 @@ public class ComputerMapper implements Mapper<Computer> {
         Computer computer = null;
         Company company = null;
         if (resultSet.getInt("COMPANY_ID") > 0) {
-          company = this.daoFactory.getCompanyDao().get(resultSet.getInt("COMPANY_ID")).get();
+          company = companyDao.get(resultSet.getInt("COMPANY_ID")).get();
         }
 
         computer = cb.addId(resultSet.getInt("ID")).addName(resultSet.getString("NAME"))
             .addIntroduced(resultSet.getDate("INTRODUCED"))
-            .addDiscontinued(resultSet.getDate("DISCONTINUED"))
-            .addCompany(company).build();
+            .addDiscontinued(resultSet.getDate("DISCONTINUED")).addCompany(company).build();
 
         list.add(computer);
       }
@@ -96,28 +79,43 @@ public class ComputerMapper implements Mapper<Computer> {
    * @return CompanyDTO
    */
   @Override
-  public Dto entityToDto(Computer computer) {
+  public Dto entityToDto(Computer computer) throws ComputerValidationException {
     ComputerDtoBuilder computerDtoBuilder = new ComputerDtoBuilder();
+    try {
 
-    String formattedIntroduced = (computer.getIntroduced() != null)
-        ? new SimpleDateFormat("yyyy-MM-dd").format(computer.getIntroduced())
-        : null;
-    String formattedDiscontinued = (computer.getDiscontinued() != null)
-        ? new SimpleDateFormat("yyyy-MM-dd").format(computer.getDiscontinued())
-        : null;
-    CompanyDto companyDto = null;
-    if (computer.getCompany() != null) {
-      String formattedCompanyId = (new Integer(computer.getCompany().getId()) != null)
-          ? Integer.toString(computer.getCompany().getId())
+      computerValidation.validateId(computer.getId());
+      computerDtoBuilder.addId(Integer.toString(computer.getId()));
+      
+      computerValidation.validateName(computer.getName());
+      computerDtoBuilder.addName(computer.getName());
+
+      String formattedIntroduced = (computer.getIntroduced() != null)
+          ? new SimpleDateFormat("yyyy-MM-dd").format(computer.getIntroduced())
           : null;
-      String formattedCompanyName = computer.getCompany().getName();
-      companyDto =
-          new CompanyDtoBuilder().addId(formattedCompanyId).addName(formattedCompanyName).build();
+      computerValidation.validateIntroductionDate(formattedIntroduced);
+          
+
+      String formattedDiscontinued = (computer.getDiscontinued() != null)
+          ? new SimpleDateFormat("yyyy-MM-dd").format(computer.getDiscontinued())
+          : null;
+
+      computerValidation.validateDiscontinuationDate(formattedDiscontinued);
+      computerValidation.validatePrecedence(computer.getIntroduced(), computer.getDiscontinued());
+      
+      computerDtoBuilder.addIntroduced(formattedIntroduced);
+      computerDtoBuilder.addDiscontinued(formattedIntroduced);  
+      
+      CompanyDto companyDto = computer.getCompany() != null 
+          ? (CompanyDto) companyMapper.entityToDto(computer.getCompany())
+          : null;
+      
+      computerDtoBuilder.addCompanyDto(companyDto);
+
+    } catch (ValidationException validationException) {
+      
     }
 
-    return computerDtoBuilder.addId(Integer.toString(computer.getId())).addName(computer.getName())
-        .addIntroduced(formattedIntroduced).addDiscontinued(formattedDiscontinued)
-        .addCompanyDto(companyDto).build();
+    return computerDtoBuilder.build();
   }
 
   /**
@@ -125,51 +123,75 @@ public class ComputerMapper implements Mapper<Computer> {
    * 
    * @param dto A computer Data Transfer Object
    * @return Company
+   * @throws ValidationException 
    */
   @Override
-  public Computer dtoToEntity(Dto dto) {
+  public Computer dtoToEntity(Dto dto) throws ValidationException{
 
     ComputerDto computerDto = (ComputerDto) dto;
     ComputerBuilder computerBuilder = new ComputerBuilder();
 
-    try {
-      validator.validateId(computerDto.getId());
-      if (computerDto.getId() != null) {
-        computerBuilder.addId(Integer.parseInt(computerDto.getId()));
-      }
-
-      validator.validateName(computerDto.getName());
-      computerBuilder.addName(computerDto.getName());
-
-      Date parsedIntroduced = null;
-      Date parsedDiscontinued = null;
-      try {
-        parsedIntroduced = new SimpleDateFormat("yyyy-MM-dd").parse(computerDto.getIntroduced());
-        parsedDiscontinued =
-            new SimpleDateFormat("yyyy-MM-dd").parse(computerDto.getDiscontinued());
-      } catch (ParseException e) {
-        logger.warn(e.getMessage());
-      }
-
-      validator.validateDate(computerDto.getIntroduced());
-      validator.validateDate(computerDto.getDiscontinued());
-      validator.validatePrecedence(parsedIntroduced, parsedDiscontinued);
-      computerBuilder.addIntroduced(parsedIntroduced).addDiscontinued(parsedDiscontinued);
-
-
-      Company company = null;
-      if (computerDto.getCompanyDto() != null) {
-        CompanyBuilder companyBuilder = new CompanyBuilder();
-        company = companyBuilder.addId(Integer.parseInt(computerDto.getCompanyDto().getId()))
-            .addName(computerDto.getCompanyDto().getName()).build();
-      }
-      validator.validateCompany(company);
-      computerBuilder.addCompany(company);
-    } catch (ValidationException e) {
-      logger.warn(e.getMessage());
+      try { 
+        
+        computerValidation.validateId(Integer.parseInt(computerDto.getId()));
+       
+        computerBuilder.addId(
+            computerDto.getId() != null 
+            ? Integer.parseInt(computerDto.getId()) 
+            : null
+        );
+  
+        computerValidation.validateName(computerDto.getName());
+        computerBuilder.addName(computerDto.getName());
+  
+  
+        computerValidation.validateIntroductionDate(computerDto.getIntroduced());
+        computerValidation.validateDiscontinuationDate(computerDto.getDiscontinued());
+  
+        Date parsedIntroduced = computerDto.getIntroduced() != null 
+            ? new SimpleDateFormat("yyyy-MM-dd").parse(computerDto.getIntroduced())
+            : null
+        ;
+        Date parsedDiscontinued = computerDto.getDiscontinued() != null
+            ? new SimpleDateFormat("yyyy-MM-dd").parse(computerDto.getDiscontinued())
+            : null
+        ;
+  
+        computerValidation.validatePrecedence(parsedIntroduced, parsedDiscontinued);
+        computerBuilder
+          .addIntroduced(parsedIntroduced)
+          .addDiscontinued(parsedDiscontinued);
+  
+          
+        Company company  = companyMapper.dtoToEntity(computerDto.getCompanyDto());
+        
+        computerBuilder.addCompany(company);
+    
+     } catch (ValidationException validationException) {
+       logger.warn(validationException.getMessage());
+       throw validationException;
+     } catch (ParseException parseException) {
+      logger.warn(parseException.getMessage());
+      throw new ComputerValidationException(parseException.getMessage());
     }
 
     return computerBuilder.build();
   }
 
+  /**
+   * Singleton implementation of ComputerMapper.
+   */
+  private ComputerMapper() {}
+
+  /**
+   * Singleton implementation of ComputerMapper.
+   *
+   * @return single instance of ComputerMapper
+   */
+  public static ComputerMapper getInstance() {
+    if (computerMapperInstance == null) {
+      computerMapperInstance = new ComputerMapper();
+    }
+    return computerMapperInstance;
+  }
 }

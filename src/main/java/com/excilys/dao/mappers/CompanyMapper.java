@@ -1,18 +1,18 @@
 package com.excilys.dao.mappers;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.excilys.dao.model.Company;
 import com.excilys.dao.model.CompanyBuilder;
 import com.excilys.dto.CompanyDto;
 import com.excilys.dto.CompanyDtoBuilder;
 import com.excilys.dto.Dto;
-import com.excilys.validation.ComputerValidation;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import javax.xml.bind.ValidationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.excilys.exception.validation.company.CompanyValidationException;
+import com.excilys.validation.CompanyValidation;
 
 /**
  * Contains all method to map different types to Company.
@@ -21,28 +21,10 @@ public class CompanyMapper implements Mapper<Company> {
 
   /** Singleton implementation of CompanyMapper. */
   private static CompanyMapper companyMapperInstance = null;
-
-  /**
-   * Singleton implementation of CompanyMapper.
-   */
-  private CompanyMapper() {}
-
-  /**
-   * Singleton implementation of CompanyMapper.
-   *
-   * @return single instance of CompanyMapper
-   */
-  public static CompanyMapper getInstance() {
-    if (companyMapperInstance == null) {
-      companyMapperInstance = new CompanyMapper();
-    }
-    return companyMapperInstance;
-  }
-
   /** Logger. */
-  private Logger logger = LoggerFactory.getLogger(this.getClass());
+  private static Logger logger = LoggerFactory.getLogger(CompanyMapper.class);
   /** Validator. */
-  private ComputerValidation validator = ComputerValidation.getInstance();
+  private static CompanyValidation companyValidation = CompanyValidation.getInstance();
 
   /**
    * Take a ResulSet and returns a list of Company, useful to map items directly after a Database
@@ -75,11 +57,22 @@ public class CompanyMapper implements Mapper<Company> {
    * 
    * @param company A company entity
    * @return CompanyDTO
+   * @throws CompanyValidationException 
    */
   @Override
-  public Dto entityToDto(Company company) {
-    CompanyDtoBuilder companyDtoBuilder = new CompanyDtoBuilder();
-    return companyDtoBuilder.addId(Integer.toString(company.getId())).addName(company.getName())
+  public Dto entityToDto(Company company) throws CompanyValidationException {
+    
+    try {
+      companyValidation.validateId(company.getId());
+      companyValidation.validateName(company.getName());
+    } catch (CompanyValidationException companyValidationException) {
+      logger.warn(companyValidationException.getMessage());
+      throw companyValidationException;
+    }
+    
+    return new CompanyDtoBuilder()
+        .addId(Integer.toString(company.getId()))
+        .addName(company.getName())
         .build();
   }
 
@@ -88,20 +81,40 @@ public class CompanyMapper implements Mapper<Company> {
    * 
    * @param dto A company Data transfer object
    * @return Company
+   * @throws CompanyValidationException 
    */
   @Override
-  public Company dtoToEntity(Dto dto) {
+  public Company dtoToEntity(Dto dto) throws CompanyValidationException {
     CompanyDto companyDto = (CompanyDto) dto;
 
     try {
-      validator.validateId(companyDto.getId());
-      validator.validateName(companyDto.getName());
-    } catch (ValidationException e) {
-      logger.warn(e.getMessage());
+      companyValidation.validateId(Integer.parseInt(companyDto.getId()));
+      companyValidation.validateName(companyDto.getName());
+    } catch (CompanyValidationException companyValidationException) {
+      logger.warn(companyValidationException.getMessage());
+      throw companyValidationException;
     }
-
-    CompanyBuilder builder = new CompanyBuilder();
-    return builder.addId(Integer.parseInt(companyDto.getId())).addName(companyDto.getName())
+    
+    return new CompanyBuilder()
+        .addId(Integer.parseInt(companyDto.getId()))
+        .addName(companyDto.getName())
         .build();
+  }
+  
+  /**
+   * Singleton implementation of CompanyMapper.
+   */
+  private CompanyMapper() {}
+
+  /**
+   * Singleton implementation of CompanyMapper.
+   *
+   * @return single instance of CompanyMapper
+   */
+  public static CompanyMapper getInstance() {
+    if (companyMapperInstance == null) {
+      companyMapperInstance = new CompanyMapper();
+    }
+    return companyMapperInstance;
   }
 }

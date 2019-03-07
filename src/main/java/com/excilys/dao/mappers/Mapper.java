@@ -1,8 +1,9 @@
 package com.excilys.dao.mappers;
 
-import com.excilys.dto.Dto;
 import java.sql.ResultSet;
 import java.util.List;
+import com.excilys.dto.Dto;
+import com.excilys.exception.validation.ValidationException;
 
 /**
  * The Interface Mapper.
@@ -25,14 +26,16 @@ public interface Mapper<T> {
    * 
    * @param entity Any entity
    * @return DTO
+   * @throws ValidationException 
    */
-  Dto entityToDto(T entity);
+  Dto entityToDto(T entity) throws ValidationException;
 
   /**
    * Transforms DTO into an Entity.
    * 
    * @param dto Any data object
    * @return T
+   * @throws ValidationException 
    */
-  T dtoToEntity(Dto dto);
+  T dtoToEntity(Dto dto) throws ValidationException;
 }
