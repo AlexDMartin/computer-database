@@ -8,7 +8,7 @@ import java.util.Optional;
  *
  * @param <T> the generic type
  */
-public interface Dao<T> {
+public abstract interface Dao<T> {
 
   /**
    * Gets the.
@@ -23,7 +23,7 @@ public interface Dao<T> {
    *
    * @return the all
    */
-  List<T> getAll();
+  public abstract List<T> getAll();
 
   /**
    * Save.
@@ -31,19 +31,19 @@ public interface Dao<T> {
    * @param t the t
    * @throws Exception the exception
    */
-  void save(T t) throws Exception;
+  public abstract void save(T t) throws Exception;
 
   /**
    * Update.
    *
    * @param t the t
    */
-  void update(T t);
+  public abstract void update(T t);
 
   /**
    * Delete.
    *
    * @param t the t
    */
-  void delete(T t);
+  public abstract void delete(T t);
 }

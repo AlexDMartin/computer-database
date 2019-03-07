@@ -9,23 +9,6 @@ public class DaoFactory {
   private static DaoFactory daoFactoryInstance = null;
 
   /**
-   * Instantiates a new dao factory.
-   */
-  private DaoFactory() {}
-
-  /**
-   * Gets the single instance of DaoFactory.
-   *
-   * @return single instance of DaoFactory
-   */
-  public static DaoFactory getInstance() {
-    if (daoFactoryInstance == null) {
-      daoFactoryInstance = new DaoFactory();
-    }
-    return daoFactoryInstance;
-  }
-
-  /**
    * Gets the company dao.
    *
    * @return the company dao
@@ -41,5 +24,22 @@ public class DaoFactory {
    */
   public ComputerDao getComputerDao() {
     return ComputerDao.getInstance();
+  }
+  
+  /**
+   * Instantiates a new dao factory.
+   */
+  private DaoFactory() {}
+
+  /**
+   * Gets the single instance of DaoFactory.
+   *
+   * @return single instance of DaoFactory
+   */
+  public static DaoFactory getInstance() {
+    if (daoFactoryInstance == null) {
+      daoFactoryInstance = new DaoFactory();
+    }
+    return daoFactoryInstance;
   }
 }

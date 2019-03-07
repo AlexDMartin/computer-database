@@ -3,10 +3,13 @@ package com.excilys.controller;
 import com.excilys.dao.mappers.ComputerMapper;
 import com.excilys.dao.model.Computer;
 import com.excilys.dto.ComputerDto;
+import com.excilys.exception.validation.computer.ComputerValidationException;
 import com.excilys.service.ComputerService;
 import com.excilys.view.ShowDetailsView;
 import java.util.Optional;
 import java.util.Scanner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Singleton implementation of ShowDetailsController.
@@ -15,14 +18,16 @@ public class ShowDetailsController {
 
   /** Singleton implementation of ShowDetailsController. */
   private static ShowDetailsController showDetailsControllerInstance = null;
+  /** Logger. */
+  private static Logger logger = LoggerFactory.getLogger(ShowDetailsController.class);
   /** ComputerService. */
-  ComputerService computerService = ComputerService.getInstance();
+  private static ComputerService computerService = ComputerService.getInstance();
   /** ComputerMapper. */
-  ComputerMapper computerMapper = ComputerMapper.getInstance();
+  private static ComputerMapper computerMapper = ComputerMapper.getInstance();
   /** View. */
-  ShowDetailsView view = ShowDetailsView.getInstance();
+  private static ShowDetailsView view = ShowDetailsView.getInstance();
   /** Scanner. */
-  Scanner scan = new Scanner(System.in);
+  private static Scanner scan = new Scanner(System.in);
 
   /**
    * Singleton implementation of ShowDetailsController.
@@ -37,7 +42,12 @@ public class ShowDetailsController {
     Optional<Computer> computer = computerService.get(id);
 
     if (computer.isPresent()) {
-      ComputerDto computerDto = (ComputerDto) computerMapper.entityToDto(computer.get());
+      ComputerDto computerDto = null;
+      try {
+        computerDto = (ComputerDto) computerMapper.entityToDto(computer.get());
+      } catch (ComputerValidationException e) {
+        logger.warn(e.getMessage());
+      }
       view.displayComputer(computerDto);
     }
   }

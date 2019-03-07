@@ -19,7 +19,7 @@ import com.excilys.service.ComputerService;
 public class DeleteServlet extends HttpServlet {
   
   /** SerialVersionUid. */
-  private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 7210607623729089403L;
   /** Computer Service. */
   private static ComputerService computerService = ComputerService.getInstance();
   /** Logger. */
@@ -47,7 +47,8 @@ public class DeleteServlet extends HttpServlet {
       }
     } catch (Exception e) {
        logger.warn(e.getMessage());
-       request.getRequestDispatcher("view/500.jsp");
+       request.getRequestDispatcher("view/500.jsp").forward(request, response);
+       return;
     }
 
     request.getRequestDispatcher("Dashboard").forward(request, response);

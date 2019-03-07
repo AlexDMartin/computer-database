@@ -14,11 +14,11 @@ public class DeleteComputerController {
   /** Singleton implementation of DeleteComputerController. */
   private static DeleteComputerController deleteComputerControllerInstance = null;
   /** ComputerService. */
-  ComputerService computerService = ComputerService.getInstance();
+  private static ComputerService computerService = ComputerService.getInstance();
   /** View. */
-  DeleteComputerView view = DeleteComputerView.getInstance();
+  private static DeleteComputerView view = DeleteComputerView.getInstance();
   /** Scanner. */
-  Scanner scan = new Scanner(System.in);
+  private static Scanner scan = new Scanner(System.in);
 
   /**
    * Singleton implementation of DeleteComputerController.

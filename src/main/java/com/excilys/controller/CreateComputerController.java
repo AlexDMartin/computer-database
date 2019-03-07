@@ -6,8 +6,10 @@ import com.excilys.dao.model.Company;
 import com.excilys.dao.model.Computer;
 import com.excilys.dto.CompanyDto;
 import com.excilys.dto.ComputerDtoBuilder;
+import com.excilys.exception.validation.ValidationException;
 import com.excilys.service.CompanyService;
 import com.excilys.service.ComputerService;
+import com.excilys.validation.CompanyValidation;
 import com.excilys.validation.ComputerValidation;
 import com.excilys.view.CreateComputerView;
 import java.text.ParseException;
@@ -15,7 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Scanner;
-import javax.xml.bind.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,21 +28,23 @@ public class CreateComputerController {
   /** Singleton implementation of CreateComputerController. */
   private static CreateComputerController createComputerControllerInstance = null;
   /** Computer Mapper. */
-  ComputerMapper computerMapper = ComputerMapper.getInstance();
+  private static ComputerMapper computerMapper = ComputerMapper.getInstance();
   /** Company Mapper. */
-  CompanyMapper companyMapper = CompanyMapper.getInstance();
+  private static CompanyMapper companyMapper = CompanyMapper.getInstance();
   /** View. */
-  CreateComputerView view = CreateComputerView.getInstance();
-  /** Validator. */
-  ComputerValidation validator = ComputerValidation.getInstance();
+  private static CreateComputerView view = CreateComputerView.getInstance();
+  /** ComputerValidator. */
+  private static ComputerValidation computerValidation = ComputerValidation.getInstance();
+  /** CompanyValidator. */
+  private static CompanyValidation companyValidation = CompanyValidation.getInstance();
   /** ComputerService. */
-  ComputerService computerService = ComputerService.getInstance();
+  private static ComputerService computerService = ComputerService.getInstance();
   /** CompanyService. */
-  CompanyService companyService = CompanyService.getInstance();
+  private static CompanyService companyService = CompanyService.getInstance();
   /** Scanner. */
-  Scanner scan = new Scanner(System.in);
+  private static Scanner scan = new Scanner(System.in);
   /** Logger. */
-  Logger logger = LoggerFactory.getLogger(this.getClass());
+  private static Logger logger = LoggerFactory.getLogger(CreateComputerController.class);
 
   /**
    * CreateComputerController Constructor.
@@ -53,12 +56,12 @@ public class CreateComputerController {
 
       view.askForName();
       String nameInput = scan.next();
-      validator.validateName(nameInput);
+      computerValidation.validateName(nameInput);
       computerDtoBuilder.addName(nameInput);
 
       view.askForIntroduced();
       String introducedInput = scan.next();
-      validator.validateDate(introducedInput);
+      computerValidation.validateIntroductionDate(introducedInput);
       Date introducedDate = null;
       if (introducedInput != null) {
         computerDtoBuilder.addIntroduced(introducedInput);
@@ -67,18 +70,19 @@ public class CreateComputerController {
 
       view.askForDiscontinued();
       String discontinuedInput = scan.next();
-      validator.validateDate(discontinuedInput);
+      computerValidation.validateDiscontinuationDate(discontinuedInput);
       Date discontinuedDate = null;
       if (discontinuedInput != null) {
         computerDtoBuilder.addDiscontinued(discontinuedInput);
         discontinuedDate = new SimpleDateFormat("yyyy-MM-dd").parse(discontinuedInput);
       }
-      validator.validatePrecedence(introducedDate, discontinuedDate);
+      computerValidation.validatePrecedence(introducedDate, discontinuedDate);
 
       view.askForCompany();
       long companyInput = (long) scan.nextInt();
       Optional<Company> company = companyService.get(companyInput);
-      validator.validateCompany(company.get());
+      companyValidation.validateId(company.get().getId());
+      companyValidation.validateName(company.get().getName());
       CompanyDto companyDto = null;
       if (company.isPresent()) {
         companyDto = (CompanyDto) companyMapper.entityToDto(company.get());

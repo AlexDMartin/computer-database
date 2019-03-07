@@ -10,7 +10,7 @@ import com.excilys.exception.validation.ValidationException;
  *
  * @param <T> the generic type
  */
-public interface Mapper<T> {
+public abstract interface Mapper<T> {
 
   /**
    * Take a ResulSet and returns a list of the generic type, useful to map items directly after a
@@ -19,7 +19,7 @@ public interface Mapper<T> {
    * @param resultSet Any ResultSet
    * @return List&lt;Company&gt;
    */
-  List<T> map(ResultSet resultSet);
+  public abstract List<T> map(ResultSet resultSet);
 
   /**
    * Transforms an Entity into a DTO.
@@ -28,7 +28,7 @@ public interface Mapper<T> {
    * @return DTO
    * @throws ValidationException 
    */
-  Dto entityToDto(T entity) throws ValidationException;
+  public abstract Dto entityToDto(T entity) throws ValidationException;
 
   /**
    * Transforms DTO into an Entity.
@@ -37,5 +37,5 @@ public interface Mapper<T> {
    * @return T
    * @throws ValidationException 
    */
-  T dtoToEntity(Dto dto) throws ValidationException;
+  public abstract T dtoToEntity(Dto dto) throws ValidationException;
 }

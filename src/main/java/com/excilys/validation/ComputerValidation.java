@@ -10,28 +10,12 @@ import com.excilys.exception.validation.computer.InvalidNameComputerValidationEx
 import com.excilys.exception.validation.computer.InvalidPrecedenceComputerValidationException;
 
 /**
- * Implements all methods to validate user inputs in the application. All methods return true if the
- * string passed to the method is valid, or throw a ValidationException otherwise.
+ * Validate Computer fields.
  */
 public class ComputerValidation {
 
-  /** Singleton implementation of Validator. */
+  /** Singleton implementation of ComputerValidation. */
   private static ComputerValidation validatorInstance = null;
-
-  /** Singleton implementation of Validator. */
-  private ComputerValidation() {}
-
-  /**
-   * Singleton implementation of Validator.
-   *
-   * @return single instance of Validator
-   */
-  public static ComputerValidation getInstance() {
-    if (validatorInstance == null) {
-      validatorInstance = new ComputerValidation();
-    }
-    return validatorInstance;
-  }
 
   public void validateId(int id) throws InvalidIdComputerValidationException {
     
@@ -53,7 +37,11 @@ public class ComputerValidation {
 
   public void validateIntroductionDate(String introduction)
       throws InvalidIntroductionDateComputerValidationException {
-
+  
+    if(introduction == null || introduction.isEmpty()) {
+      return;
+    }
+    
     Pattern p = Pattern.compile("^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])$");
     Matcher m = p.matcher(introduction);
     
@@ -66,6 +54,10 @@ public class ComputerValidation {
 
   public void validateDiscontinuationDate(String discontinued)
       throws InvalidDiscontinuationDateComputerValidationException {
+    
+    if(discontinued == null || discontinued.isEmpty()) {
+      return;
+    }
     
     Pattern p = Pattern.compile("^\\d{4}\\-(0[1-9]|1[012])\\-(0[1-9]|[12][0-9]|3[01])$");
     Matcher m = p.matcher(discontinued);
@@ -80,10 +72,29 @@ public class ComputerValidation {
   public void validatePrecedence(Date introduced, Date discontinued)
       throws InvalidPrecedenceComputerValidationException {
 
+    if(discontinued == null || introduced == null) {
+      return;
+    }
+    
     if (discontinued.before(introduced)) {
       throw new InvalidPrecedenceComputerValidationException(
           "The discontinuation date is before the introduction date.");
     }
 
+  }
+  
+  /** Singleton implementation of ComputerValidation. */
+  private ComputerValidation() {}
+
+  /**
+   * Singleton implementation of ComputerValidation.
+   *
+   * @return single instance of ComputerValidation
+   */
+  public static ComputerValidation getInstance() {
+    if (validatorInstance == null) {
+      validatorInstance = new ComputerValidation();
+    }
+    return validatorInstance;
   }
 }

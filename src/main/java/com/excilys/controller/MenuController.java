@@ -13,23 +13,6 @@ public class MenuController {
   private static MenuController menuControllerInstance = null;
 
   /**
-   * Instantiates a new menu controller.
-   */
-  private MenuController() {}
-
-  /**
-   * Gets the single instance of MenuController.
-   *
-   * @return single instance of MenuController
-   */
-  public static MenuController getInstance() {
-    if (menuControllerInstance == null) {
-      menuControllerInstance = new MenuController();
-    }
-    return menuControllerInstance;
-  }
-
-  /**
    * Resolve.
    */
   public void resolve() {
@@ -60,5 +43,22 @@ public class MenuController {
         break;
     }
     scan.close();
+  }
+  
+  /**
+   * Instantiates a new menu controller.
+   */
+  private MenuController() {}
+
+  /**
+   * Gets the single instance of MenuController.
+   *
+   * @return single instance of MenuController
+   */
+  public static MenuController getInstance() {
+    if (menuControllerInstance == null) {
+      menuControllerInstance = new MenuController();
+    }
+    return menuControllerInstance;
   }
 }

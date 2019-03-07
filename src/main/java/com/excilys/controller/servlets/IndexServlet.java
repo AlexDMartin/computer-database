@@ -26,11 +26,11 @@ public class IndexServlet extends HttpServlet {
   /** Default page. */
   private static final int DEFAULT_PAGE = 1;
   /** ComputerService. */
-  ComputerService computerService = ComputerService.getInstance();
+  private static ComputerService computerService = ComputerService.getInstance();
   /** Logger. */
-  Logger logger = LoggerFactory.getLogger(this.getClass());
+  private static Logger logger = LoggerFactory.getLogger(IndexServlet.class);
   /** PaginationController. */
-  PaginationController paginationController = PaginationController.getInstance();
+  private static PaginationController paginationController = PaginationController.getInstance();
   
   /**
    * Default constructor.

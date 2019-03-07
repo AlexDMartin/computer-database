@@ -1,5 +1,5 @@
 package com.excilys.dto;
 
-public interface Dto {
+public abstract interface Dto {
 
 }

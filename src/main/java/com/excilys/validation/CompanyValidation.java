@@ -9,17 +9,6 @@ public class CompanyValidation {
 
   private static CompanyValidation companyValidationInstance = null;
 
-  private CompanyValidation() {}
-
-  public static CompanyValidation getInstance() {
-
-    if (companyValidationInstance == null) {
-      companyValidationInstance = new CompanyValidation();
-    }
-
-    return companyValidationInstance;
-  }
-
   public void validateId(int id) throws InvalidIdCompanyValidationException {
     Pattern p = Pattern.compile("^-?\\d+$");
     Matcher m = p.matcher(Integer.toString(id));
@@ -36,5 +25,16 @@ public class CompanyValidation {
       throw new InvalidNameCompanyValidationException("The company\'s name is not valid.");
     }
 
+  }
+  
+  private CompanyValidation() {}
+
+  public static CompanyValidation getInstance() {
+
+    if (companyValidationInstance == null) {
+      companyValidationInstance = new CompanyValidation();
+    }
+
+    return companyValidationInstance;
   }
 }

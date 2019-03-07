@@ -30,15 +30,15 @@ public class AddComputer extends HttpServlet {
   /** SerialVersionUID. */
   private static final long serialVersionUID = 86529706591354229L;
   /** ComputerService. */
-  ComputerService computerService = ComputerService.getInstance();
+  private static ComputerService computerService = ComputerService.getInstance();
   /** ComputerMapper. */
-  ComputerMapper computerMapper = ComputerMapper.getInstance();
+  private static ComputerMapper computerMapper = ComputerMapper.getInstance();
   /** CompanyService. */
-  CompanyService companyService = CompanyService.getInstance();
+  private static CompanyService companyService = CompanyService.getInstance();
   /** CompanyMapper. */
-  CompanyMapper companyMapper = CompanyMapper.getInstance();
+  private static CompanyMapper companyMapper = CompanyMapper.getInstance();
   /** Logger. */
-  Logger logger = LoggerFactory.getLogger(this.getClass());
+  private static Logger logger = LoggerFactory.getLogger(AddComputer.class);
 
   /**
    * The servlet used to add Computers.

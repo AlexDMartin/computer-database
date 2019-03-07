@@ -3,6 +3,7 @@ package com.excilys.controller;
 import com.excilys.dao.mappers.CompanyMapper;
 import com.excilys.dao.model.Company;
 import com.excilys.dto.CompanyDto;
+import com.excilys.exception.validation.company.CompanyValidationException;
 import com.excilys.service.CompanyService;
 import com.excilys.view.ListCompanyView;
 import java.util.ArrayList;
@@ -18,13 +19,13 @@ public class ListCompanyController {
   /** Singleton implementation of ListCompanyController. */
   private static ListCompanyController listCompanyControllerInstance = null;
   /** Logger. */
-  private Logger logger = LoggerFactory.getLogger(this.getClass());
+  private static Logger logger = LoggerFactory.getLogger(ListCompanyController.class);
   /** Company service. */
-  CompanyService companyService = CompanyService.getInstance();
+  private static CompanyService companyService = CompanyService.getInstance();
   /** Mapper. */
-  CompanyMapper companyMapper = CompanyMapper.getInstance();
+  private static CompanyMapper companyMapper = CompanyMapper.getInstance();
   /** View. */
-  ListCompanyView view = ListCompanyView.getInstance();
+  private static ListCompanyView view = ListCompanyView.getInstance();
 
   /**
    * Singleton implementation of ListCompanyController.
@@ -36,7 +37,11 @@ public class ListCompanyController {
     List<CompanyDto> companyDtoList = new ArrayList<CompanyDto>();
 
     for (Company company : companyList) {
-      companyDtoList.add((CompanyDto) this.companyMapper.entityToDto(company));
+      try {
+        companyDtoList.add((CompanyDto) companyMapper.entityToDto(company));
+      } catch (CompanyValidationException e) {
+        logger.warn(e.getMessage());
+      }
     }
 
     view.render(companyDtoList);

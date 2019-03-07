@@ -148,13 +148,13 @@ public class ComputerMapper implements Mapper<Computer> {
         computerValidation.validateIntroductionDate(computerDto.getIntroduced());
         computerValidation.validateDiscontinuationDate(computerDto.getDiscontinued());
   
-        Date parsedIntroduced = computerDto.getIntroduced() != null 
-            ? new SimpleDateFormat("yyyy-MM-dd").parse(computerDto.getIntroduced())
-            : null
+        Date parsedIntroduced = computerDto.getIntroduced() == null || computerDto.getIntroduced().isEmpty() 
+            ? null
+            : new SimpleDateFormat("yyyy-MM-dd").parse(computerDto.getIntroduced())
         ;
-        Date parsedDiscontinued = computerDto.getDiscontinued() != null
-            ? new SimpleDateFormat("yyyy-MM-dd").parse(computerDto.getDiscontinued())
-            : null
+        Date parsedDiscontinued = computerDto.getDiscontinued() == null || computerDto.getDiscontinued().isEmpty()
+            ? null
+            : new SimpleDateFormat("yyyy-MM-dd").parse(computerDto.getDiscontinued())
         ;
   
         computerValidation.validatePrecedence(parsedIntroduced, parsedDiscontinued);
@@ -162,7 +162,6 @@ public class ComputerMapper implements Mapper<Computer> {
           .addIntroduced(parsedIntroduced)
           .addDiscontinued(parsedDiscontinued);
   
-          
         Company company  = companyMapper.dtoToEntity(computerDto.getCompanyDto());
         
         computerBuilder.addCompany(company);

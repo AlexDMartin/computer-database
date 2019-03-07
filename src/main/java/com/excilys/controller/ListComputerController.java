@@ -1,14 +1,15 @@
 package com.excilys.controller;
 
-import com.excilys.dao.mappers.ComputerMapper;
-import com.excilys.dao.model.Computer;
-import com.excilys.dto.ComputerDto;
-import com.excilys.service.ComputerService;
-import com.excilys.view.ListComputerView;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.excilys.dao.mappers.ComputerMapper;
+import com.excilys.dao.model.Computer;
+import com.excilys.dto.ComputerDto;
+import com.excilys.exception.validation.computer.ComputerValidationException;
+import com.excilys.service.ComputerService;
+import com.excilys.view.ListComputerView;
 
 /**
  * Displays the Computer list.
@@ -18,13 +19,13 @@ public class ListComputerController {
   /** Singleton implementation of ListCompanyController. */
   private static ListComputerController listComputerControllerInstance = null;
   /** Logger. */
-  private Logger logger = LoggerFactory.getLogger(this.getClass());
+  private static Logger logger = LoggerFactory.getLogger(ListComputerController.class);
   /** Company service. */
-  ComputerService computerService = ComputerService.getInstance();
+  private static ComputerService computerService = ComputerService.getInstance();
   /** Mapper. */
-  ComputerMapper computerMapper = ComputerMapper.getInstance();
+  private static ComputerMapper computerMapper = ComputerMapper.getInstance();
   /** View. */
-  ListComputerView view = ListComputerView.getInstance();
+  private static ListComputerView view = ListComputerView.getInstance();
 
   /**
    * Singleton implementation of ListCompanyController.
@@ -36,7 +37,11 @@ public class ListComputerController {
     List<ComputerDto> computerDtoList = new ArrayList<ComputerDto>();
 
     for (Computer computer : computerList) {
-      computerDtoList.add((ComputerDto) this.computerMapper.entityToDto(computer));
+      try {
+        computerDtoList.add((ComputerDto) computerMapper.entityToDto(computer));
+      } catch (ComputerValidationException e) {
+        logger.warn(e.getMessage());
+      }
     }
 
     view.render(computerDtoList);
