@@ -10,7 +10,7 @@ import com.excilys.dto.CompanyDtoBuilder;
 import com.excilys.dto.ComputerDto;
 import com.excilys.dto.ComputerDtoBuilder;
 import com.excilys.dto.Dto;
-import com.excilys.validator.Validator;
+import com.excilys.validation.Validation;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -52,7 +52,7 @@ public class ComputerMapper implements Mapper<Computer> {
   /** DaoFactory. */
   private DaoFactory daoFactory = DaoFactory.getInstance();
   /** Validator. */
-  private Validator validator = Validator.getInstance();
+  private Validation validator = Validation.getInstance();
 
   /**
    * Take a ResulSet and returns a list of Computer, useful to map items directly after a Database

@@ -1,4 +1,4 @@
-package com.excilys.validator;
+package com.excilys.validation;
 
 import com.excilys.dao.model.Company;
 import java.util.Date;
@@ -10,22 +10,22 @@ import javax.xml.bind.ValidationException;
  * Implements all methods to validate user inputs in the application. All methods return true if the
  * string passed to the method is valid, or throw a ValidationException otherwise.
  */
-public class Validator {
+public class Validation {
 
   /** Singleton implementation of Validator. */
-  private static Validator validatorInstance = null;
+  private static Validation validatorInstance = null;
 
   /** Singleton implementation of Validator. */
-  private Validator() {}
+  private Validation() {}
 
   /**
    * Singleton implementation of Validator.
    *
    * @return single instance of Validator
    */
-  public static Validator getInstance() {
+  public static Validation getInstance() {
     if (validatorInstance == null) {
-      validatorInstance = new Validator();
+      validatorInstance = new Validation();
     }
     return validatorInstance;
   }
