@@ -78,7 +78,7 @@ public class AddComputer extends HttpServlet {
       ComputerDtoBuilder computerDtoBuilder = new ComputerDtoBuilder();
 
       if (request.getParameter("companyId") != null) {
-        logger.debug("companyId" + request.getParameter("companyId"));
+        logger.warn("companyId" + request.getParameter("companyId"));
         long companyId = Long.parseLong(request.getParameter("companyId"));
         Optional<Company> company = companyService.get(companyId);
         CompanyDto companyDto = null;
@@ -88,15 +88,15 @@ public class AddComputer extends HttpServlet {
         computerDtoBuilder.addCompanyDto(companyDto);
       }
 
-      logger.debug("computerName" + request.getParameter("computerName"));
+      logger.warn("computerName" + request.getParameter("computerName"));
       computerDtoBuilder.addName(request.getParameter("computerName"));
       
-      logger.debug("introduced" + request.getParameter("introduced"));
+      logger.warn("introduced" + request.getParameter("introduced"));
       if (request.getParameter("introduced") != null) {
         computerDtoBuilder.addIntroduced(request.getParameter("introduced"));
       }
       
-      logger.debug("discontinued" + request.getParameter("discontinued"));
+      logger.warn("discontinued" + request.getParameter("discontinued"));
       if (request.getParameter("discontinued") != null) {
         computerDtoBuilder.addDiscontinued(request.getParameter("discontinued"));
       }

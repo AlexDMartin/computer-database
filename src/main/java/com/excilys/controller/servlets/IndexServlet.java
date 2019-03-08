@@ -25,6 +25,10 @@ public class IndexServlet extends HttpServlet {
   private static final int DEFAULT_LPP = 10;
   /** Default page. */
   private static final int DEFAULT_PAGE = 1;
+  /** Default sort column. */
+  private static final String DEFAULT_SORT_COLUMN = "ID";
+  /** Default ascendency. */
+  private static final String DEFAULT_ASCENDENCY = "DESC";
   /** ComputerService. */
   private static ComputerService computerService = ComputerService.getInstance();
   /** Logger. */
@@ -61,8 +65,24 @@ public class IndexServlet extends HttpServlet {
             ? DEFAULT_LPP 
             : Integer.parseInt(request.getParameter("lpp"));
     
+    String sortColumn = (
+        request.getParameter("col") == null ||
+        request.getParameter("col").isEmpty()
+        ) 
+            ? DEFAULT_SORT_COLUMN
+            : request.getParameter("col");
+    
+    String ascendency = (
+        request.getParameter("asc") == null ||
+        request.getParameter("asc").isEmpty()
+        ) 
+            ? DEFAULT_ASCENDENCY
+            : request.getParameter("asc");
+    
     paginationController.setPage(page);
     paginationController.setLinePerPage(lpp);
+    paginationController.setAscendency(ascendency);
+    paginationController.setSortColumn(sortColumn);
 
     int count = 0;
     try {

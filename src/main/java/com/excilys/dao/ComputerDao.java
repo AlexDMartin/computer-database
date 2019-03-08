@@ -38,8 +38,8 @@ public class ComputerDao implements Dao<Computer> {
 
   /** The Constant GET_PAGINATED. */
   private static final String GET_PAGINATED =
-      "SELECT ID, NAME, INTRODUCED, DISCONTINUED, COMPANY_ID FROM computer "
-      + "ORDER BY ID "
+      "SELECT computer.ID, computer.NAME, INTRODUCED, DISCONTINUED, COMPANY_ID FROM computer LEFT JOIN company ON computer.ID = company.ID "
+      + "ORDER BY %s "
       + "LIMIT ? "
       + "OFFSET ?";
   
@@ -47,7 +47,7 @@ public class ComputerDao implements Dao<Computer> {
   private static final String GET_SEARCHED_PAGINATED=
       "SELECT computer.ID, computer.NAME, INTRODUCED, DISCONTINUED, COMPANY_ID FROM computer LEFT JOIN company ON computer.ID = company.ID "
       + "WHERE computer.NAME LIKE ? OR company.NAME LIKE ? "
-      + "ORDER BY computer.ID "
+      + "ORDER BY %s "
       + "LIMIT ? "
       + "OFFSET ?";
 
@@ -145,8 +145,9 @@ public class ComputerDao implements Dao<Computer> {
     List<Computer> resultItems = new ArrayList<Computer>();
 
     try {
+      String getPaginatedOrdered = String.format(GET_PAGINATED, paginationController.getSortColumn() + " " + paginationController.getAscendency());
       PreparedStatement getAllPaginatedStatement =
-          connector.getConnection().prepareStatement(GET_PAGINATED);
+          connector.getConnection().prepareStatement(getPaginatedOrdered);
       getAllPaginatedStatement.setInt(1, paginationController.getLimit());
       getAllPaginatedStatement.setInt(2, paginationController.getOffset());
       ResultSet rs = getAllPaginatedStatement.executeQuery();
@@ -226,8 +227,9 @@ public class ComputerDao implements Dao<Computer> {
     List<Computer> resultItems = new ArrayList<Computer>();
 
     try {
+      String getSearchedPaginatedOrdered = String.format(GET_SEARCHED_PAGINATED, paginationController.getSortColumn() + " " + paginationController.getAscendency());
       PreparedStatement getAllSearchedPaginatedStatement =
-          connector.getConnection().prepareStatement(GET_SEARCHED_PAGINATED);
+          connector.getConnection().prepareStatement(getSearchedPaginatedOrdered);
       String filterWithPercents = "%" + filter + "%";
       getAllSearchedPaginatedStatement.setString(1, filterWithPercents);
       getAllSearchedPaginatedStatement.setString(2, filterWithPercents);

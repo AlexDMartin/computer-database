@@ -59,10 +59,21 @@
 									class="fa fa-trash-o fa-lg"></i>
 							</a>
 						</span></th>
-						<th>Computer name</th>
-						<th>Introduced date</th>
-						<th>Discontinued date</th>
-						<th>Company</th>
+						<c:choose>
+							<c:when test="${pageType == 'search'}">
+								<th><a href="Search?filter=${filter}&page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=NAME&asc=${paginationController.getNemesis(paginationController.getAscendency())}">Computer name</a></th>
+								<th><a href="Search?filter=${filter}&page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=INTRODUCED&asc=${paginationController.getNemesis(paginationController.getAscendency())}">Introduced date</a></th>
+								<th><a href="Search?filter=${filter}&page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=DISCONTINUED&asc=${paginationController.getNemesis(paginationController.getAscendency())}">Discontinued date</a></th>
+								<th>Company</th>
+							</c:when>
+							<c:otherwise>
+								<th><a href="Dashboard?page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=NAME&asc=${paginationController.getNemesis(paginationController.getAscendency())}">Computer name</a></th>
+								<th><a href="Dashboard?page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=INTRODUCED&asc=${paginationController.getNemesis(paginationController.getAscendency())}">Introduced date</a></th>
+								<th><a href="Dashboard?page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=DISCONTINUED&asc=${paginationController.getNemesis(paginationController.getAscendency())}">Discontinued date</a></th>
+								<th>Company</th>
+							</c:otherwise>
+						</c:choose>
+					
 					</tr>
 				</thead>
 				<tbody id="results">
@@ -88,27 +99,27 @@
 			<ul class="pagination">
 				<c:choose>
 					<c:when test="${pageType == 'search'}">
-						<li><a href="Search?filter=${filter}&page=${paginationController.getPrevious()}&lpp=${paginationController.getLinePerPage()}" aria-label="Previous"> <span
+						<li><a href="Search?filter=${filter}&page=${paginationController.getPrevious()}&lpp=${paginationController.getLinePerPage()}&col=${paginationController.getSortColumn()}&asc=${paginationController.getAscendency()}" aria-label="Previous"> <span
 							aria-hidden="true">&laquo;</span>
 						</a></li>
-						<li><a href="Search?filter=${filter}&page=${paginationController.getPages()[0]}&lpp=${paginationController.getLinePerPage()}">${paginationController.getPages()[0]}</a></li>
-						<li><a href="Search?filter=${filter}&page=${paginationController.getPages()[1]}&lpp=${paginationController.getLinePerPage()}">${paginationController.getPages()[1]}</a></li>
-						<li><a href="Search?filter=${filter}&page=${paginationController.getPages()[2]}&lpp=${paginationController.getLinePerPage()}">${paginationController.getPages()[2]}</a></li>
-						<li><a href="Search?filter=${filter}&page=${paginationController.getPages()[3]}&lpp=${paginationController.getLinePerPage()}">${paginationController.getPages()[3]}</a></li>
-						<li><a href="Search?filter=${filter}&page=${paginationController.getPages()[4]}&lpp=${paginationController.getLinePerPage()}">${paginationController.getPages()[4]}</a></li>
-						<li><a href="Search?filter=${filter}&page=${paginationController.getNext()}&lpp=${paginationController.getLinePerPage()}" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+						<li><a href="Search?filter=${filter}&page=${paginationController.getPages()[0]}&lpp=${paginationController.getLinePerPage()}&col=${paginationController.getSortColumn()}&asc=${paginationController.getAscendency()}">${paginationController.getPages()[0]}</a></li>
+						<li><a href="Search?filter=${filter}&page=${paginationController.getPages()[1]}&lpp=${paginationController.getLinePerPage()}&col=${paginationController.getSortColumn()}&asc=${paginationController.getAscendency()}">${paginationController.getPages()[1]}</a></li>
+						<li><a href="Search?filter=${filter}&page=${paginationController.getPages()[2]}&lpp=${paginationController.getLinePerPage()}&col=${paginationController.getSortColumn()}&asc=${paginationController.getAscendency()}">${paginationController.getPages()[2]}</a></li>
+						<li><a href="Search?filter=${filter}&page=${paginationController.getPages()[3]}&lpp=${paginationController.getLinePerPage()}&col=${paginationController.getSortColumn()}&asc=${paginationController.getAscendency()}">${paginationController.getPages()[3]}</a></li>
+						<li><a href="Search?filter=${filter}&page=${paginationController.getPages()[4]}&lpp=${paginationController.getLinePerPage()}&col=${paginationController.getSortColumn()}&asc=${paginationController.getAscendency()}">${paginationController.getPages()[4]}</a></li>
+						<li><a href="Search?filter=${filter}&page=${paginationController.getNext()}&lpp=${paginationController.getLinePerPage()}&col=${paginationController.getSortColumn()}&asc=${paginationController.getAscendency()}" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 						</a></li>
 					</c:when>
 					<c:otherwise>
-					<li><a href="Dashboard?page=${paginationController.getPrevious()}&lpp=${paginationController.getLinePerPage()}" aria-label="Previous"> <span
+					<li><a href="Dashboard?page=${paginationController.getPrevious()}&lpp=${paginationController.getLinePerPage()}&col=${paginationController.getSortColumn()}" aria-label="Previous"> <span
 							aria-hidden="true">&laquo;</span>
 					</a></li>
-						<li><a href="Dashboard?page=${paginationController.getPages()[0]}&lpp=${paginationController.getLinePerPage()}">${paginationController.getPages()[0]}</a></li>
-						<li><a href="Dashboard?page=${paginationController.getPages()[1]}&lpp=${paginationController.getLinePerPage()}">${paginationController.getPages()[1]}</a></li>
-						<li><a href="Dashboard?page=${paginationController.getPages()[2]}&lpp=${paginationController.getLinePerPage()}">${paginationController.getPages()[2]}</a></li>
-						<li><a href="Dashboard?page=${paginationController.getPages()[3]}&lpp=${paginationController.getLinePerPage()}">${paginationController.getPages()[3]}</a></li>
-						<li><a href="Dashboard?page=${paginationController.getPages()[4]}&lpp=${paginationController.getLinePerPage()}">${paginationController.getPages()[4]}</a></li>
-						<li><a href="Dashboard?page=${paginationController.getNext()}&lpp=${paginationController.getLinePerPage()}" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+						<li><a href="Dashboard?page=${paginationController.getPages()[0]}&lpp=${paginationController.getLinePerPage()}&col=${paginationController.getSortColumn()}&asc=${paginationController.getAscendency()}">${paginationController.getPages()[0]}</a></li>
+						<li><a href="Dashboard?page=${paginationController.getPages()[1]}&lpp=${paginationController.getLinePerPage()}&col=${paginationController.getSortColumn()}&asc=${paginationController.getAscendency()}">${paginationController.getPages()[1]}</a></li>
+						<li><a href="Dashboard?page=${paginationController.getPages()[2]}&lpp=${paginationController.getLinePerPage()}&col=${paginationController.getSortColumn()}&asc=${paginationController.getAscendency()}">${paginationController.getPages()[2]}</a></li>
+						<li><a href="Dashboard?page=${paginationController.getPages()[3]}&lpp=${paginationController.getLinePerPage()}&col=${paginationController.getSortColumn()}&asc=${paginationController.getAscendency()}">${paginationController.getPages()[3]}</a></li>
+						<li><a href="Dashboard?page=${paginationController.getPages()[4]}&lpp=${paginationController.getLinePerPage()}&col=${paginationController.getSortColumn()}&asc=${paginationController.getAscendency()}">${paginationController.getPages()[4]}</a></li>
+						<li><a href="Dashboard?page=${paginationController.getNext()}&lpp=${paginationController.getLinePerPage()}&col=${paginationController.getSortColumn()}&asc=${paginationController.getAscendency()}" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 						</a></li>
 					</c:otherwise>
 				</c:choose>	
@@ -117,14 +128,14 @@
 			<div class="btn-group btn-group-sm pull-right" role="group">
 			<c:choose>
 				<c:when test="${pageType == 'search'}">
-					<a href="Search?filter=${filter}&page=${paginationController.getPage()}&lpp=10"><button type="button" class="btn btn-default">10</button></a>
-					<a href="Search?filter=${filter}&page=${paginationController.getPage()}&lpp=50"><button type="button" class="btn btn-default">50</button></a>
-					<a href="Search?filter=${filter}&page=${paginationController.getPage()}&lpp=100"><button type="button" class="btn btn-default">100</button></a>
+					<a href="Search?filter=${filter}&page=${paginationController.getPage()}&lpp=10&col=${paginationController.getSortColumn()}"><button type="button" class="btn btn-default">10</button></a>
+					<a href="Search?filter=${filter}&page=${paginationController.getPage()}&lpp=50&col=${paginationController.getSortColumn()}"><button type="button" class="btn btn-default">50</button></a>
+					<a href="Search?filter=${filter}&page=${paginationController.getPage()}&lpp=100&col=${paginationController.getSortColumn()}"><button type="button" class="btn btn-default">100</button></a>
 				</c:when>
 				<c:otherwise>
-					<a href="Dashboard?page=${paginationController.getPage()}&lpp=10"><button type="button" class="btn btn-default">10</button></a>
-					<a href="Dashboard?page=${paginationController.getPage()}&lpp=50"><button type="button" class="btn btn-default">50</button></a>
-					<a href="Dashboard?page=${paginationController.getPage()}&lpp=100"><button type="button" class="btn btn-default">100</button></a>
+					<a href="Dashboard?page=${paginationController.getPage()}&lpp=10&col=${paginationController.getSortColumn()}"><button type="button" class="btn btn-default">10</button></a>
+					<a href="Dashboard?page=${paginationController.getPage()}&lpp=50&col=${paginationController.getSortColumn()}"><button type="button" class="btn btn-default">50</button></a>
+					<a href="Dashboard?page=${paginationController.getPage()}&lpp=100&col=${paginationController.getSortColumn()}"><button type="button" class="btn btn-default">100</button></a>
 				</c:otherwise>
 			</c:choose>
 				

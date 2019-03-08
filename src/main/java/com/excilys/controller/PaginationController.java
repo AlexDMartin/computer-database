@@ -17,21 +17,9 @@ public class PaginationController {
   private int[] pages = new int[5];
   private int next;
   
-
-  private PaginationController() {}
+  private String sortColumn = "ID";
+  private String ascendency = "ASC";
   
-  /**
-   * Singleton implementation of PaginationController.
-   * 
-   * @return single instance of PaginationController
-   */
-  public static PaginationController getInstance() {
-    if (paginationControllerInstance == null) {
-      paginationControllerInstance = new PaginationController();
-    }
-    return paginationControllerInstance;
-
-  }
 
   /**
    * Getter for line Per Page.
@@ -136,5 +124,60 @@ public class PaginationController {
     return next;
   }
   
+  /**
+   * Getter for the sort column.
+   * @return the column on which the sorting applies
+   */
+  public String getSortColumn() {
+    return sortColumn;
+  }
+  
+  /**
+   * Setter for the sort column. switches the ascendency on second call on the same column
+   * @param sortColumn
+   */
+  public void setSortColumn(String sortColumn) {
+      this.sortColumn = sortColumn;
+  }
+  
+  /**
+   * Switches the ascendency from "ASC" to "DESC" and from "DESC" to "ASC".
+   */
+  public String getNemesis(String ascendency) {
+    if (ascendency.equals("ASC")) {
+      return "DESC";
+    } 
+    return "ASC";
+  }
+  
+  /**
+   * Setter for ascendency.
+   * @param ascendency
+   */
+  public void setAscendency(String ascendency) {
+    this.ascendency = ascendency;
+  }
+  
+  /**
+   * Getter for the ascendency.
+   * @return the ascendency of the column on which the sorting applies
+   */
+  public String getAscendency() {
+    return ascendency;
+  }
+  
+ private PaginationController() {}
+  
+  /**
+   * Singleton implementation of PaginationController.
+   * 
+   * @return single instance of PaginationController
+   */
+  public static PaginationController getInstance() {
+    if (paginationControllerInstance == null) {
+      paginationControllerInstance = new PaginationController();
+    }
+    return paginationControllerInstance;
 
+  }
 }
