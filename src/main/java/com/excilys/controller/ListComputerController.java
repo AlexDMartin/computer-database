@@ -1,15 +1,15 @@
 package com.excilys.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.excilys.dao.mappers.ComputerMapper;
 import com.excilys.dao.model.Computer;
 import com.excilys.dto.ComputerDto;
 import com.excilys.exception.validation.computer.ComputerValidationException;
 import com.excilys.service.ComputerService;
 import com.excilys.view.ListComputerView;
+import java.util.ArrayList;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Displays the Computer list.

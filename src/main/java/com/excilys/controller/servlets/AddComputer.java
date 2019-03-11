@@ -10,7 +10,6 @@ import com.excilys.dto.ComputerDtoBuilder;
 import com.excilys.service.CompanyService;
 import com.excilys.service.ComputerService;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.servlet.ServletException;
@@ -54,11 +53,12 @@ public class AddComputer extends HttpServlet {
    * 
    * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
    */
+  @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     try {
-      List<Company> companyList = new ArrayList<Company>();
-      companyList = companyService.getAll();
+      List<Company> companyList = companyService.getAll();
+     
       request.setAttribute("companyList", companyList);
     } catch (Exception e) {
       logger.warn(e.getMessage());
@@ -72,6 +72,7 @@ public class AddComputer extends HttpServlet {
    * This doPost method validates and adds the computer in the database.
    * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
    */
+  @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     try {
@@ -110,7 +111,7 @@ public class AddComputer extends HttpServlet {
       }
     } catch (Exception e) {
       logger.warn(e.getMessage());
-      request.setAttribute("stacktrace", e.getMessage());
+      request.setAttribute("stacktrace", e.getMessage());       
       request.getRequestDispatcher("view/500.jsp").forward(request, response);
       return;
     } 

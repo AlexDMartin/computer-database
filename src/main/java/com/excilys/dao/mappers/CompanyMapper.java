@@ -1,11 +1,5 @@
 package com.excilys.dao.mappers;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.excilys.dao.model.Company;
 import com.excilys.dao.model.CompanyBuilder;
 import com.excilys.dto.CompanyDto;
@@ -13,6 +7,12 @@ import com.excilys.dto.CompanyDtoBuilder;
 import com.excilys.dto.Dto;
 import com.excilys.exception.validation.company.CompanyValidationException;
 import com.excilys.validation.CompanyValidation;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Contains all method to map different types to Company.
@@ -56,8 +56,8 @@ public class CompanyMapper implements Mapper<Company> {
    * Transforms a Company entity into a CompanyDTO.
    * 
    * @param company A company entity
-   * @return CompanyDTO
-   * @throws CompanyValidationException 
+   * @return CompanyDto
+   * @throws CompanyValidationException Exception throwed if the validation fails
    */
   @Override
   public Dto entityToDto(Company company) throws CompanyValidationException {
@@ -81,7 +81,7 @@ public class CompanyMapper implements Mapper<Company> {
    * 
    * @param dto A company Data transfer object
    * @return Company
-   * @throws CompanyValidationException 
+   * @throws CompanyValidationException Throwed when the company isn't valid
    */
   @Override
   public Company dtoToEntity(Dto dto) throws CompanyValidationException {

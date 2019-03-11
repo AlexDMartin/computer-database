@@ -1,5 +1,9 @@
 package com.excilys.dao;
 
+import com.excilys.controller.PaginationController;
+import com.excilys.dao.mappers.ComputerMapper;
+import com.excilys.dao.model.Computer;
+import com.excilys.persistance.utils.Connector;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,10 +13,6 @@ import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.excilys.controller.PaginationController;
-import com.excilys.dao.mappers.ComputerMapper;
-import com.excilys.dao.model.Computer;
-import com.excilys.persistance.utils.Connector;
 
 /**
  * The Class ComputerDao.
@@ -27,7 +27,7 @@ public class ComputerDao implements Dao<Computer> {
   private static Connector connector = Connector.getInstance();
   /** ComputerMapper. */
   private static ComputerMapper computerMapper = ComputerMapper.getInstance();
-  
+
   /** The Constant GET_ONE. */
   private static final String GET_ONE =
       "SELECT ID, NAME, INTRODUCED, DISCONTINUED, COMPANY_ID FROM computer WHERE ID = ? LIMIT 1";
@@ -37,45 +37,36 @@ public class ComputerDao implements Dao<Computer> {
       "SELECT ID, NAME, INTRODUCED, DISCONTINUED, COMPANY_ID FROM computer ORDER BY ID";
 
   /** The Constant GET_PAGINATED. */
-  private static final String GET_PAGINATED =
-      "SELECT computer.ID, computer.NAME, INTRODUCED, DISCONTINUED, COMPANY_ID FROM computer LEFT JOIN company ON computer.ID = company.ID "
-      + "ORDER BY %s "
-      + "LIMIT ? "
-      + "OFFSET ?";
-  
-  /** The Constant GET_SEARCHED_PAGINATED */
-  private static final String GET_SEARCHED_PAGINATED=
-      "SELECT computer.ID, computer.NAME, INTRODUCED, DISCONTINUED, COMPANY_ID FROM computer LEFT JOIN company ON computer.ID = company.ID "
-      + "WHERE computer.NAME LIKE ? OR company.NAME LIKE ? "
-      + "ORDER BY %s "
-      + "LIMIT ? "
-      + "OFFSET ?";
+  private static final String GET_PAGINATED = "SELECT computer.ID, " + "computer.NAME, "
+      + "INTRODUCED, " + "DISCONTINUED, " + "COMPANY_ID " + "FROM computer LEFT JOIN company "
+      + "ON computer.ID = company.ID " + "ORDER BY %s " + "LIMIT ? " + "OFFSET ?";
+
+  /** The Constant GET_SEARCHED_PAGINATED. */
+  private static final String GET_SEARCHED_PAGINATED =
+      "SELECT computer.ID, computer.NAME, INTRODUCED, DISCONTINUED, "
+          + "COMPANY_ID FROM computer LEFT JOIN company ON computer.ID = company.ID "
+          + "WHERE computer.NAME LIKE ? OR company.NAME LIKE ? " + "ORDER BY %s " + "LIMIT ? "
+          + "OFFSET ?";
 
   /** The Constant SAVE. */
   private static final String SAVE =
       "INSERT INTO computer (NAME, INTRODUCED, DISCONTINUED, COMPANY_ID) VALUES (?,?,?,?)";
 
   /** The Constant UPDATE. */
-  private static final String UPDATE =
-      "UPDATE computer SET "
-      + "NAME = ?"
-      + ", INTRODUCED = ? "
-      + ", DISCONTINUED = ? "
-      + ", COMPANY_ID = ? "
-      + "WHERE ID = ?";
+  private static final String UPDATE = "UPDATE computer SET " + "NAME = ?" + ", INTRODUCED = ? "
+      + ", DISCONTINUED = ? " + ", COMPANY_ID = ? " + "WHERE ID = ?";
 
   /** The Constant DELETE. */
   private static final String DELETE = "DELETE FROM computer WHERE ID = ?";
-  
-  /** The Constant COUNT_ALL_COMPUTERS */
+
+  /** The Constant COUNT_ALL_COMPUTERS. */
   private static final String COUNT_ALL_COMPUTERS = "SELECT COUNT(ID) FROM computer";
-  
-  /** The Constant COUNT_ALL_COMPUTERS_BY_CRITERIA */
+
+  /** The Constant COUNT_ALL_COMPUTERS_BY_CRITERIA. */
   private static final String COUNT_ALL_COMPUTERS_BY_CRITERIA = "SELECT COUNT(computer.ID) "
-      + "FROM computer "
-      + "LEFT JOIN company ON computer.ID = company.ID "
+      + "FROM computer " + "LEFT JOIN company ON computer.ID = company.ID "
       + "WHERE computer.NAME LIKE ? OR company.NAME LIKE ? ";
-  
+
   /**
    * Instantiates a new computer dao.
    */
@@ -103,8 +94,7 @@ public class ComputerDao implements Dao<Computer> {
     Computer resultItem = null;
 
     try {
-      PreparedStatement getStatement =
-          connector.getConnection().prepareStatement(GET_ONE);
+      PreparedStatement getStatement = connector.getConnection().prepareStatement(GET_ONE);
       getStatement.setLong(1, id);
       ResultSet rs = getStatement.executeQuery();
       resultItem = computerMapper.map(rs).get(0);
@@ -124,9 +114,7 @@ public class ComputerDao implements Dao<Computer> {
   public List<Computer> getAll() {
     List<Computer> resultItems = null;
 
-    try {
-      PreparedStatement getAllStatement =
-         connector.getConnection().prepareStatement(GET_ALL);
+    try (PreparedStatement getAllStatement = connector.getConnection().prepareStatement(GET_ALL)) {
       ResultSet rs = getAllStatement.executeQuery();
       resultItems = computerMapper.map(rs);
     } catch (SQLException e) {
@@ -142,12 +130,12 @@ public class ComputerDao implements Dao<Computer> {
    * @param paginationController A pagination controller
    */
   public List<Computer> getAllPaginated(PaginationController paginationController) {
-    List<Computer> resultItems = new ArrayList<Computer>();
+    List<Computer> resultItems = new ArrayList<>();
+    String getPaginatedOrdered = String.format(GET_PAGINATED,
+        paginationController.getSortColumn() + " " + paginationController.getAscendency());
 
-    try {
-      String getPaginatedOrdered = String.format(GET_PAGINATED, paginationController.getSortColumn() + " " + paginationController.getAscendency());
-      PreparedStatement getAllPaginatedStatement =
-          connector.getConnection().prepareStatement(getPaginatedOrdered);
+    try (PreparedStatement getAllPaginatedStatement =
+        connector.getConnection().prepareStatement(getPaginatedOrdered)) {
       getAllPaginatedStatement.setInt(1, paginationController.getLimit());
       getAllPaginatedStatement.setInt(2, paginationController.getOffset());
       ResultSet rs = getAllPaginatedStatement.executeQuery();
@@ -166,16 +154,15 @@ public class ComputerDao implements Dao<Computer> {
    */
   @Override
   public void save(Computer computer) {
-    try {
-      PreparedStatement saveStatement =
-          connector.getConnection().prepareStatement(SAVE);
+    try (PreparedStatement saveStatement = connector.getConnection().prepareStatement(SAVE)) {
       saveStatement.setString(1, computer.getName());
       saveStatement.setTimestamp(2, new Timestamp(computer.getIntroduced().getTime()));
       saveStatement.setTimestamp(3, new Timestamp(computer.getDiscontinued().getTime()));
       saveStatement.setInt(4, computer.getCompany().getId());
 
       int resultCode = saveStatement.executeUpdate();
-      logger.info("Save operated on " + resultCode + " row(s)");
+      String message = "Save operated on " + resultCode + " row(s)";
+      logger.info(message);
     } catch (SQLException e) {
       logger.warn(e.getMessage());
     }
@@ -188,9 +175,7 @@ public class ComputerDao implements Dao<Computer> {
    */
   @Override
   public void update(Computer computer) {
-    try {
-      PreparedStatement updateStatement =
-          connector.getConnection().prepareStatement(UPDATE);
+    try (PreparedStatement updateStatement = connector.getConnection().prepareStatement(UPDATE)) {
       updateStatement.setString(1, computer.getName());
       updateStatement.setTimestamp(2, new Timestamp(computer.getIntroduced().getTime()));
       updateStatement.setTimestamp(3, new Timestamp(computer.getDiscontinued().getTime()));
@@ -211,9 +196,7 @@ public class ComputerDao implements Dao<Computer> {
    */
   @Override
   public void delete(Computer computer) {
-    try {
-      PreparedStatement deleteStatement =
-          connector.getConnection().prepareStatement(DELETE);
+    try (PreparedStatement deleteStatement = connector.getConnection().prepareStatement(DELETE)) {
       deleteStatement.setLong(1, computer.getId());
 
       int resultCode = deleteStatement.executeUpdate();
@@ -223,13 +206,21 @@ public class ComputerDao implements Dao<Computer> {
     }
   }
 
-  public List<Computer> getAllSearchedPaginated(String filter, PaginationController paginationController) {
-    List<Computer> resultItems = new ArrayList<Computer>();
+  /**
+   * Queries the database to return a computer list filtered and paginated.
+   * @param filter The string by which the user is filtering with
+   * @param paginationController That will adapt the request to look out for the displayed computers
+   *        only
+   * @return
+   */
+  public List<Computer> getAllSearchedPaginated(String filter,
+      PaginationController paginationController) {
+    List<Computer> resultItems = new ArrayList<>();
+    String getSearchedPaginatedOrdered = String.format(GET_SEARCHED_PAGINATED,
+        paginationController.getSortColumn() + " " + paginationController.getAscendency());
 
-    try {
-      String getSearchedPaginatedOrdered = String.format(GET_SEARCHED_PAGINATED, paginationController.getSortColumn() + " " + paginationController.getAscendency());
-      PreparedStatement getAllSearchedPaginatedStatement =
-          connector.getConnection().prepareStatement(getSearchedPaginatedOrdered);
+    try (PreparedStatement getAllSearchedPaginatedStatement =
+        connector.getConnection().prepareStatement(getSearchedPaginatedOrdered)) {
       String filterWithPercents = "%" + filter + "%";
       getAllSearchedPaginatedStatement.setString(1, filterWithPercents);
       getAllSearchedPaginatedStatement.setString(2, filterWithPercents);
@@ -245,16 +236,16 @@ public class ComputerDao implements Dao<Computer> {
   }
 
   /**
-   * Counts all Computers
+   * Counts all Computers.
+   * 
    * @return the total of computers
    */
   public int countAllComputer() {
     int count = 0;
-    try {
-      PreparedStatement countAllComputersStatement =
-         connector.getConnection().prepareStatement(COUNT_ALL_COMPUTERS);
+    try (PreparedStatement countAllComputersStatement =
+        connector.getConnection().prepareStatement(COUNT_ALL_COMPUTERS)) {
       ResultSet rs = countAllComputersStatement.executeQuery();
-      if(rs.next()){
+      if (rs.next()) {
         count = Integer.parseInt(rs.getString(1));
       }
     } catch (SQLException e) {
@@ -263,22 +254,23 @@ public class ComputerDao implements Dao<Computer> {
 
     return count;
   }
-  
+
   /**
-   * Counts all Computers by criteria
-   * @param criteria
-   * @return the total of computers 
+   * Counts all Computers by criteria.
+   * 
+   * @param criteria the filter string
+   * @return the total of computers
    */
   public int countAllComputerByCriteria(String criteria) {
     int count = 0;
     try {
       String filter = "%" + criteria + "%";
       PreparedStatement countAllComputersByCriteriaStatement =
-         connector.getConnection().prepareStatement(COUNT_ALL_COMPUTERS_BY_CRITERIA);
+          connector.getConnection().prepareStatement(COUNT_ALL_COMPUTERS_BY_CRITERIA);
       countAllComputersByCriteriaStatement.setString(1, filter);
       countAllComputersByCriteriaStatement.setString(2, filter);
       ResultSet rs = countAllComputersByCriteriaStatement.executeQuery();
-      if(rs.next()){
+      if (rs.next()) {
         count = Integer.parseInt(rs.getString(1));
       }
     } catch (SQLException e) {

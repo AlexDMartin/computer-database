@@ -1,5 +1,8 @@
 package com.excilys.dao;
 
+import com.excilys.dao.mappers.CompanyMapper;
+import com.excilys.dao.model.Company;
+import com.excilys.persistance.utils.Connector;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,9 +10,6 @@ import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.excilys.dao.mappers.CompanyMapper;
-import com.excilys.dao.model.Company;
-import com.excilys.persistance.utils.Connector;
 
 /**
  * The Class CompanyDao.
@@ -44,9 +44,7 @@ public class CompanyDao implements Dao<Company> {
   public Optional<Company> get(long id) {
     Company resultItem = null;
 
-    try {
-      PreparedStatement getStatement =
-          connector.getConnection().prepareStatement(GET_ONE);
+    try (PreparedStatement getStatement = connector.getConnection().prepareStatement(GET_ONE)) {
       getStatement.setLong(1, id);
       ResultSet rs = getStatement.executeQuery();
       resultItem = companyMapper.map(rs).get(0);
@@ -66,8 +64,7 @@ public class CompanyDao implements Dao<Company> {
   public List<Company> getAll() {
     List<Company> resultItems = null;
 
-    try {
-      PreparedStatement getAllStatement = connector.getConnection().prepareStatement(GET_ALL);
+    try (PreparedStatement getAllStatement = connector.getConnection().prepareStatement(GET_ALL)) {
       ResultSet rs = getAllStatement.executeQuery();
       resultItems = companyMapper.map(rs);
     } catch (SQLException sqlException) {
@@ -84,8 +81,7 @@ public class CompanyDao implements Dao<Company> {
    */
   @Override
   public void save(Company company) throws Exception {
-    try {
-      PreparedStatement saveStatement = connector.getConnection().prepareStatement(SAVE);
+    try (PreparedStatement saveStatement = connector.getConnection().prepareStatement(SAVE)) {
       saveStatement.setString(1, company.getName());
 
       int resultCode = saveStatement.executeUpdate();
@@ -103,8 +99,7 @@ public class CompanyDao implements Dao<Company> {
   @Override
   public void update(Company company) {
     try {
-      PreparedStatement updateStatement =
-          connector.getConnection().prepareStatement(UPDATE);
+      PreparedStatement updateStatement = connector.getConnection().prepareStatement(UPDATE);
       updateStatement.setString(1, company.getName());
       updateStatement.setLong(1, company.getId());
 
@@ -122,9 +117,7 @@ public class CompanyDao implements Dao<Company> {
    */
   @Override
   public void delete(Company company) {
-    try {
-      PreparedStatement deleteStatement =
-          connector.getConnection().prepareStatement(DELETE);
+    try (PreparedStatement deleteStatement = connector.getConnection().prepareStatement(DELETE)) {
       deleteStatement.setLong(1, company.getId());
 
       int resultCode = deleteStatement.executeUpdate();
@@ -133,7 +126,7 @@ public class CompanyDao implements Dao<Company> {
       logger.warn(sqlException.getMessage());
     }
   }
-  
+
   /**
    * Instantiates a new company dao.
    */

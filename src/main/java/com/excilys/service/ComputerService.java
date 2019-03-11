@@ -1,13 +1,13 @@
 package com.excilys.service;
 
-import java.util.List;
-import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.excilys.controller.PaginationController;
 import com.excilys.dao.ComputerDao;
 import com.excilys.dao.DaoFactory;
 import com.excilys.dao.model.Computer;
+import java.util.List;
+import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class ComputerService.
@@ -20,7 +20,7 @@ public class ComputerService implements CallableService<Computer> {
   private static ComputerDao computerDao = DaoFactory.getInstance().getComputerDao();
   /** Logger. */
   private static Logger logger = LoggerFactory.getLogger(ComputerService.class);
-  
+
   /**
    * Instantiates a new computer service.
    */
@@ -68,10 +68,11 @@ public class ComputerService implements CallableService<Computer> {
   }
 
 
-  public List<Computer> getAllSearchedPaginated(String filter, PaginationController paginationController) {
+  public List<Computer> getAllSearchedPaginated(String filter,
+      PaginationController paginationController) {
     return computerDao.getAllSearchedPaginated(filter, paginationController);
   }
-  
+
   /*
    * (non-Javadoc)
    * 
@@ -105,11 +106,11 @@ public class ComputerService implements CallableService<Computer> {
   public void delete(Computer computer) {
     computerDao.delete(computer);
   }
-  
+
   public int countAllComputer() {
     return computerDao.countAllComputer();
   }
-  
+
   public int countAllComputerByCriteria(String criteria) {
     return computerDao.countAllComputerByCriteria(criteria);
   }

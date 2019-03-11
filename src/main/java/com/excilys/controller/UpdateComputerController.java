@@ -1,12 +1,5 @@
 package com.excilys.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Optional;
-import java.util.Scanner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.excilys.dao.mappers.CompanyMapper;
 import com.excilys.dao.mappers.ComputerMapper;
 import com.excilys.dao.model.Company;
@@ -19,6 +12,13 @@ import com.excilys.service.ComputerService;
 import com.excilys.validation.CompanyValidation;
 import com.excilys.validation.ComputerValidation;
 import com.excilys.view.UpdateComputerView;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Optional;
+import java.util.Scanner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Singleton implementation of UpdateComputerController.

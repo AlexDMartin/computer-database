@@ -61,15 +61,15 @@
 						</span></th>
 						<c:choose>
 							<c:when test="${pageType == 'search'}">
-								<th><a href="Search?filter=${filter}&page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=NAME&asc=${paginationController.getNemesis(paginationController.getAscendency())}">Computer name</a></th>
-								<th><a href="Search?filter=${filter}&page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=INTRODUCED&asc=${paginationController.getNemesis(paginationController.getAscendency())}">Introduced date</a></th>
-								<th><a href="Search?filter=${filter}&page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=DISCONTINUED&asc=${paginationController.getNemesis(paginationController.getAscendency())}">Discontinued date</a></th>
+								<th><a href="Search?filter=${filter}&page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=NAME&asc=${paginationController.getInvertedAscendency(paginationController.getAscendency())}">Computer name</a></th>
+								<th><a href="Search?filter=${filter}&page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=INTRODUCED&asc=${paginationController.getInvertedAscendency(paginationController.getAscendency())}">Introduced date</a></th>
+								<th><a href="Search?filter=${filter}&page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=DISCONTINUED&asc=${paginationController.getInvertedAscendency(paginationController.getAscendency())}">Discontinued date</a></th>
 								<th>Company</th>
 							</c:when>
 							<c:otherwise>
-								<th><a href="Dashboard?page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=NAME&asc=${paginationController.getNemesis(paginationController.getAscendency())}">Computer name</a></th>
-								<th><a href="Dashboard?page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=INTRODUCED&asc=${paginationController.getNemesis(paginationController.getAscendency())}">Introduced date</a></th>
-								<th><a href="Dashboard?page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=DISCONTINUED&asc=${paginationController.getNemesis(paginationController.getAscendency())}">Discontinued date</a></th>
+								<th><a href="Dashboard?page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=NAME&asc=${paginationController.getInvertedAscendency(paginationController.getAscendency())}">Computer name</a></th>
+								<th><a href="Dashboard?page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=INTRODUCED&asc=${paginationController.getInvertedAscendency(paginationController.getAscendency())}">Introduced date</a></th>
+								<th><a href="Dashboard?page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=DISCONTINUED&asc=${paginationController.getInvertedAscendency(paginationController.getAscendency())}">Discontinued date</a></th>
 								<th>Company</th>
 							</c:otherwise>
 						</c:choose>

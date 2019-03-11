@@ -51,6 +51,7 @@ public class EditComputer extends HttpServlet {
    * This doGet methods returns information to prefill the edition form.
    * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
    */
+  @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     try {
@@ -59,7 +60,9 @@ public class EditComputer extends HttpServlet {
       List<Company> companyList = companyService.getAll();
 
       request.setAttribute("companyList", companyList);
-      request.setAttribute("computer", computer.get());
+      if (computer.isPresent()) {
+        request.setAttribute("computer", computer.get());
+      }
       request.getRequestDispatcher("view/editComputer.jsp").forward(request, response);
     } catch (Exception e) {
       logger.warn(e.getMessage());
@@ -72,6 +75,7 @@ public class EditComputer extends HttpServlet {
    * This doPost method verify data sent by the user and tries to update the database.
    * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
    */
+  @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     try {

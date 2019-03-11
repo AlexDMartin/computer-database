@@ -1,5 +1,7 @@
 package com.excilys.controller.servlets;
 
+import com.excilys.dao.model.Computer;
+import com.excilys.service.ComputerService;
 import java.io.IOException;
 import java.util.Optional;
 import javax.servlet.ServletException;
@@ -9,15 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.excilys.dao.model.Computer;
-import com.excilys.service.ComputerService;
 
 /**
- * Servlet implementation class DeleteServlet
+ * Servlet implementation class DeleteServlet.
  */
 @WebServlet(name = "Delete", urlPatterns = {"/Delete"})
 public class DeleteServlet extends HttpServlet {
-  
+
   /** SerialVersionUid. */
   private static final long serialVersionUID = 7210607623729089403L;
   /** Computer Service. */
@@ -26,6 +26,7 @@ public class DeleteServlet extends HttpServlet {
   private static Logger logger = LoggerFactory.getLogger(DeleteServlet.class);
 
   /**
+   * Servlet Constructor.
    * @see HttpServlet#HttpServlet()
    */
   public DeleteServlet() {
@@ -33,6 +34,7 @@ public class DeleteServlet extends HttpServlet {
   }
 
   /**
+   * Servlet doGet.
    * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
    */
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -40,21 +42,23 @@ public class DeleteServlet extends HttpServlet {
     String selection = request.getParameter("selection");
     String[] selectedId = selection.split(",");
     try {
-      for(String id: selectedId) {
+      for (String id : selectedId) {
         Optional<Computer> computer = computerService.get(Long.parseLong(id));
-        if(computer.isPresent())
-        computerService.delete(computer.get());
+        if (computer.isPresent()) {
+          computerService.delete(computer.get());
+        }
       }
     } catch (Exception e) {
-       logger.warn(e.getMessage());
-       request.getRequestDispatcher("view/500.jsp").forward(request, response);
-       return;
+      logger.warn(e.getMessage());
+      request.getRequestDispatcher("view/500.jsp").forward(request, response);
+      return;
     }
 
     request.getRequestDispatcher("Dashboard").forward(request, response);
   }
 
   /**
+   * Servlet doPost.
    * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
    */
   protected void doPost(HttpServletRequest request, HttpServletResponse response)

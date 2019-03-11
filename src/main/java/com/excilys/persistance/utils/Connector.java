@@ -1,11 +1,11 @@
 package com.excilys.persistance.utils;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 
 /**
  * Singleton implementation of Connector.
@@ -52,7 +52,7 @@ public class Connector {
    * Gets the connection.
    *
    * @return the connection
-   * @throws SQLException
+   * @throws SQLException Exception throwed when the connector fail to return a connection
    */
   public Connection getConnection() throws SQLException {
     return Connector.connection;
