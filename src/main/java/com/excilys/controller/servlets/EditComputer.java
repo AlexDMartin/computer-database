@@ -1,5 +1,6 @@
 package com.excilys.controller.servlets;
 
+import com.excilys.config.SpringConfig;
 import com.excilys.dao.mappers.CompanyMapper;
 import com.excilys.dao.mappers.ComputerMapper;
 import com.excilys.dao.model.Company;
@@ -20,6 +21,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
  * Servlet implementation class EditComputer.
@@ -28,14 +31,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class EditComputer extends HttpServlet {
 
   private static final long serialVersionUID = 9089945397283880630L;
-  @Autowired
-  private ComputerService computerService;
-  @Autowired
-  private ComputerMapper computerMapper;
-  @Autowired
-  private CompanyService companyService;
-  @Autowired
-  private CompanyMapper companyMapper;
   private static Logger logger = LoggerFactory.getLogger(EditComputer.class);
 
   /**
@@ -56,6 +51,12 @@ public class EditComputer extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     try {
+      ApplicationContext applicationContext =
+          new AnnotationConfigApplicationContext(SpringConfig.class);
+      ComputerService computerService = applicationContext.getBean(ComputerService.class);
+      CompanyService companyService = applicationContext.getBean(CompanyService.class);
+      ComputerMapper computerMapper = applicationContext.getBean(ComputerMapper.class);
+      CompanyMapper companyMapper = applicationContext.getBean(CompanyMapper.class);
       long id = Long.parseLong(request.getParameter("id"));
       Optional<Computer> computer = computerService.get(id);
       List<Company> companyList = companyService.getAll();
@@ -81,6 +82,12 @@ public class EditComputer extends HttpServlet {
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     try {
+      ApplicationContext applicationContext =
+          new AnnotationConfigApplicationContext(SpringConfig.class);
+      ComputerService computerService = applicationContext.getBean(ComputerService.class);
+      CompanyService companyService = applicationContext.getBean(CompanyService.class);
+      ComputerMapper computerMapper = applicationContext.getBean(ComputerMapper.class);
+      CompanyMapper companyMapper = applicationContext.getBean(CompanyMapper.class);
       ComputerDtoBuilder computerDtoBuilder = new ComputerDtoBuilder();
 
       if (request.getParameter("id") != null) {

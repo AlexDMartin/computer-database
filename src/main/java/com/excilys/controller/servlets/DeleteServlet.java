@@ -1,5 +1,6 @@
 package com.excilys.controller.servlets;
 
+import com.excilys.config.SpringConfig;
 import com.excilys.dao.model.Computer;
 import com.excilys.service.ComputerService;
 import java.io.IOException;
@@ -12,13 +13,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 @WebServlet(name = "Delete", urlPatterns = {"/Delete"})
 public class DeleteServlet extends HttpServlet {
 
   private static final long serialVersionUID = 7210607623729089403L;
-  @Autowired
-  private ComputerService computerService;
   private static final Logger logger = LoggerFactory.getLogger(DeleteServlet.class);
 
   /**
@@ -38,9 +39,13 @@ public class DeleteServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    String selection = request.getParameter("selection");
-    String[] selectedId = selection.split(",");
     try {
+      ApplicationContext applicationContext =
+          new AnnotationConfigApplicationContext(SpringConfig.class);
+      ComputerService computerService = applicationContext.getBean(ComputerService.class);
+      String selection = request.getParameter("selection");
+      String[] selectedId = selection.split(",");
+
       for (String id : selectedId) {
         Optional<Computer> computer = computerService.get(Long.parseLong(id));
         if (computer.isPresent()) {

@@ -1,5 +1,6 @@
 package com.excilys.controller.servlets;
 
+import com.excilys.config.SpringConfig;
 import com.excilys.controller.PaginationController;
 import com.excilys.dao.model.Computer;
 import com.excilys.service.ComputerService;
@@ -12,7 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 @WebServlet(name = "Dashboard", urlPatterns = {"/", "/dashboard"})
 public class IndexServlet extends HttpServlet {
@@ -22,10 +25,6 @@ public class IndexServlet extends HttpServlet {
   private static final int DEFAULT_PAGE = 1;
   private static final String DEFAULT_SORT_COLUMN = "ID";
   private static final String DEFAULT_ASCENDENCY = "DESC";
-  @Autowired
-  private ComputerService computerService;
-  @Autowired
-  private PaginationController paginationController;
   private static Logger logger = LoggerFactory.getLogger(IndexServlet.class);
 
   /**
@@ -43,43 +42,53 @@ public class IndexServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    List<Computer> computerList = null;
-
-    int page = (request.getParameter("page") == null || request.getParameter("page").isEmpty())
-        ? DEFAULT_PAGE
-        : Integer.parseInt(request.getParameter("page"));
-
-    int lpp =
-        (request.getParameter("lpp") == null || request.getParameter("lpp").isEmpty()) ? DEFAULT_LPP
-            : Integer.parseInt(request.getParameter("lpp"));
-
-    String sortColumn =
-        (request.getParameter("col") == null || request.getParameter("col").isEmpty())
-            ? DEFAULT_SORT_COLUMN
-            : request.getParameter("col");
-
-    String ascendency =
-        (request.getParameter("asc") == null || request.getParameter("asc").isEmpty())
-            ? DEFAULT_ASCENDENCY
-            : request.getParameter("asc");
-
-    paginationController.setPage(page);
-    paginationController.setLinePerPage(lpp);
-    paginationController.setAscendency(ascendency);
-    paginationController.setSortColumn(sortColumn);
-
-    int count = 0;
     try {
-      computerList = computerService.getAllPaginated(paginationController);
-      count = computerService.countAllComputer();
-    } catch (Exception e) {
-      logger.warn(e.getMessage());
-    }
+      ApplicationContext applicationContext =
+          new AnnotationConfigApplicationContext(SpringConfig.class);
+      ComputerService computerService = applicationContext.getBean(ComputerService.class);
+      PaginationController paginationController =
+          applicationContext.getBean(PaginationController.class);
 
-    request.setAttribute("count", count);
-    request.setAttribute("computerList", computerList);
-    request.setAttribute("paginationController", paginationController);
-    request.getRequestDispatcher("view/index.jsp").forward(request, response);
+      List<Computer> computerList = null;
+
+      int page = (request.getParameter("page") == null || request.getParameter("page").isEmpty())
+          ? DEFAULT_PAGE
+          : Integer.parseInt(request.getParameter("page"));
+
+      int lpp = (request.getParameter("lpp") == null || request.getParameter("lpp").isEmpty())
+          ? DEFAULT_LPP
+          : Integer.parseInt(request.getParameter("lpp"));
+
+      String sortColumn =
+          (request.getParameter("col") == null || request.getParameter("col").isEmpty())
+              ? DEFAULT_SORT_COLUMN
+              : request.getParameter("col");
+
+      String ascendency =
+          (request.getParameter("asc") == null || request.getParameter("asc").isEmpty())
+              ? DEFAULT_ASCENDENCY
+              : request.getParameter("asc");
+
+      paginationController.setPage(page);
+      paginationController.setLinePerPage(lpp);
+      paginationController.setAscendency(ascendency);
+      paginationController.setSortColumn(sortColumn);
+
+      int count = 0;
+      try {
+        computerList = computerService.getAllPaginated(paginationController);
+        count = computerService.countAllComputer();
+      } catch (Exception e) {
+        logger.warn(e.getMessage());
+      }
+
+      request.setAttribute("count", count);
+      request.setAttribute("computerList", computerList);
+      request.setAttribute("paginationController", paginationController);
+      request.getRequestDispatcher("view/index.jsp").forward(request, response);
+    } catch (BeansException beansException) {
+      logger.warn(beansException.getMessage());
+    }
   }
 
   /**

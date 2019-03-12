@@ -1,5 +1,6 @@
 package com.excilys.controller.servlets;
 
+import com.excilys.config.SpringConfig;
 import com.excilys.dao.mappers.CompanyMapper;
 import com.excilys.dao.mappers.ComputerMapper;
 import com.excilys.dao.model.Company;
@@ -20,6 +21,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
  * Servlet implementation class AddComputer.
@@ -28,15 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class AddComputer extends HttpServlet {
 
   private static final long serialVersionUID = 86529706591354229L;
-  @Autowired
-  private ComputerService computerService;
-  @Autowired
-  private CompanyService companyService;
-  @Autowired
-  private ComputerMapper computerMapper;
-  @Autowired
-  private CompanyMapper companyMapper;
-  private static Logger logger = LoggerFactory.getLogger(AddComputer.class);
+  private static final Logger logger = LoggerFactory.getLogger(AddComputer.class);
 
   /**
    * The servlet used to add Computers.
@@ -56,6 +51,9 @@ public class AddComputer extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     try {
+      ApplicationContext applicationContext =
+          new AnnotationConfigApplicationContext(SpringConfig.class);
+      CompanyService companyService = applicationContext.getBean(CompanyService.class);
       List<Company> companyList = companyService.getAll();
 
       request.setAttribute("companyList", companyList);
@@ -76,6 +74,13 @@ public class AddComputer extends HttpServlet {
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     try {
+      ApplicationContext applicationContext =
+          new AnnotationConfigApplicationContext(SpringConfig.class);
+      ComputerService computerService = applicationContext.getBean(ComputerService.class);
+      CompanyService companyService = applicationContext.getBean(CompanyService.class);
+      ComputerMapper computerMapper = applicationContext.getBean(ComputerMapper.class);
+      CompanyMapper companyMapper = applicationContext.getBean(CompanyMapper.class);
+      
       ComputerDtoBuilder computerDtoBuilder = new ComputerDtoBuilder();
       String companyIdInput = request.getParameter("companyId");
 
