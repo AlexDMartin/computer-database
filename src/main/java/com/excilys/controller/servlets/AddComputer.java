@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Servlet implementation class AddComputer.
@@ -26,17 +27,15 @@ import org.slf4j.LoggerFactory;
 @WebServlet(name = "Add", urlPatterns = {"/Add"})
 public class AddComputer extends HttpServlet {
 
-  /** SerialVersionUID. */
   private static final long serialVersionUID = 86529706591354229L;
-  /** ComputerService. */
-  private static ComputerService computerService = ComputerService.getInstance();
-  /** ComputerMapper. */
-  private static ComputerMapper computerMapper = ComputerMapper.getInstance();
-  /** CompanyService. */
-  private static CompanyService companyService = CompanyService.getInstance();
-  /** CompanyMapper. */
-  private static CompanyMapper companyMapper = CompanyMapper.getInstance();
-  /** Logger. */
+  @Autowired
+  private ComputerService computerService;
+  @Autowired
+  private CompanyService companyService;
+  @Autowired
+  private ComputerMapper computerMapper;
+  @Autowired
+  private CompanyMapper companyMapper;
   private static Logger logger = LoggerFactory.getLogger(AddComputer.class);
 
   /**
@@ -58,7 +57,7 @@ public class AddComputer extends HttpServlet {
       throws ServletException, IOException {
     try {
       List<Company> companyList = companyService.getAll();
-     
+
       request.setAttribute("companyList", companyList);
     } catch (Exception e) {
       logger.warn(e.getMessage());
@@ -70,6 +69,7 @@ public class AddComputer extends HttpServlet {
 
   /**
    * This doPost method validates and adds the computer in the database.
+   * 
    * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
    */
   @Override
@@ -77,9 +77,9 @@ public class AddComputer extends HttpServlet {
       throws ServletException, IOException {
     try {
       ComputerDtoBuilder computerDtoBuilder = new ComputerDtoBuilder();
+      String companyIdInput = request.getParameter("companyId");
 
-      if (request.getParameter("companyId") != null) {
-        logger.warn("companyId" + request.getParameter("companyId"));
+      if (companyIdInput != null) {
         long companyId = Long.parseLong(request.getParameter("companyId"));
         Optional<Company> company = companyService.get(companyId);
         CompanyDto companyDto = null;
@@ -89,15 +89,12 @@ public class AddComputer extends HttpServlet {
         computerDtoBuilder.addCompanyDto(companyDto);
       }
 
-      logger.warn("computerName" + request.getParameter("computerName"));
       computerDtoBuilder.addName(request.getParameter("computerName"));
-      
-      logger.warn("introduced" + request.getParameter("introduced"));
+
       if (request.getParameter("introduced") != null) {
         computerDtoBuilder.addIntroduced(request.getParameter("introduced"));
       }
-      
-      logger.warn("discontinued" + request.getParameter("discontinued"));
+
       if (request.getParameter("discontinued") != null) {
         computerDtoBuilder.addDiscontinued(request.getParameter("discontinued"));
       }
@@ -111,10 +108,10 @@ public class AddComputer extends HttpServlet {
       }
     } catch (Exception e) {
       logger.warn(e.getMessage());
-      request.setAttribute("stacktrace", e.getMessage());       
+      request.setAttribute("stacktrace", e.getMessage());
       request.getRequestDispatcher("view/500.jsp").forward(request, response);
       return;
-    } 
+    }
 
     request.getRequestDispatcher("Dashboard").forward(request, response);
   }

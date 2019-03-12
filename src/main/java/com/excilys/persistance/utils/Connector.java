@@ -6,46 +6,25 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
-/**
- * Singleton implementation of Connector.
- */
+@Component
 public class Connector {
 
-  /** The connector instance. */
-  private static Connector connectorInstance = null;
-  /** Logger. */
   private static Logger logger = LoggerFactory.getLogger(Connector.class);
-  /** Connection. */
   private static Connection connection;
-  /** Hikari Config. */
-  private static HikariConfig config;
-  /** Hikari DataSource. */
-  private static HikariDataSource dataSource;
+  private static HikariConfig config = new HikariConfig("/hikari.properties");
+  private static HikariDataSource dataSource = new HikariDataSource(Connector.config);
 
   /**
    * Singleton implementation of Connector.
    */
   private Connector() {
-    Connector.config = new HikariConfig("/hikari.properties");
-    Connector.dataSource = new HikariDataSource(Connector.config);
     try {
       Connector.connection = Connector.dataSource.getConnection();
     } catch (SQLException e) {
       logger.warn(e.getMessage());
     }
-  }
-
-  /**
-   * Singleton implementation of Connector.
-   *
-   * @return single instance of Connector
-   */
-  public static Connector getInstance() {
-    if (connectorInstance == null) {
-      connectorInstance = new Connector();
-    }
-    return connectorInstance;
   }
 
   /**

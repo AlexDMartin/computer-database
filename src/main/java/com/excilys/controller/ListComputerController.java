@@ -10,31 +10,29 @@ import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
-/**
- * Displays the Computer list.
- */
+@Controller
 public class ListComputerController {
 
-  /** Singleton implementation of ListCompanyController. */
-  private static ListComputerController listComputerControllerInstance = null;
-  /** Logger. */
-  private static Logger logger = LoggerFactory.getLogger(ListComputerController.class);
-  /** Company service. */
-  private static ComputerService computerService = ComputerService.getInstance();
-  /** Mapper. */
-  private static ComputerMapper computerMapper = ComputerMapper.getInstance();
-  /** View. */
-  private static ListComputerView view = ListComputerView.getInstance();
+  @Autowired
+  private ComputerService computerService;
+  @Autowired
+  private ComputerMapper computerMapper;
+  private ListComputerView view = ListComputerView.getInstance();
+  private Logger logger = LoggerFactory.getLogger(ListComputerController.class);
+
+  private ListComputerController() {}
 
   /**
-   * Singleton implementation of ListCompanyController.
+   * Renders the List Computer view.
    */
-  private ListComputerController() {
+  public void render() {
     logger.info("List computers");
 
     List<Computer> computerList = computerService.getAll();
-    List<ComputerDto> computerDtoList = new ArrayList<ComputerDto>();
+    List<ComputerDto> computerDtoList = new ArrayList<>();
 
     for (Computer computer : computerList) {
       try {
@@ -45,18 +43,6 @@ public class ListComputerController {
     }
 
     view.render(computerDtoList);
-  }
 
-  /**
-   * Singleton implementation of ListCompanyController.
-   *
-   * @return single instance of ListComputerController
-   */
-  public static ListComputerController getInstance() {
-    if (listComputerControllerInstance == null) {
-      listComputerControllerInstance = new ListComputerController();
-    }
-    return listComputerControllerInstance;
   }
-
 }

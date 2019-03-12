@@ -13,18 +13,17 @@ import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-/**
- * Contains all method to map different types to Company.
- */
+@Component
 public class CompanyMapper implements Mapper<Company> {
 
-  /** Singleton implementation of CompanyMapper. */
-  private static CompanyMapper companyMapperInstance = null;
-  /** Logger. */
-  private static Logger logger = LoggerFactory.getLogger(CompanyMapper.class);
-  /** Validator. */
-  private static CompanyValidation companyValidation = CompanyValidation.getInstance();
+  @Autowired
+  private CompanyValidation companyValidation;
+  private static final Logger logger = LoggerFactory.getLogger(CompanyMapper.class);
+
+  private CompanyMapper() {}
 
   /**
    * Take a ResulSet and returns a list of Company, useful to map items directly after a Database
@@ -61,19 +60,12 @@ public class CompanyMapper implements Mapper<Company> {
    */
   @Override
   public Dto entityToDto(Company company) throws CompanyValidationException {
-    
-    try {
-      companyValidation.validateId(company.getId());
-      companyValidation.validateName(company.getName());
-    } catch (CompanyValidationException companyValidationException) {
-      logger.warn(companyValidationException.getMessage());
-      throw companyValidationException;
-    }
-    
-    return new CompanyDtoBuilder()
-        .addId(Integer.toString(company.getId()))
-        .addName(company.getName())
-        .build();
+
+    companyValidation.validateId(company.getId());
+    companyValidation.validateName(company.getName());
+
+    return new CompanyDtoBuilder().addId(Integer.toString(company.getId()))
+        .addName(company.getName()).build();
   }
 
   /**
@@ -87,34 +79,10 @@ public class CompanyMapper implements Mapper<Company> {
   public Company dtoToEntity(Dto dto) throws CompanyValidationException {
     CompanyDto companyDto = (CompanyDto) dto;
 
-    try {
-      companyValidation.validateId(Integer.parseInt(companyDto.getId()));
-      companyValidation.validateName(companyDto.getName());
-    } catch (CompanyValidationException companyValidationException) {
-      logger.warn(companyValidationException.getMessage());
-      throw companyValidationException;
-    }
-    
-    return new CompanyBuilder()
-        .addId(Integer.parseInt(companyDto.getId()))
-        .addName(companyDto.getName())
-        .build();
-  }
-  
-  /**
-   * Singleton implementation of CompanyMapper.
-   */
-  private CompanyMapper() {}
+    companyValidation.validateId(Integer.parseInt(companyDto.getId()));
+    companyValidation.validateName(companyDto.getName());
 
-  /**
-   * Singleton implementation of CompanyMapper.
-   *
-   * @return single instance of CompanyMapper
-   */
-  public static CompanyMapper getInstance() {
-    if (companyMapperInstance == null) {
-      companyMapperInstance = new CompanyMapper();
-    }
-    return companyMapperInstance;
+    return new CompanyBuilder().addId(Integer.parseInt(companyDto.getId()))
+        .addName(companyDto.getName()).build();
   }
 }

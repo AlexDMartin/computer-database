@@ -4,10 +4,12 @@ import com.excilys.exception.validation.company.InvalidIdCompanyValidationExcept
 import com.excilys.exception.validation.company.InvalidNameCompanyValidationException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CompanyValidation {
 
-  private static CompanyValidation companyValidationInstance = null;
+  private CompanyValidation() {}
 
   /**
    * Validates the Company's id.
@@ -39,21 +41,5 @@ public class CompanyValidation {
       throw new InvalidNameCompanyValidationException("The company\'s name is not valid.");
     }
 
-  }
-
-  private CompanyValidation() {}
-
-  /**
-   * Singleton implementation of CompanyValidation.
-   * 
-   * @return A single instance of CompanyValidation
-   */
-  public static CompanyValidation getInstance() {
-
-    if (companyValidationInstance == null) {
-      companyValidationInstance = new CompanyValidation();
-    }
-
-    return companyValidationInstance;
   }
 }

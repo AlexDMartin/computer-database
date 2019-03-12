@@ -11,22 +11,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
-/**
- * Servlet implementation class DeleteServlet.
- */
 @WebServlet(name = "Delete", urlPatterns = {"/Delete"})
 public class DeleteServlet extends HttpServlet {
 
-  /** SerialVersionUid. */
   private static final long serialVersionUID = 7210607623729089403L;
-  /** Computer Service. */
-  private static ComputerService computerService = ComputerService.getInstance();
-  /** Logger. */
-  private static Logger logger = LoggerFactory.getLogger(DeleteServlet.class);
+  @Autowired
+  private ComputerService computerService;
+  private static final Logger logger = LoggerFactory.getLogger(DeleteServlet.class);
 
   /**
    * Servlet Constructor.
+   * 
    * @see HttpServlet#HttpServlet()
    */
   public DeleteServlet() {
@@ -35,8 +32,10 @@ public class DeleteServlet extends HttpServlet {
 
   /**
    * Servlet doGet.
+   * 
    * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
    */
+  @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     String selection = request.getParameter("selection");
@@ -59,8 +58,10 @@ public class DeleteServlet extends HttpServlet {
 
   /**
    * Servlet doPost.
+   * 
    * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
    */
+  @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     doGet(request, response);

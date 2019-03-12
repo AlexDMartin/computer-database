@@ -12,29 +12,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
-/**
- * Servlet implementation class IndexServlet.
- */
 @WebServlet(name = "Dashboard", urlPatterns = {"/", "/dashboard"})
 public class IndexServlet extends HttpServlet {
 
-  /** SerialVersionUID. */
   private static final long serialVersionUID = 1L;
-  /** Default line per page. */
   private static final int DEFAULT_LPP = 10;
-  /** Default page. */
   private static final int DEFAULT_PAGE = 1;
-  /** Default sort column. */
   private static final String DEFAULT_SORT_COLUMN = "ID";
-  /** Default ascendency. */
   private static final String DEFAULT_ASCENDENCY = "DESC";
-  /** ComputerService. */
-  private static ComputerService computerService = ComputerService.getInstance();
-  /** Logger. */
+  @Autowired
+  private ComputerService computerService;
+  @Autowired
+  private PaginationController paginationController;
   private static Logger logger = LoggerFactory.getLogger(IndexServlet.class);
-  /** PaginationController. */
-  private static PaginationController paginationController = PaginationController.getInstance();
 
   /**
    * Default constructor.
@@ -95,6 +87,7 @@ public class IndexServlet extends HttpServlet {
    * 
    * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
    */
+  @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     doGet(request, response);

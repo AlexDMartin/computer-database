@@ -2,41 +2,22 @@ package com.excilys.service;
 
 import com.excilys.controller.PaginationController;
 import com.excilys.dao.ComputerDao;
-import com.excilys.dao.DaoFactory;
 import com.excilys.dao.model.Computer;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-/**
- * The Class ComputerService.
- */
+@Service
 public class ComputerService implements CallableService<Computer> {
 
-  /** The computer service instance. */
-  private static ComputerService computerServiceInstance = null;
-  /** ComputerDao. */
-  private static ComputerDao computerDao = DaoFactory.getInstance().getComputerDao();
-  /** Logger. */
+  @Autowired
+  private ComputerDao computerDao;
   private static Logger logger = LoggerFactory.getLogger(ComputerService.class);
 
-  /**
-   * Instantiates a new computer service.
-   */
   private ComputerService() {}
-
-  /**
-   * Gets the single instance of ComputerService.
-   *
-   * @return single instance of ComputerService
-   */
-  public static ComputerService getInstance() {
-    if (computerServiceInstance == null) {
-      computerServiceInstance = new ComputerService();
-    }
-    return computerServiceInstance;
-  }
 
   /*
    * (non-Javadoc)
@@ -55,7 +36,7 @@ public class ComputerService implements CallableService<Computer> {
    */
   @Override
   public List<Computer> getAll() {
-    return DaoFactory.getInstance().getComputerDao().getAll();
+    return computerDao.getAll();
   }
 
   /*

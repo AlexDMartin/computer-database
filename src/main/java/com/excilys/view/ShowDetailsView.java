@@ -1,31 +1,12 @@
 package com.excilys.view;
 
 import com.excilys.dto.ComputerDto;
+import org.springframework.stereotype.Component;
 
-/**
- * The Class ShowDetailsView.
- */
+@Component
 public class ShowDetailsView {
 
-  /** The show details view instance. */
-  private static ShowDetailsView showDetailsViewInstance = null;
-
-  /**
-   * Instantiates a new show details view.
-   */
   private ShowDetailsView() {}
-
-  /**
-   * Gets the single instance of ShowDetailsView.
-   *
-   * @return single instance of ShowDetailsView
-   */
-  public static ShowDetailsView getInstance() {
-    if (showDetailsViewInstance == null) {
-      showDetailsViewInstance = new ShowDetailsView();
-    }
-    return showDetailsViewInstance;
-  }
 
   /**
    * Ask for id.

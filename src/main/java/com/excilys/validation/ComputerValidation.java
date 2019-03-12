@@ -1,6 +1,5 @@
 package com.excilys.validation;
 
-import com.excilys.exception.validation.company.InvalidIdCompanyValidationException;
 import com.excilys.exception.validation.computer.InvalidDiscontinuationDateComputerValidationException;
 import com.excilys.exception.validation.computer.InvalidIdComputerValidationException;
 import com.excilys.exception.validation.computer.InvalidIntroductionDateComputerValidationException;
@@ -9,14 +8,13 @@ import com.excilys.exception.validation.computer.InvalidPrecedenceComputerValida
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.springframework.stereotype.Component;
 
-/**
- * Validate Computer fields.
- */
+@Component
 public class ComputerValidation {
 
   /** Singleton implementation of ComputerValidation. */
-  private static ComputerValidation validatorInstance = null;
+  private ComputerValidation() {}
 
   /**
    * Validates the Computer's id.
@@ -118,20 +116,5 @@ public class ComputerValidation {
           "The discontinuation date is before the introduction date.");
     }
 
-  }
-
-  /** Singleton implementation of ComputerValidation. */
-  private ComputerValidation() {}
-
-  /**
-   * Singleton implementation of ComputerValidation.
-   *
-   * @return single instance of ComputerValidation
-   */
-  public static ComputerValidation getInstance() {
-    if (validatorInstance == null) {
-      validatorInstance = new ComputerValidation();
-    }
-    return validatorInstance;
   }
 }

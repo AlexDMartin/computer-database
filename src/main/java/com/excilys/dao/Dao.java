@@ -16,7 +16,7 @@ public abstract interface Dao<T> {
    * @param id the id
    * @return the optional
    */
-  Optional<T> get(long id);
+  public abstract Optional<T> get(long id);
 
   /**
    * Gets the all.

@@ -10,31 +10,32 @@ import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
-/**
- * Displays the Company list.
- */
+@Controller
 public class ListCompanyController {
 
-  /** Singleton implementation of ListCompanyController. */
-  private static ListCompanyController listCompanyControllerInstance = null;
-  /** Logger. */
-  private static Logger logger = LoggerFactory.getLogger(ListCompanyController.class);
-  /** Company service. */
-  private static CompanyService companyService = CompanyService.getInstance();
-  /** Mapper. */
-  private static CompanyMapper companyMapper = CompanyMapper.getInstance();
-  /** View. */
-  private static ListCompanyView view = ListCompanyView.getInstance();
+  @Autowired
+  private CompanyService companyService;
+  @Autowired
+  private CompanyMapper companyMapper;
+  @Autowired
+  private ListCompanyView view;
+  private Logger logger = LoggerFactory.getLogger(ListCompanyController.class);
+
+  private ListCompanyController() {
+
+  }
 
   /**
-   * Singleton implementation of ListCompanyController.
+   * Renders the List Company view.
    */
-  private ListCompanyController() {
+  public void render() {
     logger.info("List companies");
 
     List<Company> companyList = companyService.getAll();
-    List<CompanyDto> companyDtoList = new ArrayList<CompanyDto>();
+    List<CompanyDto> companyDtoList = new ArrayList<>();
 
     for (Company company : companyList) {
       try {
@@ -45,17 +46,5 @@ public class ListCompanyController {
     }
 
     view.render(companyDtoList);
-  }
-
-  /**
-   * Singleton implementation of ListCompanyController.
-   *
-   * @return single instance of ListCompanyController
-   */
-  public static ListCompanyController getInstance() {
-    if (listCompanyControllerInstance == null) {
-      listCompanyControllerInstance = new ListCompanyController();
-    }
-    return listCompanyControllerInstance;
   }
 }

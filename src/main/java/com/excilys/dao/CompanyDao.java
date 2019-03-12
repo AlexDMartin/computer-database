@@ -10,30 +10,23 @@ import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-/**
- * The Class CompanyDao.
- */
+@Repository
 public class CompanyDao implements Dao<Company> {
-
-  /** The company dao instance. */
-  private static CompanyDao companyDaoInstance = null;
-  /** Logger. */
-  private static Logger logger = LoggerFactory.getLogger(CompanyDao.class);
-  /** Connection. */
-  private static Connector connector = Connector.getInstance();
-  /** Company Mapper. */
-  private static CompanyMapper companyMapper = CompanyMapper.getInstance();
-  /** The Constant GET_ONE. */
+  @Autowired
+  private Connector connector;
+  @Autowired
+  private CompanyMapper companyMapper;
   private static final String GET_ONE = "SELECT ID, NAME FROM company WHERE ID = ? LIMIT 1";
-  /** The Constant GET_ALL. */
   private static final String GET_ALL = "SELECT ID, NAME FROM company ORDER BY ID";
-  /** The Constant SAVE. */
   private static final String SAVE = "INSERT INTO company (NAME) VALUES (?)";
-  /** The Constant UPDATE. */
   private static final String UPDATE = "UPDATE company NAME = ? WHERE ID = ?";
-  /** The Constant DELETE. */
   private static final String DELETE = "DELETE FROM company WHERE ID = ?";
+  private static Logger logger = LoggerFactory.getLogger(CompanyDao.class);
+
+  private CompanyDao() {}
 
   /*
    * (non-Javadoc)
@@ -85,7 +78,8 @@ public class CompanyDao implements Dao<Company> {
       saveStatement.setString(1, company.getName());
 
       int resultCode = saveStatement.executeUpdate();
-      logger.info("Save operated on " + resultCode + " row(s)");
+      String message = String.format("Save operated on %d row(s)", resultCode);
+      logger.info(message);
     } catch (SQLException sqlException) {
       logger.warn(sqlException.getMessage());
     }
@@ -98,13 +92,13 @@ public class CompanyDao implements Dao<Company> {
    */
   @Override
   public void update(Company company) {
-    try {
-      PreparedStatement updateStatement = connector.getConnection().prepareStatement(UPDATE);
+    try (PreparedStatement updateStatement = connector.getConnection().prepareStatement(UPDATE)) {
       updateStatement.setString(1, company.getName());
       updateStatement.setLong(1, company.getId());
 
       int resultCode = updateStatement.executeUpdate();
-      logger.info("Save operated on " + resultCode + " row(s)");
+      String message = String.format("Save operated on %d row(s)", resultCode);
+      logger.info(message);
     } catch (SQLException sqlException) {
       logger.warn(sqlException.getMessage());
     }
@@ -121,27 +115,10 @@ public class CompanyDao implements Dao<Company> {
       deleteStatement.setLong(1, company.getId());
 
       int resultCode = deleteStatement.executeUpdate();
-      logger.info("Delete operated on " + resultCode + " row(s)");
+      String message = String.format("Delete operated on %d row(s)", resultCode);
+      logger.info(message);
     } catch (SQLException sqlException) {
       logger.warn(sqlException.getMessage());
     }
   }
-
-  /**
-   * Instantiates a new company dao.
-   */
-  private CompanyDao() {}
-
-  /**
-   * Gets the single instance of CompanyDao.
-   *
-   * @return single instance of CompanyDao
-   */
-  public static CompanyDao getInstance() {
-    if (companyDaoInstance == null) {
-      companyDaoInstance = new CompanyDao();
-    }
-    return companyDaoInstance;
-  }
-
 }

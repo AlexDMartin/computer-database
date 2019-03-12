@@ -19,37 +19,37 @@ import java.util.Optional;
 import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
-/**
- * Singleton implementation of UpdateComputerController.
- */
+@Controller
 public class UpdateComputerController {
 
-  /** Singleton implementation of UpdateComputerController. */
-  private static UpdateComputerController updateComputerControllerInstance = null;
-  /** Computer Mapper. */
-  private static ComputerMapper computerMapper = ComputerMapper.getInstance();
-  /** Company Mapper. */
-  private static CompanyMapper companyMapper = CompanyMapper.getInstance();
-  /** View. */
-  private static UpdateComputerView view = UpdateComputerView.getInstance();
-  /** Computer Validation. */
-  private static ComputerValidation computerValidation = ComputerValidation.getInstance();
-  /** Company Validation. */
-  private static CompanyValidation companyValidation = CompanyValidation.getInstance();
-  /** ComputerService. */
-  private static ComputerService computerService = ComputerService.getInstance();
-  /** CompanyService. */
-  private static CompanyService companyService = CompanyService.getInstance();
-  /** Scanner. */
+  @Autowired
+  private ComputerMapper computerMapper;
+  @Autowired
+  private CompanyMapper companyMapper;
+  @Autowired
+  private UpdateComputerView view;
+  @Autowired
+  private ComputerValidation computerValidation;
+  @Autowired
+  private CompanyValidation companyValidation;
+  @Autowired
+  private ComputerService computerService;
+  @Autowired
+  private CompanyService companyService;
+
   private static Scanner scan = new Scanner(System.in);
-  /** Logger. */
   private static Logger logger = LoggerFactory.getLogger(UpdateComputerController.class);
 
+  private UpdateComputerController() {}
+
   /**
-   * Singleton implementation of UpdateComputerController.
+   * Renders the Update Computer view.
    */
-  private UpdateComputerController() {
+  public void render() {
+
     ComputerDto computerDto = null;
     Computer computer = null;
 
@@ -60,7 +60,7 @@ public class UpdateComputerController {
     if (computer != null) {
       try {
         computerDto = (ComputerDto) computerMapper.entityToDto(computer);
-     
+
         computerDto.setId(computerDto.getId());
 
         view.askForNewName(computerDto.getName());
@@ -81,19 +81,19 @@ public class UpdateComputerController {
         String discontinuedInput = scan.next();
         computerValidation.validateDiscontinuationDate(discontinuedInput);
         Date discontinuedDate = null;
-        
+
         if (discontinuedInput != null) {
           computerDto.setDiscontinued(discontinuedInput);
           discontinuedDate = new SimpleDateFormat("yyyy-MM-dd").parse(discontinuedInput);
         }
-        
+
         computerValidation.validatePrecedence(introducedDate, discontinuedDate);
 
         view.askForNewCompany(computerDto.getCompanyDto());
         long companyInput = (long) scan.nextInt();
         Optional<Company> company = companyService.get(companyInput);
         companyValidation.validateId(company.get().getId());
-        
+
         CompanyDto companyDto = null;
         if (company.isPresent()) {
           companyDto = (CompanyDto) companyMapper.entityToDto(company.get());
@@ -117,17 +117,5 @@ public class UpdateComputerController {
         logger.warn(e.getMessage());
       }
     }
-  }
-
-  /**
-   * Singleton implementation of UpdateComputerController.
-   *
-   * @return single instance of UpdateComputerController
-   */
-  public static UpdateComputerController getInstance() {
-    if (updateComputerControllerInstance == null) {
-      updateComputerControllerInstance = new UpdateComputerController();
-    }
-    return updateComputerControllerInstance;
   }
 }

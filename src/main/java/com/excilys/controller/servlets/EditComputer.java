@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Servlet implementation class EditComputer.
@@ -26,21 +27,20 @@ import org.slf4j.LoggerFactory;
 @WebServlet(name = "Edit", urlPatterns = {"/Edit"})
 public class EditComputer extends HttpServlet {
 
-  /** SerialVersionUID. */
   private static final long serialVersionUID = 9089945397283880630L;
-  /** ComputerService. */
-  private static ComputerService computerService = ComputerService.getInstance();
-  /** ComputerMapper. */
-  private static ComputerMapper computerMapper = ComputerMapper.getInstance();
-  /** CompanyService. */
-  private static CompanyService companyService = CompanyService.getInstance();
-  /** CompanyMapper. */
-  private static CompanyMapper companyMapper = CompanyMapper.getInstance();
-  /** Logger. */
+  @Autowired
+  private ComputerService computerService;
+  @Autowired
+  private ComputerMapper computerMapper;
+  @Autowired
+  private CompanyService companyService;
+  @Autowired
+  private CompanyMapper companyMapper;
   private static Logger logger = LoggerFactory.getLogger(EditComputer.class);
-  
+
   /**
    * Servlet used to edit computers.
+   * 
    * @see HttpServlet#HttpServlet()
    */
   public EditComputer() {
@@ -49,6 +49,7 @@ public class EditComputer extends HttpServlet {
 
   /**
    * This doGet methods returns information to prefill the edition form.
+   * 
    * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
    */
   @Override
@@ -73,6 +74,7 @@ public class EditComputer extends HttpServlet {
 
   /**
    * This doPost method verify data sent by the user and tries to update the database.
+   * 
    * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
    */
   @Override
@@ -96,22 +98,19 @@ public class EditComputer extends HttpServlet {
         computerDtoBuilder.addCompanyDto(companyDto);
       }
 
-      logger.debug("computerName" + request.getParameter("computerName"));
       computerDtoBuilder.addName(request.getParameter("computerName"));
-      
-      logger.debug("introduced" + request.getParameter("introduced"));
+
       if (request.getParameter("introduced") != null) {
         computerDtoBuilder.addIntroduced(request.getParameter("introduced"));
       }
-      
-      logger.debug("discontinued" + request.getParameter("discontinued"));
+
       if (request.getParameter("discontinued") != null) {
         computerDtoBuilder.addDiscontinued(request.getParameter("discontinued"));
       }
-    
+
       ComputerDto computerDto = null;
       computerDto = computerDtoBuilder.build();
-  
+
       if (computerDto != null) {
         Computer computer = computerMapper.dtoToEntity(computerDto);
         computerService.update(computer);

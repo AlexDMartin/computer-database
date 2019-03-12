@@ -1,11 +1,9 @@
 package com.excilys.controller;
 
-/**
- * Creates a new Pagination Controller.
- */
-public class PaginationController {
+import org.springframework.stereotype.Controller;
 
-  private static PaginationController paginationControllerInstance = null;
+@Controller
+public class PaginationController {
 
   private int page;
   private int linePerPage;
@@ -19,6 +17,8 @@ public class PaginationController {
 
   private String sortColumn = "ID";
   private String ascendency = "ASC";
+
+  private PaginationController() {}
 
 
   /**
@@ -144,7 +144,7 @@ public class PaginationController {
   /**
    * Setter for the sort column. switches the ascendency on second call on the same column
    * 
-   * @param sortColumn The column by which the user sorts 
+   * @param sortColumn The column by which the user sorts
    */
   public void setSortColumn(String sortColumn) {
     this.sortColumn = sortColumn;
@@ -176,20 +176,5 @@ public class PaginationController {
    */
   public String getAscendency() {
     return ascendency;
-  }
-
-  private PaginationController() {}
-
-  /**
-   * Singleton implementation of PaginationController.
-   * 
-   * @return single instance of PaginationController
-   */
-  public static PaginationController getInstance() {
-    if (paginationControllerInstance == null) {
-      paginationControllerInstance = new PaginationController();
-    }
-    return paginationControllerInstance;
-
   }
 }

@@ -1,31 +1,12 @@
 package com.excilys.view;
 
 import com.excilys.dao.model.Computer;
+import org.springframework.stereotype.Component;
 
-/**
- * The Class DeleteComputerView.
- */
+@Component
 public class DeleteComputerView {
 
-  /** The delete computer view instance. */
-  private static DeleteComputerView deleteComputerViewInstance = null;
-
-  /**
-   * Instantiates a new delete computer view.
-   */
   private DeleteComputerView() {}
-
-  /**
-   * Gets the single instance of DeleteComputerView.
-   *
-   * @return single instance of DeleteComputerView
-   */
-  public static DeleteComputerView getInstance() {
-    if (deleteComputerViewInstance == null) {
-      deleteComputerViewInstance = new DeleteComputerView();
-    }
-    return deleteComputerViewInstance;
-  }
 
   /**
    * Ask for id.

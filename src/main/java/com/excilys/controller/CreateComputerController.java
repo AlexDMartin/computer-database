@@ -19,37 +19,33 @@ import java.util.Optional;
 import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
-/**
- * Singleton implementation of CreateComputerController.
- */
+@Controller
 public class CreateComputerController {
-
-  /** Singleton implementation of CreateComputerController. */
-  private static CreateComputerController createComputerControllerInstance = null;
-  /** Computer Mapper. */
-  private static ComputerMapper computerMapper = ComputerMapper.getInstance();
-  /** Company Mapper. */
-  private static CompanyMapper companyMapper = CompanyMapper.getInstance();
-  /** View. */
-  private static CreateComputerView view = CreateComputerView.getInstance();
-  /** ComputerValidator. */
-  private static ComputerValidation computerValidation = ComputerValidation.getInstance();
-  /** CompanyValidator. */
-  private static CompanyValidation companyValidation = CompanyValidation.getInstance();
-  /** ComputerService. */
-  private static ComputerService computerService = ComputerService.getInstance();
-  /** CompanyService. */
-  private static CompanyService companyService = CompanyService.getInstance();
-  /** Scanner. */
+  @Autowired
+  private ComputerMapper computerMapper;
+  @Autowired
+  private CompanyMapper companyMapper;
+  private CreateComputerView view = CreateComputerView.getInstance();
+  @Autowired
+  private ComputerValidation computerValidation;
+  @Autowired
+  private CompanyValidation companyValidation;
+  @Autowired
+  private ComputerService computerService;
+  @Autowired
+  private CompanyService companyService;
   private static Scanner scan = new Scanner(System.in);
-  /** Logger. */
   private static Logger logger = LoggerFactory.getLogger(CreateComputerController.class);
 
+  private CreateComputerController() {}
+
   /**
-   * CreateComputerController Constructor.
+   * Renders the Create Computer view.
    */
-  private CreateComputerController() {
+  public void render() {
     Computer computer = null;
     try {
       ComputerDtoBuilder computerDtoBuilder = new ComputerDtoBuilder();
@@ -81,10 +77,10 @@ public class CreateComputerController {
       view.askForCompany();
       long companyInput = (long) scan.nextInt();
       Optional<Company> company = companyService.get(companyInput);
-      companyValidation.validateId(company.get().getId());
-      companyValidation.validateName(company.get().getName());
-      CompanyDto companyDto = null;
       if (company.isPresent()) {
+        companyValidation.validateId(company.get().getId());
+        companyValidation.validateName(company.get().getName());
+        CompanyDto companyDto = null;
         companyDto = (CompanyDto) companyMapper.entityToDto(company.get());
         computerDtoBuilder.addCompanyDto(companyDto);
       }
@@ -92,9 +88,7 @@ public class CreateComputerController {
       computer = computerMapper.dtoToEntity(computerDtoBuilder.build());
 
       scan.close();
-    } catch (ValidationException e) {
-      logger.warn(e.getMessage());
-    } catch (ParseException e) {
+    } catch (ValidationException | ParseException e) {
       logger.warn(e.getMessage());
     }
 
@@ -105,17 +99,6 @@ public class CreateComputerController {
     } catch (Exception e) {
       logger.warn(e.getMessage());
     }
-  }
 
-  /**
-   * Singleton implementation of CreateComputerController.
-   *
-   * @return single instance of CreateComputerController
-   */
-  public static CreateComputerController getInstance() {
-    if (createComputerControllerInstance == null) {
-      createComputerControllerInstance = new CreateComputerController();
-    }
-    return createComputerControllerInstance;
   }
 }

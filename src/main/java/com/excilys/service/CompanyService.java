@@ -1,35 +1,22 @@
 package com.excilys.service;
 
-import com.excilys.dao.DaoFactory;
+import com.excilys.dao.CompanyDao;
 import com.excilys.dao.model.Company;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-/**
- * The Class CompanyService.
- */
+@Service
 public class CompanyService implements CallableService<Company> {
 
-  /** The company service instance. */
-  private static CompanyService companyServiceInstance = null;
+  @Autowired
+  private CompanyDao companyDao;
+  private static Logger logger = LoggerFactory.getLogger(CompanyService.class);
 
-  /**
-   * Instantiates a new company service.
-   */
   private CompanyService() {}
-
-  /**
-   * Gets the single instance of CompanyService.
-   *
-   * @return single instance of CompanyService
-   */
-  public static CompanyService getInstance() {
-    if (companyServiceInstance == null) {
-      companyServiceInstance = new CompanyService();
-    }
-    return companyServiceInstance;
-  }
 
   /*
    * (non-Javadoc)
@@ -38,7 +25,7 @@ public class CompanyService implements CallableService<Company> {
    */
   @Override
   public Optional<Company> get(long id) {
-    return DaoFactory.getInstance().getCompanyDao().get(id);
+    return companyDao.get(id);
   }
 
   /*
@@ -48,7 +35,7 @@ public class CompanyService implements CallableService<Company> {
    */
   @Override
   public List<Company> getAll() {
-    return DaoFactory.getInstance().getCompanyDao().getAll();
+    return companyDao.getAll();
   }
 
   /*
@@ -59,9 +46,9 @@ public class CompanyService implements CallableService<Company> {
   @Override
   public void save(Company t) throws Exception {
     try {
-      DaoFactory.getInstance().getCompanyDao().save(t);
+      companyDao.save(t);
     } catch (Exception e) {
-      LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
+      logger.warn(e.getMessage());
     }
   }
 
@@ -72,7 +59,7 @@ public class CompanyService implements CallableService<Company> {
    */
   @Override
   public void update(Company company) {
-    DaoFactory.getInstance().getCompanyDao().update(company);
+    companyDao.update(company);
 
   }
 
@@ -83,7 +70,7 @@ public class CompanyService implements CallableService<Company> {
    */
   @Override
   public void delete(Company company) {
-    DaoFactory.getInstance().getCompanyDao().delete(company);
+    companyDao.delete(company);
   }
 
 }

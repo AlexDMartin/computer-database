@@ -4,7 +4,6 @@ import com.excilys.controller.PaginationController;
 import com.excilys.dao.model.Computer;
 import com.excilys.service.ComputerService;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,32 +12,25 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
-/**
- * Servlet implementation class SearchServlet.
- */
 @WebServlet(name = "Search", urlPatterns = {"/Search"})
 public class SearchServlet extends HttpServlet {
 
-  /** SerialVersionUID. */
   private static final long serialVersionUID = 1L;
-  /** Default line per page. */
   private static final int DEFAULT_LPP = 10;
-  /** Default page. */
   private static final int DEFAULT_PAGE = 1;
-  /** Default sort column. */
   private static final String DEFAULT_SORT_COLUMN = "ID";
-  /** Default ascendency. */
   private static final String DEFAULT_ASCENDENCY = "DESC";
-  /** ComputerService. */
-  private static ComputerService computerService = ComputerService.getInstance();
-  /** Pagination Controller. */
-  private static PaginationController paginationController = PaginationController.getInstance();
-  /** Logger. */
+  @Autowired
+  private ComputerService computerService;
+  @Autowired
+  private PaginationController paginationController;
   private static Logger logger = LoggerFactory.getLogger(SearchServlet.class);
 
   /**
    * Servlet Constructor.
+   * 
    * @see HttpServlet#HttpServlet()
    */
   public SearchServlet() {
@@ -47,16 +39,17 @@ public class SearchServlet extends HttpServlet {
 
   /**
    * Servlet doGet.
+   * 
    * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
    */
+  @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
-    List<Computer> computerList = new ArrayList<Computer>();
-
-    int page = (request.getParameter("request") == "new" || request.getParameter("page") == null
-        || request.getParameter("page").isEmpty()) ? DEFAULT_PAGE
-            : Integer.parseInt(request.getParameter("page"));
+    int page =
+        (request.getParameter("request").equals("new") || request.getParameter("page") == null
+            || request.getParameter("page").isEmpty()) ? DEFAULT_PAGE
+                : Integer.parseInt(request.getParameter("page"));
 
     int lpp =
         (request.getParameter("lpp") == null || request.getParameter("lpp").isEmpty()) ? DEFAULT_LPP
@@ -80,7 +73,9 @@ public class SearchServlet extends HttpServlet {
     String filterString = request.getParameter("filter");
     int count = 0;
     try {
-      computerList = computerService.getAllSearchedPaginated(filterString, paginationController);
+      List<Computer> computerList =
+          computerService.getAllSearchedPaginated(filterString, paginationController);
+      request.setAttribute("computerList", computerList);
       count = computerService.countAllComputerByCriteria(filterString);
     } catch (Exception e) {
       logger.warn(e.getMessage());
@@ -93,17 +88,19 @@ public class SearchServlet extends HttpServlet {
     request.setAttribute("count", count);
     request.setAttribute("pageType", "search");
     request.setAttribute("paginationController", paginationController);
-    request.setAttribute("computerList", computerList);
+
     request.getRequestDispatcher("view/index.jsp").forward(request, response);
   }
 
   /**
    * Servlet doPost.
+   * 
    * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
    */
+  @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-
+    doGet(request, response);
   }
 
 }

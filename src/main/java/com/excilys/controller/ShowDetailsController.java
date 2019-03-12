@@ -10,29 +10,27 @@ import java.util.Optional;
 import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
-/**
- * Singleton implementation of ShowDetailsController.
- */
+@Controller
 public class ShowDetailsController {
 
-  /** Singleton implementation of ShowDetailsController. */
-  private static ShowDetailsController showDetailsControllerInstance = null;
-  /** Logger. */
-  private static Logger logger = LoggerFactory.getLogger(ShowDetailsController.class);
-  /** ComputerService. */
-  private static ComputerService computerService = ComputerService.getInstance();
-  /** ComputerMapper. */
-  private static ComputerMapper computerMapper = ComputerMapper.getInstance();
-  /** View. */
-  private static ShowDetailsView view = ShowDetailsView.getInstance();
-  /** Scanner. */
+  @Autowired
+  private ComputerService computerService;
+  @Autowired
+  private ComputerMapper computerMapper;
+  @Autowired
+  private ShowDetailsView view;
   private static Scanner scan = new Scanner(System.in);
+  private static Logger logger = LoggerFactory.getLogger(ShowDetailsController.class);
+
+  private ShowDetailsController() {}
 
   /**
-   * Singleton implementation of ShowDetailsController.
+   * Renders the Show Details view.
    */
-  private ShowDetailsController() {
+  public void render() {
 
     view.askForId();
 
@@ -50,17 +48,5 @@ public class ShowDetailsController {
       }
       view.displayComputer(computerDto);
     }
-  }
-
-  /**
-   * Gets the single instance of ShowDetailsController.
-   *
-   * @return single instance of ShowDetailsController
-   */
-  public static ShowDetailsController getInstance() {
-    if (showDetailsControllerInstance == null) {
-      showDetailsControllerInstance = new ShowDetailsController();
-    }
-    return showDetailsControllerInstance;
   }
 }

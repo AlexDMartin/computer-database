@@ -8,7 +8,7 @@ import java.util.Optional;
  *
  * @param <T> the generic type
  */
-public interface CallableService<T> {
+public abstract interface CallableService<T> {
 
   /**
    * Gets the.
@@ -16,14 +16,14 @@ public interface CallableService<T> {
    * @param id the id
    * @return the optional
    */
-  Optional<T> get(long id);
+  public abstract Optional<T> get(long id);
 
   /**
    * Gets the all.
    *
    * @return the all
    */
-  List<T> getAll();
+  public abstract List<T> getAll();
 
   /**
    * Save.
@@ -31,19 +31,19 @@ public interface CallableService<T> {
    * @param t the t
    * @throws Exception the exception
    */
-  void save(T t) throws Exception;
+  public abstract void save(T t) throws Exception;
 
   /**
    * Update.
    *
    * @param t the t
    */
-  void update(T t);
+  public abstract void update(T t);
 
   /**
    * Delete.
    *
    * @param t the t
    */
-  void delete(T t);
+  public abstract void delete(T t);
 }

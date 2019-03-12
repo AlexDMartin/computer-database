@@ -2,31 +2,12 @@ package com.excilys.view;
 
 import com.excilys.dto.CompanyDto;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
-/**
- * View used to list all companies.
- */
+@Component
 public class ListCompanyView {
 
-  /** Singleton implementation of ListCompanyView. */
-  private static ListCompanyView listCompanyViewInstance = null;
-
-  /**
-   * Singleton implementation of ListCompanyView.
-   */
   private ListCompanyView() {}
-
-  /**
-   * Singleton implementation of ListCompanyView.
-   *
-   * @return single instance of ListCompanyView
-   */
-  public static ListCompanyView getInstance() {
-    if (listCompanyViewInstance == null) {
-      listCompanyViewInstance = new ListCompanyView();
-    }
-    return listCompanyViewInstance;
-  }
 
   /**
    * Displays the view.

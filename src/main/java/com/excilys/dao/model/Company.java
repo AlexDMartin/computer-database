@@ -65,7 +65,6 @@ public class Company {
    */
   @Override
   public String toString() {
-    String formattedString = Integer.toString(this.id) + "\t| " + this.name;
-    return formattedString;
+    return Integer.toString(this.id) + "\t| " + this.name;
   }
 }

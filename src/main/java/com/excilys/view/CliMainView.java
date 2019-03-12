@@ -1,38 +1,31 @@
 package com.excilys.view;
 
 import com.excilys.controller.MenuController;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-/**
- * The Class CliMainView.
- */
+@Component
 public class CliMainView {
+  @Autowired
+  private MenuController menuController;
+  private static final Logger logger = LoggerFactory.getLogger(CliMainView.class);
 
-  /** The cli main view instance. */
-  private static CliMainView cliMainViewInstance = null;
+  private CliMainView() {}
 
   /**
-   * Instantiates a new cli main view.
+   * Renders the cli main view.
    */
-  private CliMainView() {
-    LoggerFactory.getLogger(this.getClass()).info("Displaying main menu");
+  public void render() {
+    logger.info("Displaying main menu");
 
     System.out.println("-------------------\n " + "1 / List Computers\n " + "2 / List Companies\n "
         + "3 / Show Details\n " + "4 / Create a Computer\n " + "5 / Update a Computer\n "
         + "6 / Delete a Computer\n ");
 
-    MenuController.getInstance().resolve();
+
+    menuController.resolve();
   }
 
-  /**
-   * Gets the single instance of CliMainView.
-   *
-   * @return single instance of CliMainView
-   */
-  public static CliMainView getInstance() {
-    if (cliMainViewInstance == null) {
-      cliMainViewInstance = new CliMainView();
-    }
-    return cliMainViewInstance;
-  }
 }

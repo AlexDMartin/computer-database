@@ -1,7 +1,6 @@
 package com.excilys.dao.mappers;
 
 import com.excilys.dao.CompanyDao;
-import com.excilys.dao.DaoFactory;
 import com.excilys.dao.model.Company;
 import com.excilys.dao.model.Computer;
 import com.excilys.dao.model.ComputerBuilder;
@@ -21,22 +20,22 @@ import java.util.Date;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-/**
- * Contains all method to map different types to Company.
- */
+@Component
 public class ComputerMapper implements Mapper<Computer> {
 
-  /** Singleton implementation of ComputerMapper. */
-  private static ComputerMapper computerMapperInstance = null;
-  /** Logger. */
-  private Logger logger = LoggerFactory.getLogger(this.getClass());
-  /** DaoFactory. */
-  private static CompanyDao companyDao = DaoFactory.getInstance().getCompanyDao();
-  /** ComputerValidation. */
-  private static ComputerValidation computerValidation = ComputerValidation.getInstance();
-  /** CompanyMapper. */
-  private static CompanyMapper companyMapper = CompanyMapper.getInstance();
+  private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
+  @Autowired
+  private CompanyDao companyDao;
+  @Autowired
+  private ComputerValidation computerValidation;
+  @Autowired
+  private CompanyMapper companyMapper;
+  private static final Logger logger = LoggerFactory.getLogger(ComputerMapper.class);
+
+  private ComputerMapper() {}
 
   /**
    * Take a ResulSet and returns a list of Computer, useful to map items directly after a Database
@@ -90,13 +89,13 @@ public class ComputerMapper implements Mapper<Computer> {
       computerDtoBuilder.addName(computer.getName());
 
       String formattedIntroduced = (computer.getIntroduced() != null)
-          ? new SimpleDateFormat("yyyy-MM-dd").format(computer.getIntroduced())
+          ? new SimpleDateFormat(DEFAULT_DATE_FORMAT).format(computer.getIntroduced())
           : null;
       computerValidation.validateIntroductionDate(formattedIntroduced);
 
 
       String formattedDiscontinued = (computer.getDiscontinued() != null)
-          ? new SimpleDateFormat("yyyy-MM-dd").format(computer.getDiscontinued())
+          ? new SimpleDateFormat(DEFAULT_DATE_FORMAT).format(computer.getDiscontinued())
           : null;
 
       computerValidation.validateDiscontinuationDate(formattedDiscontinued);
@@ -131,59 +130,39 @@ public class ComputerMapper implements Mapper<Computer> {
     ComputerDto computerDto = (ComputerDto) dto;
     ComputerBuilder computerBuilder = new ComputerBuilder();
 
+
+    computerValidation.validateId(Integer.parseInt(computerDto.getId()));
+
+    computerBuilder
+        .addId(computerDto.getId() != null ? Integer.parseInt(computerDto.getId()) : null);
+
+    computerValidation.validateName(computerDto.getName());
+    computerBuilder.addName(computerDto.getName());
+
+
+    computerValidation.validateIntroductionDate(computerDto.getIntroduced());
+    computerValidation.validateDiscontinuationDate(computerDto.getDiscontinued());
+
+    Date parsedIntroduced = null;
+    Date parsedDiscontinued = null;
     try {
-
-      computerValidation.validateId(Integer.parseInt(computerDto.getId()));
-
-      computerBuilder
-          .addId(computerDto.getId() != null ? Integer.parseInt(computerDto.getId()) : null);
-
-      computerValidation.validateName(computerDto.getName());
-      computerBuilder.addName(computerDto.getName());
-
-
-      computerValidation.validateIntroductionDate(computerDto.getIntroduced());
-      computerValidation.validateDiscontinuationDate(computerDto.getDiscontinued());
-
-      Date parsedIntroduced =
+      parsedIntroduced =
           computerDto.getIntroduced() == null || computerDto.getIntroduced().isEmpty() ? null
-              : new SimpleDateFormat("yyyy-MM-dd").parse(computerDto.getIntroduced());
-      Date parsedDiscontinued =
+              : new SimpleDateFormat(DEFAULT_DATE_FORMAT).parse(computerDto.getIntroduced());
+      parsedDiscontinued =
           computerDto.getDiscontinued() == null || computerDto.getDiscontinued().isEmpty() ? null
-              : new SimpleDateFormat("yyyy-MM-dd").parse(computerDto.getDiscontinued());
-
-      computerValidation.validatePrecedence(parsedIntroduced, parsedDiscontinued);
-      computerBuilder.addIntroduced(parsedIntroduced).addDiscontinued(parsedDiscontinued);
-
-      Company company = companyMapper.dtoToEntity(computerDto.getCompanyDto());
-
-      computerBuilder.addCompany(company);
-
-    } catch (ValidationException validationException) {
-      logger.warn(validationException.getMessage());
-      throw validationException;
+              : new SimpleDateFormat(DEFAULT_DATE_FORMAT).parse(computerDto.getDiscontinued());
     } catch (ParseException parseException) {
       logger.warn(parseException.getMessage());
-      throw new ComputerValidationException(parseException.getMessage());
     }
+
+    computerValidation.validatePrecedence(parsedIntroduced, parsedDiscontinued);
+    computerBuilder.addIntroduced(parsedIntroduced).addDiscontinued(parsedDiscontinued);
+
+    Company company = companyMapper.dtoToEntity(computerDto.getCompanyDto());
+
+    computerBuilder.addCompany(company);
 
     return computerBuilder.build();
-  }
-
-  /**
-   * Singleton implementation of ComputerMapper.
-   */
-  private ComputerMapper() {}
-
-  /**
-   * Singleton implementation of ComputerMapper.
-   *
-   * @return single instance of ComputerMapper
-   */
-  public static ComputerMapper getInstance() {
-    if (computerMapperInstance == null) {
-      computerMapperInstance = new ComputerMapper();
-    }
-    return computerMapperInstance;
   }
 }

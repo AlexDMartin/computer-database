@@ -1,31 +1,12 @@
 package com.excilys.view;
 
 import com.excilys.dto.CompanyDto;
+import org.springframework.stereotype.Component;
 
-/**
- * The Class UpdateComputerView.
- */
+@Component
 public class UpdateComputerView {
 
-  /** The update computer view instance. */
-  private static UpdateComputerView updateComputerViewInstance = null;
-
-  /**
-   * Instantiates a new update computer view.
-   */
   private UpdateComputerView() {}
-
-  /**
-   * Gets the single instance of UpdateComputerView.
-   *
-   * @return single instance of UpdateComputerView
-   */
-  public static UpdateComputerView getInstance() {
-    if (updateComputerViewInstance == null) {
-      updateComputerViewInstance = new UpdateComputerView();
-    }
-    return updateComputerViewInstance;
-  }
 
   /**
    * Ask for id.

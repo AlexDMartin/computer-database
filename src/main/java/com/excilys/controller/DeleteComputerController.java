@@ -5,25 +5,24 @@ import com.excilys.service.ComputerService;
 import com.excilys.view.DeleteComputerView;
 import java.util.Optional;
 import java.util.Scanner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
-/**
- * Singleton implementation of DeleteComputerController.
- */
+@Controller
 public class DeleteComputerController {
 
-  /** Singleton implementation of DeleteComputerController. */
-  private static DeleteComputerController deleteComputerControllerInstance = null;
-  /** ComputerService. */
-  private static ComputerService computerService = ComputerService.getInstance();
-  /** View. */
-  private static DeleteComputerView view = DeleteComputerView.getInstance();
-  /** Scanner. */
+  @Autowired
+  private ComputerService computerService;
+  @Autowired
+  private DeleteComputerView view;
   private static Scanner scan = new Scanner(System.in);
 
+  private DeleteComputerController() {}
+
   /**
-   * Singleton implementation of DeleteComputerController.
+   * Renders the Delete Computer view.
    */
-  private DeleteComputerController() {
+  public void render() {
 
     view.askForId();
 
@@ -32,21 +31,9 @@ public class DeleteComputerController {
     Optional<Computer> computer = computerService.get(id);
 
     if (computer.isPresent()) {
-      ComputerService.getInstance().delete(computer.get());
+      computerService.delete(computer.get());
     }
 
     scan.close();
-  }
-
-  /**
-   * Singleton implementation of DeleteComputerController.
-   *
-   * @return single instance of DeleteComputerController
-   */
-  public static DeleteComputerController getInstance() {
-    if (deleteComputerControllerInstance == null) {
-      deleteComputerControllerInstance = new DeleteComputerController();
-    }
-    return deleteComputerControllerInstance;
   }
 }
