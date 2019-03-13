@@ -1,6 +1,5 @@
 package com.excilys.controller.servlets;
 
-import com.excilys.config.SpringConfig;
 import com.excilys.controller.PaginationController;
 import com.excilys.dao.model.Computer;
 import com.excilys.service.ComputerService;
@@ -15,12 +14,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 @WebServlet(name = "Search", urlPatterns = {"/Search"})
 public class SearchServlet extends HttpServlet {
 
+  @Autowired
+  private ComputerService computerService;
+  @Autowired
+  private PaginationController paginationController;
+  
   private static final long serialVersionUID = 1L;
   private static final int DEFAULT_LPP = 10;
   private static final int DEFAULT_PAGE = 1;
@@ -28,6 +31,12 @@ public class SearchServlet extends HttpServlet {
   private static final String DEFAULT_ASCENDENCY = "DESC";
   private static Logger logger = LoggerFactory.getLogger(SearchServlet.class);
 
+  @Override
+  public void init() throws ServletException {
+    super.init();
+    SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+  }
+  
   /**
    * Servlet Constructor.
    * 
@@ -46,12 +55,6 @@ public class SearchServlet extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     try {
-      ApplicationContext applicationContext =
-          new AnnotationConfigApplicationContext(SpringConfig.class);
-      ComputerService computerService = applicationContext.getBean(ComputerService.class);
-      PaginationController paginationController =
-          applicationContext.getBean(PaginationController.class);
-
       int page =
           (request.getParameter("request").equals("new") || request.getParameter("page") == null
               || request.getParameter("page").isEmpty()) ? DEFAULT_PAGE

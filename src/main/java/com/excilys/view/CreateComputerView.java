@@ -1,29 +1,11 @@
 package com.excilys.view;
 
-/**
- * The Class CreateComputerView.
- */
+import org.springframework.stereotype.Component;
+
+@Component
 public class CreateComputerView {
 
-  /** The create computer view instance. */
-  private static CreateComputerView createComputerViewInstance = null;
-
-  /**
-   * Instantiates a new creates the computer view.
-   */
   private CreateComputerView() {}
-
-  /**
-   * Gets the single instance of CreateComputerView.
-   *
-   * @return single instance of CreateComputerView
-   */
-  public static CreateComputerView getInstance() {
-    if (createComputerViewInstance == null) {
-      createComputerViewInstance = new CreateComputerView();
-    }
-    return createComputerViewInstance;
-  }
 
   /**
    * Ask for name.

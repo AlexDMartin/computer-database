@@ -2,30 +2,34 @@ package com.excilys.controller;
 
 import com.excilys.config.SpringConfig;
 import com.excilys.view.CliMainView;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class CliRenderer {
 
-  private static Logger logger = LoggerFactory.getLogger(CliRenderer.class);
+  private static final Logger logger = LoggerFactory.getLogger(CliRenderer.class);
 
   /**
-   * Entrypoint method for the CLI Application.
+   * Entrypoint for the CLI Application.
    *
    * @param args the arguments
    */
   public static void main(String[] args) {
+    Optional<ApplicationContext> applicationContext = Optional.empty();
     try {
-      ApplicationContext applicationContext =
-          new AnnotationConfigApplicationContext(SpringConfig.class);
-      CliMainView cliMainView = applicationContext.getBean(CliMainView.class);
+      applicationContext = Optional.of(new AnnotationConfigApplicationContext(SpringConfig.class));
+      CliMainView cliMainView = applicationContext.get().getBean(CliMainView.class);
       cliMainView.render();
-      logger.warn(applicationContext.toString());
-      logger.info("Main Started");
     } catch (Exception e) {
       logger.warn(e.getMessage());
+    } finally {
+      if (applicationContext.isPresent()) {
+        ((ConfigurableApplicationContext) applicationContext.get()).close();
+      }
     }
   }
 }

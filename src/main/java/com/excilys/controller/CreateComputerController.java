@@ -24,11 +24,13 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 public class CreateComputerController {
+  
   @Autowired
   private ComputerMapper computerMapper;
   @Autowired
   private CompanyMapper companyMapper;
-  private CreateComputerView view = CreateComputerView.getInstance();
+  @Autowired
+  private CreateComputerView view;
   @Autowired
   private ComputerValidation computerValidation;
   @Autowired
