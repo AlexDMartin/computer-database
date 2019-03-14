@@ -32,7 +32,6 @@ public class SpringConfig implements WebApplicationInitializer {
    */
   @Bean
   public HikariDataSource dataSource() {
-
     HikariDataSource ds = new HikariDataSource();
     ds.setJdbcUrl(environment.getRequiredProperty("jdbcUrl"));
     ds.setUsername(environment.getRequiredProperty("dataSource.user"));

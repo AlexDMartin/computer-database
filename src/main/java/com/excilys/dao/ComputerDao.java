@@ -3,27 +3,22 @@ package com.excilys.dao;
 import com.excilys.controller.PaginationController;
 import com.excilys.dao.mappers.ComputerMapper;
 import com.excilys.dao.model.Computer;
-import com.excilys.persistance.utils.Connector;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class ComputerDao implements Dao<Computer> {
 
   @Autowired
-  private Connector connector;
+  private DataSource dataSource;
   @Autowired
   private ComputerMapper computerMapper;
-  private static Logger logger = LoggerFactory.getLogger(ComputerDao.class);
+
+  JdbcTemplate jdbcTemplate;
 
   private ComputerDao() {}
 
@@ -64,17 +59,9 @@ public class ComputerDao implements Dao<Computer> {
    */
   @Override
   public Optional<Computer> get(long id) {
-    Computer resultItem = null;
-
-    try (PreparedStatement getStatement = connector.getConnection().prepareStatement(GET_ONE)) {
-      getStatement.setLong(1, id);
-      ResultSet rs = getStatement.executeQuery();
-      resultItem = computerMapper.map(rs).get(0);
-    } catch (SQLException e) {
-      logger.warn(e.getMessage());
-    }
-
-    return Optional.of(resultItem);
+    this.jdbcTemplate = new JdbcTemplate(dataSource);
+    Computer computer = this.jdbcTemplate.query(GET_ONE, computerMapper, id).get(0);
+    return Optional.of(computer);
   }
 
   /*
@@ -84,16 +71,8 @@ public class ComputerDao implements Dao<Computer> {
    */
   @Override
   public List<Computer> getAll() {
-    List<Computer> resultItems = null;
-
-    try (PreparedStatement getAllStatement = connector.getConnection().prepareStatement(GET_ALL)) {
-      ResultSet rs = getAllStatement.executeQuery();
-      resultItems = computerMapper.map(rs);
-    } catch (SQLException e) {
-      logger.warn(e.getMessage());
-    }
-
-    return resultItems;
+    this.jdbcTemplate = new JdbcTemplate(dataSource);
+    return this.jdbcTemplate.query(GET_ALL, computerMapper);
   }
 
   /**
@@ -102,21 +81,15 @@ public class ComputerDao implements Dao<Computer> {
    * @param paginationController A pagination controller
    */
   public List<Computer> getAllPaginated(PaginationController paginationController) {
-    List<Computer> resultItems = new ArrayList<>();
     String getPaginatedOrdered = String.format(GET_PAGINATED,
         paginationController.getSortColumn() + " " + paginationController.getAscendency());
 
-    try (PreparedStatement getAllPaginatedStatement =
-        connector.getConnection().prepareStatement(getPaginatedOrdered)) {
-      getAllPaginatedStatement.setInt(1, paginationController.getLimit());
-      getAllPaginatedStatement.setInt(2, paginationController.getOffset());
-      ResultSet rs = getAllPaginatedStatement.executeQuery();
-      resultItems = computerMapper.map(rs);
-    } catch (SQLException e) {
-      logger.warn(e.getMessage());
-    }
-
-    return resultItems;
+    this.jdbcTemplate = new JdbcTemplate(dataSource);
+    return this.jdbcTemplate.query(getPaginatedOrdered, 
+        computerMapper,
+        paginationController.getLimit(),
+        paginationController.getOffset()
+    );
   }
 
   /*
@@ -126,18 +99,9 @@ public class ComputerDao implements Dao<Computer> {
    */
   @Override
   public void save(Computer computer) {
-    try (PreparedStatement saveStatement = connector.getConnection().prepareStatement(SAVE)) {
-      saveStatement.setString(1, computer.getName());
-      saveStatement.setTimestamp(2, new Timestamp(computer.getIntroduced().getTime()));
-      saveStatement.setTimestamp(3, new Timestamp(computer.getDiscontinued().getTime()));
-      saveStatement.setInt(4, computer.getCompany().getId());
-
-      int resultCode = saveStatement.executeUpdate();
-      String message = String.format("Save operated on %d row(s)", resultCode);
-      logger.info(message);
-    } catch (SQLException e) {
-      logger.warn(e.getMessage());
-    }
+    this.jdbcTemplate = new JdbcTemplate(dataSource);
+    this.jdbcTemplate.update(SAVE, computer.getName(), computer.getIntroduced(),
+        computer.getDiscontinued(), computer.getCompany().getId());
   }
 
   /*
@@ -147,18 +111,9 @@ public class ComputerDao implements Dao<Computer> {
    */
   @Override
   public void update(Computer computer) {
-    try (PreparedStatement updateStatement = connector.getConnection().prepareStatement(UPDATE)) {
-      updateStatement.setString(1, computer.getName());
-      updateStatement.setTimestamp(2, new Timestamp(computer.getIntroduced().getTime()));
-      updateStatement.setTimestamp(3, new Timestamp(computer.getDiscontinued().getTime()));
-      updateStatement.setInt(4, computer.getCompany().getId());
-      updateStatement.setInt(5, computer.getId());
-
-      int resultCode = updateStatement.executeUpdate();
-      logger.info("Update operated on " + resultCode + " row(s)");
-    } catch (SQLException e) {
-      LoggerFactory.getLogger(this.getClass()).warn(e.getMessage());
-    }
+    this.jdbcTemplate = new JdbcTemplate(dataSource);
+    this.jdbcTemplate.update(UPDATE, computer.getName(), computer.getIntroduced(),
+        computer.getDiscontinued(), computer.getCompany().getId(), computer.getId());
   }
 
   /*
@@ -168,14 +123,8 @@ public class ComputerDao implements Dao<Computer> {
    */
   @Override
   public void delete(Computer computer) {
-    try (PreparedStatement deleteStatement = connector.getConnection().prepareStatement(DELETE)) {
-      deleteStatement.setLong(1, computer.getId());
-
-      int resultCode = deleteStatement.executeUpdate();
-      logger.info("Delete operated on " + resultCode + " row(s)");
-    } catch (SQLException e) {
-      logger.warn(e.getMessage());
-    }
+    this.jdbcTemplate = new JdbcTemplate(dataSource);
+    this.jdbcTemplate.update(DELETE, computer.getId());
   }
 
   /**
@@ -188,24 +137,13 @@ public class ComputerDao implements Dao<Computer> {
    */
   public List<Computer> getAllSearchedPaginated(String filter,
       PaginationController paginationController) {
-    List<Computer> resultItems = new ArrayList<>();
     String getSearchedPaginatedOrdered = String.format(GET_SEARCHED_PAGINATED,
         paginationController.getSortColumn() + " " + paginationController.getAscendency());
+    String filterWithPercents = "%" + filter + "%";
 
-    try (PreparedStatement getAllSearchedPaginatedStatement =
-        connector.getConnection().prepareStatement(getSearchedPaginatedOrdered)) {
-      String filterWithPercents = "%" + filter + "%";
-      getAllSearchedPaginatedStatement.setString(1, filterWithPercents);
-      getAllSearchedPaginatedStatement.setString(2, filterWithPercents);
-      getAllSearchedPaginatedStatement.setInt(3, paginationController.getLimit());
-      getAllSearchedPaginatedStatement.setInt(4, paginationController.getOffset());
-      ResultSet rs = getAllSearchedPaginatedStatement.executeQuery();
-      resultItems = computerMapper.map(rs);
-    } catch (SQLException e) {
-      logger.warn(e.getMessage());
-    }
-
-    return resultItems;
+    this.jdbcTemplate = new JdbcTemplate(dataSource);
+    return this.jdbcTemplate.query(getSearchedPaginatedOrdered, computerMapper, filterWithPercents,
+        filterWithPercents, paginationController.getLimit(), paginationController.getOffset());
   }
 
   /**
@@ -214,21 +152,7 @@ public class ComputerDao implements Dao<Computer> {
    * @return the total of computers
    */
   public int countAllComputer() {
-    int count = 0;
-
-    try (
-        PreparedStatement countAllComputersStatement =
-            connector.getConnection().prepareStatement(COUNT_ALL_COMPUTERS);
-        ResultSet rs = countAllComputersStatement.executeQuery();) {
-
-      if (rs.next()) {
-        count = Integer.parseInt(rs.getString(1));
-      }
-    } catch (SQLException e) {
-      logger.warn(e.getMessage());
-    }
-
-    return count;
+    return jdbcTemplate.queryForObject(COUNT_ALL_COMPUTERS, Integer.class);
   }
 
   /**
@@ -238,20 +162,10 @@ public class ComputerDao implements Dao<Computer> {
    * @return the total of computers
    */
   public int countAllComputerByCriteria(String criteria) {
-    int count = 0;
     String filter = "%" + criteria + "%";
-    try (PreparedStatement countAllComputersByCriteriaStatement =
-        connector.getConnection().prepareStatement(COUNT_ALL_COMPUTERS_BY_CRITERIA)) {
-      countAllComputersByCriteriaStatement.setString(1, filter);
-      countAllComputersByCriteriaStatement.setString(2, filter);
-      ResultSet rs = countAllComputersByCriteriaStatement.executeQuery();
-      if (rs.next()) {
-        count = Integer.parseInt(rs.getString(1));
-      }
-    } catch (SQLException e) {
-      logger.warn(e.getMessage());
-    }
 
-    return count;
+    this.jdbcTemplate = new JdbcTemplate(dataSource);
+    return jdbcTemplate.queryForObject(COUNT_ALL_COMPUTERS_BY_CRITERIA, Integer.class, filter,
+        filter);
   }
 }

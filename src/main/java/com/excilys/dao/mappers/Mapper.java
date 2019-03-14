@@ -13,15 +13,6 @@ import java.util.List;
 public abstract interface Mapper<T> {
 
   /**
-   * Take a ResulSet and returns a list of the generic type, useful to map items directly after a
-   * Database call.
-   * 
-   * @param resultSet Any ResultSet
-   * @return List&lt;Company&gt;
-   */
-  public abstract List<T> map(ResultSet resultSet);
-
-  /**
    * Transforms an Entity into a DTO.
    * 
    * @param entity Any entity

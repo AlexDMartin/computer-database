@@ -2,30 +2,30 @@ package com.excilys.dao;
 
 import com.excilys.dao.mappers.CompanyMapper;
 import com.excilys.dao.model.Company;
-import com.excilys.persistance.utils.Connector;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class CompanyDao implements Dao<Company> {
+  
   @Autowired
-  private Connector connector;
+  private DataSource dataSource;
   @Autowired
   private CompanyMapper companyMapper;
+  
+  JdbcTemplate jdbcTemplate;
+  
   private static final String GET_ONE = "SELECT ID, NAME FROM company WHERE ID = ? LIMIT 1";
   private static final String GET_ALL = "SELECT ID, NAME FROM company ORDER BY ID";
   private static final String SAVE = "INSERT INTO company (NAME) VALUES (?)";
   private static final String UPDATE = "UPDATE company NAME = ? WHERE ID = ?";
   private static final String DELETE = "DELETE FROM company WHERE ID = ?";
-  private static Logger logger = LoggerFactory.getLogger(CompanyDao.class);
-
+  
   private CompanyDao() {}
 
   /*
@@ -35,17 +35,9 @@ public class CompanyDao implements Dao<Company> {
    */
   @Override
   public Optional<Company> get(long id) {
-    Company resultItem = null;
-
-    try (PreparedStatement getStatement = connector.getConnection().prepareStatement(GET_ONE)) {
-      getStatement.setLong(1, id);
-      ResultSet rs = getStatement.executeQuery();
-      resultItem = companyMapper.map(rs).get(0);
-    } catch (SQLException sqlException) {
-      logger.warn(sqlException.getMessage());
-    }
-
-    return Optional.of(resultItem);
+    this.jdbcTemplate = new JdbcTemplate(dataSource);
+    Company company = this.jdbcTemplate.query(GET_ONE, companyMapper, id).get(0);
+    return Optional.of(company);
   }
 
   /*
@@ -55,16 +47,8 @@ public class CompanyDao implements Dao<Company> {
    */
   @Override
   public List<Company> getAll() {
-    List<Company> resultItems = null;
-
-    try (PreparedStatement getAllStatement = connector.getConnection().prepareStatement(GET_ALL)) {
-      ResultSet rs = getAllStatement.executeQuery();
-      resultItems = companyMapper.map(rs);
-    } catch (SQLException sqlException) {
-      logger.warn(sqlException.getMessage());
-    }
-
-    return resultItems;
+    this.jdbcTemplate = new JdbcTemplate(dataSource);
+    return this.jdbcTemplate.query(GET_ALL, companyMapper);
   }
 
   /*
@@ -74,15 +58,10 @@ public class CompanyDao implements Dao<Company> {
    */
   @Override
   public void save(Company company) throws Exception {
-    try (PreparedStatement saveStatement = connector.getConnection().prepareStatement(SAVE)) {
-      saveStatement.setString(1, company.getName());
-
-      int resultCode = saveStatement.executeUpdate();
-      String message = String.format("Save operated on %d row(s)", resultCode);
-      logger.info(message);
-    } catch (SQLException sqlException) {
-      logger.warn(sqlException.getMessage());
-    }
+    this.jdbcTemplate = new JdbcTemplate(dataSource);
+    this.jdbcTemplate.update(
+        SAVE,
+        company.getName());
   }
 
   /*
@@ -92,16 +71,11 @@ public class CompanyDao implements Dao<Company> {
    */
   @Override
   public void update(Company company) {
-    try (PreparedStatement updateStatement = connector.getConnection().prepareStatement(UPDATE)) {
-      updateStatement.setString(1, company.getName());
-      updateStatement.setLong(1, company.getId());
-
-      int resultCode = updateStatement.executeUpdate();
-      String message = String.format("Save operated on %d row(s)", resultCode);
-      logger.info(message);
-    } catch (SQLException sqlException) {
-      logger.warn(sqlException.getMessage());
-    }
+    this.jdbcTemplate = new JdbcTemplate(dataSource);
+    this.jdbcTemplate.update(
+        UPDATE,
+        company.getId(),
+        company.getName());
   }
 
   /*
@@ -110,15 +84,11 @@ public class CompanyDao implements Dao<Company> {
    * @see com.excilys.dao.Dao#delete(java.lang.Object)
    */
   @Override
+  @Transactional
   public void delete(Company company) {
-    try (PreparedStatement deleteStatement = connector.getConnection().prepareStatement(DELETE)) {
-      deleteStatement.setLong(1, company.getId());
-
-      int resultCode = deleteStatement.executeUpdate();
-      String message = String.format("Delete operated on %d row(s)", resultCode);
-      logger.info(message);
-    } catch (SQLException sqlException) {
-      logger.warn(sqlException.getMessage());
-    }
+    this.jdbcTemplate = new JdbcTemplate(dataSource);
+    this.jdbcTemplate.update(
+        DELETE,
+        company.getId());
   }
 }

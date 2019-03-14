@@ -15,16 +15,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ComputerMapper implements Mapper<Computer> {
+public class ComputerMapper implements Mapper<Computer>, RowMapper<Computer> {
 
   private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
   @Autowired
@@ -36,40 +36,6 @@ public class ComputerMapper implements Mapper<Computer> {
   private static final Logger logger = LoggerFactory.getLogger(ComputerMapper.class);
 
   private ComputerMapper() {}
-
-  /**
-   * Take a ResulSet and returns a list of Computer, useful to map items directly after a Database
-   * call.
-   * 
-   * @param resultSet A resultSet
-   * @return List&lt;Computer&gt;
-   */
-  @Override
-  public List<Computer> map(ResultSet resultSet) {
-    List<Computer> list = new ArrayList<>();
-
-    try {
-      while (resultSet.next()) {
-        ComputerBuilder cb = new ComputerBuilder();
-
-        Computer computer = null;
-        Company company = null;
-        if (resultSet.getInt("COMPANY_ID") > 0) {
-          company = companyDao.get(resultSet.getInt("COMPANY_ID")).get();
-        }
-
-        computer = cb.addId(resultSet.getInt("ID")).addName(resultSet.getString("NAME"))
-            .addIntroduced(resultSet.getDate("INTRODUCED"))
-            .addDiscontinued(resultSet.getDate("DISCONTINUED")).addCompany(company).build();
-
-        list.add(computer);
-      }
-    } catch (SQLException e) {
-      logger.warn(e.getMessage());
-    }
-
-    return list;
-  }
 
   /**
    * Transforms a Company entity into a CompanyDTO.
@@ -164,5 +130,21 @@ public class ComputerMapper implements Mapper<Computer> {
     computerBuilder.addCompany(company);
 
     return computerBuilder.build();
+  }
+
+  @Override
+  public Computer mapRow(ResultSet rs, int rowNum) throws SQLException {
+    ComputerBuilder builder = new ComputerBuilder();
+
+    if (rs.getInt("COMPANY_ID") > 0) {      
+      Optional<Company> company = companyDao.get(rs.getInt("COMPANY_ID"));
+      if (company.isPresent()) {
+        builder.addCompany(company.get());
+      }
+    }
+
+    return builder.addId(rs.getInt("ID")).addName(rs.getString("NAME"))
+        .addIntroduced(rs.getDate("INTRODUCED")).addDiscontinued(rs.getDate("DISCONTINUED"))
+        .build();
   }
 }
