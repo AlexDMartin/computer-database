@@ -5,6 +5,7 @@ import com.excilys.view.CliMainView;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -24,8 +25,8 @@ public class CliRenderer {
       applicationContext = Optional.of(new AnnotationConfigApplicationContext(SpringConfig.class));
       CliMainView cliMainView = applicationContext.get().getBean(CliMainView.class);
       cliMainView.render();
-    } catch (Exception e) {
-      logger.warn(e.getMessage());
+    } catch (BeansException beansException) {
+      logger.warn(beansException.getMessage());
     } finally {
       if (applicationContext.isPresent()) {
         ((ConfigurableApplicationContext) applicationContext.get()).close();

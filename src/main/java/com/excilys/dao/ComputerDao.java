@@ -14,13 +14,18 @@ import org.springframework.stereotype.Repository;
 public class ComputerDao implements Dao<Computer> {
 
   @Autowired
-  private DataSource dataSource;
-  @Autowired
   private ComputerMapper computerMapper;
 
-  JdbcTemplate jdbcTemplate;
+  private JdbcTemplate jdbcTemplate;
 
-  private ComputerDao() {}
+  @Autowired
+  private ComputerDao(DataSource dataSource) {
+    this.setJdbcTemplate(dataSource);
+  }
+
+  private void setJdbcTemplate(DataSource dataSource) {
+    this.jdbcTemplate = new JdbcTemplate(dataSource);
+  }
 
   private static final String GET_ONE =
       "SELECT ID, NAME, INTRODUCED, DISCONTINUED, COMPANY_ID FROM computer WHERE ID = ? LIMIT 1";
@@ -59,7 +64,6 @@ public class ComputerDao implements Dao<Computer> {
    */
   @Override
   public Optional<Computer> get(long id) {
-    this.jdbcTemplate = new JdbcTemplate(dataSource);
     Computer computer = this.jdbcTemplate.query(GET_ONE, computerMapper, id).get(0);
     return Optional.of(computer);
   }
@@ -71,7 +75,6 @@ public class ComputerDao implements Dao<Computer> {
    */
   @Override
   public List<Computer> getAll() {
-    this.jdbcTemplate = new JdbcTemplate(dataSource);
     return this.jdbcTemplate.query(GET_ALL, computerMapper);
   }
 
@@ -84,7 +87,6 @@ public class ComputerDao implements Dao<Computer> {
     String getPaginatedOrdered = String.format(GET_PAGINATED,
         paginationController.getSortColumn() + " " + paginationController.getAscendency());
 
-    this.jdbcTemplate = new JdbcTemplate(dataSource);
     return this.jdbcTemplate.query(getPaginatedOrdered, 
         computerMapper,
         paginationController.getLimit(),
@@ -99,7 +101,6 @@ public class ComputerDao implements Dao<Computer> {
    */
   @Override
   public void save(Computer computer) {
-    this.jdbcTemplate = new JdbcTemplate(dataSource);
     this.jdbcTemplate.update(SAVE, computer.getName(), computer.getIntroduced(),
         computer.getDiscontinued(), computer.getCompany().getId());
   }
@@ -111,7 +112,6 @@ public class ComputerDao implements Dao<Computer> {
    */
   @Override
   public void update(Computer computer) {
-    this.jdbcTemplate = new JdbcTemplate(dataSource);
     this.jdbcTemplate.update(UPDATE, computer.getName(), computer.getIntroduced(),
         computer.getDiscontinued(), computer.getCompany().getId(), computer.getId());
   }
@@ -123,7 +123,6 @@ public class ComputerDao implements Dao<Computer> {
    */
   @Override
   public void delete(Computer computer) {
-    this.jdbcTemplate = new JdbcTemplate(dataSource);
     this.jdbcTemplate.update(DELETE, computer.getId());
   }
 
@@ -141,7 +140,6 @@ public class ComputerDao implements Dao<Computer> {
         paginationController.getSortColumn() + " " + paginationController.getAscendency());
     String filterWithPercents = "%" + filter + "%";
 
-    this.jdbcTemplate = new JdbcTemplate(dataSource);
     return this.jdbcTemplate.query(getSearchedPaginatedOrdered, computerMapper, filterWithPercents,
         filterWithPercents, paginationController.getLimit(), paginationController.getOffset());
   }
@@ -164,7 +162,6 @@ public class ComputerDao implements Dao<Computer> {
   public int countAllComputerByCriteria(String criteria) {
     String filter = "%" + criteria + "%";
 
-    this.jdbcTemplate = new JdbcTemplate(dataSource);
     return jdbcTemplate.queryForObject(COUNT_ALL_COMPUTERS_BY_CRITERIA, Integer.class, filter,
         filter);
   }

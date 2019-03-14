@@ -14,11 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class CompanyDao implements Dao<Company> {
   
   @Autowired
-  private DataSource dataSource;
-  @Autowired
   private CompanyMapper companyMapper;
   
-  JdbcTemplate jdbcTemplate;
+  private JdbcTemplate jdbcTemplate;
   
   private static final String GET_ONE = "SELECT ID, NAME FROM company WHERE ID = ? LIMIT 1";
   private static final String GET_ALL = "SELECT ID, NAME FROM company ORDER BY ID";
@@ -26,7 +24,15 @@ public class CompanyDao implements Dao<Company> {
   private static final String UPDATE = "UPDATE company NAME = ? WHERE ID = ?";
   private static final String DELETE = "DELETE FROM company WHERE ID = ?";
   
-  private CompanyDao() {}
+  @Autowired
+  private CompanyDao(DataSource dataSource) {
+    setJdbcTemplate(dataSource);
+  }
+  
+  
+  private void setJdbcTemplate(DataSource dataSource) {
+    this.jdbcTemplate = new JdbcTemplate(dataSource);
+  }
 
   /*
    * (non-Javadoc)
@@ -35,7 +41,6 @@ public class CompanyDao implements Dao<Company> {
    */
   @Override
   public Optional<Company> get(long id) {
-    this.jdbcTemplate = new JdbcTemplate(dataSource);
     Company company = this.jdbcTemplate.query(GET_ONE, companyMapper, id).get(0);
     return Optional.of(company);
   }
@@ -47,7 +52,6 @@ public class CompanyDao implements Dao<Company> {
    */
   @Override
   public List<Company> getAll() {
-    this.jdbcTemplate = new JdbcTemplate(dataSource);
     return this.jdbcTemplate.query(GET_ALL, companyMapper);
   }
 
@@ -58,7 +62,6 @@ public class CompanyDao implements Dao<Company> {
    */
   @Override
   public void save(Company company) throws Exception {
-    this.jdbcTemplate = new JdbcTemplate(dataSource);
     this.jdbcTemplate.update(
         SAVE,
         company.getName());
@@ -71,7 +74,6 @@ public class CompanyDao implements Dao<Company> {
    */
   @Override
   public void update(Company company) {
-    this.jdbcTemplate = new JdbcTemplate(dataSource);
     this.jdbcTemplate.update(
         UPDATE,
         company.getId(),
@@ -86,7 +88,6 @@ public class CompanyDao implements Dao<Company> {
   @Override
   @Transactional
   public void delete(Company company) {
-    this.jdbcTemplate = new JdbcTemplate(dataSource);
     this.jdbcTemplate.update(
         DELETE,
         company.getId());

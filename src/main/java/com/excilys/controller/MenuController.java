@@ -33,7 +33,8 @@ public class MenuController {
   public void resolve() {
     Scanner scan = new Scanner(System.in);
     int input = scan.nextInt();
-    logger.info("User typed : " + input);
+    String message = String.format("User typed : %d ",input);
+    logger.info(message);
     MenuItem inputMenuItem = MenuItem.valueOf(input).get();
     switch (inputMenuItem) {
       case LIST_COMPUTERS:

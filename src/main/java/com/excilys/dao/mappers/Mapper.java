@@ -2,8 +2,6 @@ package com.excilys.dao.mappers;
 
 import com.excilys.dto.Dto;
 import com.excilys.exception.validation.ValidationException;
-import java.sql.ResultSet;
-import java.util.List;
 
 /**
  * The Interface Mapper.
