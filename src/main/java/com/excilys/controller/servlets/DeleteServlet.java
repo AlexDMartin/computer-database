@@ -2,45 +2,35 @@ package com.excilys.controller.servlets;
 
 import com.excilys.dao.model.Computer;
 import com.excilys.service.ComputerService;
-import java.io.IOException;
 import java.util.Optional;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.ModelAndView;
 
-@WebServlet(name = "Delete", urlPatterns = {"/Delete"})
-public class DeleteServlet extends HttpServlet {
+@Controller
+@RequestMapping("/Delete")
+public class DeleteServlet {
 
   @Autowired
   private ComputerService computerService;
   
-  private static final long serialVersionUID = 7210607623729089403L;
   private static final Logger logger = LoggerFactory.getLogger(DeleteServlet.class);
-
-  @Override
-  public void init() throws ServletException {
-    super.init();
-    SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-  }
-  
-  public DeleteServlet() {
-    super();
-  }
 
   /**
    * Servlet doGet.
    * 
    * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
    */
-  @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+  @GetMapping
+  public void delete(WebRequest request, ModelAndView modelAndView) {
     try {
   
       String selection = request.getParameter("selection");
@@ -54,21 +44,9 @@ public class DeleteServlet extends HttpServlet {
       }
     } catch (Exception e) {
       logger.warn(e.getMessage());
-      request.getRequestDispatcher("view/500.jsp").forward(request, response);
-      return;
+      modelAndView.setViewName("redirect:500");
     }
 
-    request.getRequestDispatcher("Dashboard").forward(request, response);
-  }
-
-  /**
-   * Servlet doPost.
-   * 
-   * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-   */
-  @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-    doGet(request, response);
+    modelAndView.setViewName("Dashboard");
   }
 }

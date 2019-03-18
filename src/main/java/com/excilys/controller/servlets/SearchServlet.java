@@ -3,10 +3,7 @@ package com.excilys.controller.servlets;
 import com.excilys.controller.PaginationController;
 import com.excilys.dao.model.Computer;
 import com.excilys.service.ComputerService;
-import java.io.IOException;
 import java.util.List;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,46 +11,34 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.ModelAndView;
 
-@WebServlet(name = "Search", urlPatterns = {"/Search"})
-public class SearchServlet extends HttpServlet {
+@Controller
+@RequestMapping("/Search")
+public class SearchServlet {
 
   @Autowired
   private ComputerService computerService;
   @Autowired
   private PaginationController paginationController;
   
-  private static final long serialVersionUID = 1L;
   private static final int DEFAULT_LPP = 10;
   private static final int DEFAULT_PAGE = 1;
   private static final String DEFAULT_SORT_COLUMN = "ID";
   private static final String DEFAULT_ASCENDENCY = "DESC";
   private static Logger logger = LoggerFactory.getLogger(SearchServlet.class);
 
-  @Override
-  public void init() throws ServletException {
-    super.init();
-    SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-  }
-  
-  /**
-   * Servlet Constructor.
-   * 
-   * @see HttpServlet#HttpServlet()
-   */
-  public SearchServlet() {
-    super();
-  }
-
   /**
    * Servlet doGet.
    * 
    * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
    */
-  @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+  @GetMapping
+  public ModelAndView search(WebRequest request, ModelAndView modelAndView) {
     try {
       int page =
           (request.getParameter("request").equals("new") || request.getParameter("page") == null
@@ -84,36 +69,27 @@ public class SearchServlet extends HttpServlet {
       try {
         List<Computer> computerList =
             computerService.getAllSearchedPaginated(filterString, paginationController);
-        request.setAttribute("computerList", computerList);
+        modelAndView.addObject("computerList", computerList);
         count = computerService.countAllComputerByCriteria(filterString);
       } catch (Exception e) {
         logger.warn(e.getMessage());
-        request.setAttribute("stacktrace", e.getMessage());
-        request.getRequestDispatcher("view/500.jsp").forward(request, response);
-        return;
+        modelAndView.addObject("stacktrace", e.getMessage());
+        modelAndView.setViewName("redirect:500");
+        return modelAndView;
       }
 
-      request.setAttribute("filter", filterString);
-      request.setAttribute("count", count);
-      request.setAttribute("pageType", "search");
-      request.setAttribute("paginationController", paginationController);
+      modelAndView.addObject("filter", filterString);
+      modelAndView.addObject("count", count);
+      modelAndView.addObject("pageType", "search");
+      modelAndView.addObject("paginationController", paginationController);
 
-      request.getRequestDispatcher("view/index.jsp").forward(request, response);
+      modelAndView.setViewName("index");
     } catch (BeansException beansException) {
       logger.warn(beansException.getMessage());
+      modelAndView.setViewName("redirect:500");
     }
+    
+    return modelAndView;
 
   }
-
-  /**
-   * Servlet doPost.
-   * 
-   * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-   */
-  @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-    doGet(request, response);
-  }
-
 }

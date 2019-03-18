@@ -9,24 +9,24 @@ import com.excilys.dto.ComputerDto;
 import com.excilys.dto.ComputerDtoBuilder;
 import com.excilys.service.CompanyService;
 import com.excilys.service.ComputerService;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.ModelAndView;
 
-/**
- * Servlet implementation class EditComputer.
- */
-@WebServlet(name = "Edit", urlPatterns = {"/Edit"})
-public class EditComputer extends HttpServlet {
+@Controller
+@RequestMapping("/Edit")
+public class EditComputer {
   
   @Autowired
   private ComputerService computerService;
@@ -37,47 +37,31 @@ public class EditComputer extends HttpServlet {
   @Autowired
   private CompanyMapper companyMapper;
   
-  private static final long serialVersionUID = 9089945397283880630L;
   private static Logger logger = LoggerFactory.getLogger(EditComputer.class);
-  
-  @Override
-  public void init() throws ServletException {
-    super.init();
-    SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-  }
-
-  /**
-   * Servlet used to edit computers.
-   * 
-   * @see HttpServlet#HttpServlet()
-   */
-  public EditComputer() {
-    super();
-  }
 
   /**
    * This doGet methods returns information to prefill the edition form.
    * 
    * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
    */
-  @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+  @GetMapping
+  protected ModelAndView displayEditForm(WebRequest request, ModelAndView modelAndView) {
     try {
       long id = Long.parseLong(request.getParameter("id"));
       Optional<Computer> computer = computerService.get(id);
       List<Company> companyList = companyService.getAll();
 
-      request.setAttribute("companyList", companyList);
+      modelAndView.addObject("companyList", companyList);
       if (computer.isPresent()) {
-        request.setAttribute("computer", computer.get());
+        modelAndView.addObject("computer", computer.get());
       }
-      request.getRequestDispatcher("view/editComputer.jsp").forward(request, response);
+      modelAndView.setViewName("editComputer");
     } catch (Exception e) {
       logger.warn(e.getMessage());
-      request.setAttribute("stacktrace", e.getMessage());
-      request.getRequestDispatcher("view/404.jsp").forward(request, response);
+      modelAndView.addObject("stacktrace", e.getMessage());
+      modelAndView.setViewName("redirect:404");
     }
+    return modelAndView;
   }
 
   /**
@@ -85,9 +69,8 @@ public class EditComputer extends HttpServlet {
    * 
    * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
    */
-  @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+  @PostMapping
+  protected ModelAndView postEditForm(WebRequest request, ModelAndView modelAndView) {
     try {
  
       ComputerDtoBuilder computerDtoBuilder = new ComputerDtoBuilder();
@@ -97,7 +80,6 @@ public class EditComputer extends HttpServlet {
       }
 
       if (request.getParameter("companyId") != null) {
-        logger.debug("companyId" + request.getParameter("companyId"));
         long companyId = Long.parseLong(request.getParameter("companyId"));
         Optional<Company> company = companyService.get(companyId);
         CompanyDto companyDto = null;
@@ -126,12 +108,12 @@ public class EditComputer extends HttpServlet {
       }
     } catch (Exception e) {
       logger.warn(e.getMessage());
-      request.setAttribute("stacktrace", e.getMessage());
-      request.getRequestDispatcher("view/500.jsp").forward(request, response);
-      return;
+      modelAndView.addObject("stacktrace", e.getMessage());
+      modelAndView.setViewName("redirect:500");
     }
 
-    request.getRequestDispatcher("Dashboard").forward(request, response);
+    modelAndView.setViewName("redirect:Dashboard");
+    return modelAndView;
   }
 
 }

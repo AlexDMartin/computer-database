@@ -3,55 +3,40 @@ package com.excilys.controller.servlets;
 import com.excilys.controller.PaginationController;
 import com.excilys.dao.model.Computer;
 import com.excilys.service.ComputerService;
-import java.io.IOException;
 import java.util.List;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.ModelAndView;
 
-@WebServlet(name = "Dashboard", urlPatterns = {"/", "/dashboard"})
-public class IndexServlet extends HttpServlet {
+@Controller
+@RequestMapping("/Dashboard")
+public class IndexServlet {
 
   @Autowired
   private ComputerService computerService;
   @Autowired
   private PaginationController paginationController;
   
-  private static final long serialVersionUID = 1L;
   private static final int DEFAULT_LPP = 10;
   private static final int DEFAULT_PAGE = 1;
   private static final String DEFAULT_SORT_COLUMN = "ID";
   private static final String DEFAULT_ASCENDENCY = "DESC";
   private static Logger logger = LoggerFactory.getLogger(IndexServlet.class);
 
-  @Override
-  public void init() throws ServletException {
-    super.init();
-    SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-  }
-  
   /**
-   * Default constructor.
+   * this Method shows the index.
+   *
+   *@return model and view with index 
    */
-  public IndexServlet() {
-    super();
-  }
-
-  /**
-   * This doGet method sends the list of computers that needs to be in the index.
-   * 
-   * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-   */
-  @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+  @GetMapping
+  public ModelAndView showIndex(WebRequest request, ModelAndView modelAndView) {
+    
     try {
       List<Computer> computerList = null;
 
@@ -86,24 +71,14 @@ public class IndexServlet extends HttpServlet {
         logger.warn(e.getMessage());
       }
 
-      request.setAttribute("count", count);
-      request.setAttribute("computerList", computerList);
-      request.setAttribute("paginationController", paginationController);
-      request.getRequestDispatcher("view/index.jsp").forward(request, response);
+      modelAndView.addObject("count", count);
+      modelAndView.addObject("computerList", computerList);
+      modelAndView.addObject("paginationController", paginationController);
+      modelAndView.setViewName("index");
     } catch (BeansException beansException) {
       logger.warn(beansException.getMessage());
     }
+    
+    return modelAndView;
   }
-
-  /**
-   * Default behaviour.
-   * 
-   * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-   */
-  @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-    doGet(request, response);
-  }
-
 }

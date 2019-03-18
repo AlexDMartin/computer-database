@@ -12,19 +12,27 @@ import org.springframework.core.env.Environment;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.JstlView;
+
 
 @Configuration
-@ComponentScan(
-    basePackages = {"com.excilys.dao", "com.excilys.dao.mappers", "com.excilys.controller",
-        "com.excilys.dto", "com.excilys.validation", "com.excilys.exception.validation.company",
-        "com.excilys.exception.validation.computer", "com.excilys.persistance.utils",
-        "com.excilys.service", "com.excilys.validation", "com.excilys.view"})
-@PropertySource(value = { "classpath:hikari.properties" })
-public class SpringConfig implements WebApplicationInitializer {
+@ComponentScan(basePackages = {"com.excilys.dao", "com.excilys.dao.mappers",
+    "com.excilys.controller", "com.excilys.dto", "com.excilys.validation",
+    "com.excilys.exception.validation.company", "com.excilys.exception.validation.computer",
+    "com.excilys.persistance.utils", "com.excilys.service", "com.excilys.validation",
+    "com.excilys.view", "com.excilys.viewcontroller"})
+@PropertySource(value = {"classpath:hikari.properties"})
+@EnableWebMvc
+public class SpringConfig implements WebApplicationInitializer, WebMvcConfigurer {
 
   @Autowired
   private Environment environment;
-  
+
   /**
    * Data source.
    *
@@ -39,13 +47,32 @@ public class SpringConfig implements WebApplicationInitializer {
     ds.setDriverClassName(environment.getRequiredProperty("driverClassName"));
     return ds;
   }
-  
+
   @Override
   public void onStartup(ServletContext servletContext) throws ServletException {
     AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
     rootContext.register(SpringConfig.class);
 
     servletContext.addListener(new ContextLoaderListener(rootContext));
+  }
+  
+  /**
+   * View Resolver.
+   * @return bean
+   */
+  @Bean
+  public ViewResolver internalResourceViewResolver() {
+    InternalResourceViewResolver bean = new InternalResourceViewResolver();
+    bean.setViewClass(JstlView.class);
+    bean.setPrefix("/view/");
+    bean.setSuffix(".jsp");
+    
+    return bean;
+  }
+  
+  @Override
+  public void addResourceHandlers(final ResourceHandlerRegistry registry) {
+    registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
   }
 
 }
