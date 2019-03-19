@@ -1,6 +1,7 @@
 package com.excilys.config;
 
 import com.zaxxer.hikari.HikariDataSource;
+import java.util.Locale;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,14 +9,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
@@ -55,9 +60,10 @@ public class SpringConfig implements WebApplicationInitializer, WebMvcConfigurer
 
     servletContext.addListener(new ContextLoaderListener(rootContext));
   }
-  
+
   /**
    * View Resolver.
+   * 
    * @return bean
    */
   @Bean
@@ -66,13 +72,55 @@ public class SpringConfig implements WebApplicationInitializer, WebMvcConfigurer
     bean.setViewClass(JstlView.class);
     bean.setPrefix("/view/");
     bean.setSuffix(".jsp");
-    
+
     return bean;
   }
-  
+
   @Override
   public void addResourceHandlers(final ResourceHandlerRegistry registry) {
     registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+  }
+
+  /**
+   * Reloadable Resource Bundle Message Source.
+   * @return ReloadableResourceBundleMessageSource
+   */
+  @Bean
+  public ReloadableResourceBundleMessageSource messageSource() {
+    ReloadableResourceBundleMessageSource messageSource =
+        new ReloadableResourceBundleMessageSource();
+    messageSource.setBasename("classpath:messages");
+    messageSource.setDefaultEncoding("UTF-8");
+    return messageSource;
+  }
+
+  /**
+   * Locale Resolver.
+   * @return CookieLocaleResolver
+   */
+  @Bean
+  public CookieLocaleResolver localeResolver() {
+    CookieLocaleResolver localeResolver = new CookieLocaleResolver();
+    localeResolver.setDefaultLocale(Locale.FRENCH);
+    localeResolver.setCookieName("my-locale-cookie");
+    localeResolver.setCookieMaxAge(3600);
+    return localeResolver;
+  }
+
+  /**
+   * Locale Change Interceptor.
+   * @return LocaleChangeInterceptor 
+   */
+  @Bean
+  public LocaleChangeInterceptor localeInterceptor() {
+    LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
+    interceptor.setParamName("lang");
+    return interceptor;
+  }
+
+  @Override
+  public void addInterceptors(InterceptorRegistry registry) {
+    registry.addInterceptor(localeInterceptor());
   }
 
 }

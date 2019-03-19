@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,8 +16,7 @@
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-			<a class="navbar-brand" href="Dashboard"> Application - Computer
-				Database </a>
+			<a class="navbar-brand" href="Dashboard"> <spring:message code="application.title" /> </a>
 		</div>
 	</header>
 	<section id="main">
@@ -25,30 +25,30 @@
 				<div class="col-xs-8 col-xs-offset-2 box">
 					<div class="label label-default pull-right">id:
 						${computer.getId()}</div>
-					<h1>Edit Computer</h1>
+					<h1><spring:message code="editComputer.title" /></h1>
 
 					<form id="editform" action="Edit" method="POST">
 						<input type="hidden" value="${computer.getId()}" id="id" name="id" />
 						<fieldset>
 							<div class="form-group">
-								<label for="computerName">Computer name</label> <input
+								<label for="computerName"><spring:message code="editComputer.name" /></label> <input
 									type="text" class="form-control" id="computerName"
 									name="computerName" value="${computer.getName()}">
 							</div>
 							<div class="form-group">
-								<label for="introduced">Introduced date</label> <input
+								<label for="introduced"><spring:message code="editComputer.introduced" /></label> <input
 									type="date" class="form-control" id="introduced"
 									name="introduced" placeholder="Introduced date"
 									value="${computer.getIntroduced()}">
 							</div>
 							<div class="form-group">
-								<label for="discontinued">Discontinued date</label> <input
+								<label for="discontinued"><spring:message code="editComputer.discontinued" /></label> <input
 									type="date" class="form-control" id="discontinued"
 									name="discontinued" placeholder="Discontinued date"
 									value="${computer.getDiscontinued()}">
 							</div>
 							<div class="form-group">
-								<label for="companyId">Company</label> <select
+								<label for="companyId"><spring:message code="editComputer.company" /></label> <select
 									class="form-control" id="companyId" name="companyId">
 									<c:forEach var="company" items="${companyList}" varStatus="i">
 										<option
@@ -59,8 +59,8 @@
 							</div>
 						</fieldset>
 						<div class="actions pull-right">
-							<input type="submit" value="Edit" class="btn btn-primary">
-							or <a href="Dashboard" class="btn btn-default">Cancel</a>
+							<input type="submit" value="<spring:message code="editComputer.editButton" />" class="btn btn-primary">
+							<spring:message code="application.or" /> <a href="Dashboard" class="btn btn-default"><spring:message code="application.cancel" /></a>
 						</div>
 					</form>
 				</div>

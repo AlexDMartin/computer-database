@@ -87,7 +87,7 @@ public class CompanyDao implements Dao<Company> {
    */
   @Override
   @Transactional
-  public void delete(Company company) {
+  public void delete(Company company) {     
     this.jdbcTemplate.update(
         DELETE,
         company.getId());

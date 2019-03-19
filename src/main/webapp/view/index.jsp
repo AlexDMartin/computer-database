@@ -1,9 +1,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <!DOCTYPE html>
 <html>
 <head>
-<title>Computer Database</title>
+<title><spring:message code="application.title"/></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8">
 <link href="<c:url value="/css/bootstrap.min.css" />" rel="stylesheet"
@@ -16,14 +17,13 @@
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-			<a class="navbar-brand" href="Dashboard"> Application - Computer
-				Database </a>
+			<a class="navbar-brand" href="Dashboard"> <spring:message code="application.title"/> </a>
 		</div>
 	</header>
 
 	<section id="main">
 		<div class="container">
-			<h1 id="homeTitle">${count} Computers found</h1>
+			<h1 id="homeTitle"><spring:message code="dashboard.computersFound" arguments="${count}"/></h1>
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
 					<form id="searchForm" action="Search" method="GET" class="form-inline">
@@ -32,14 +32,13 @@
 						<input type="hidden" name="page" value="${paginationController.getPage()}" />
 						<input type="search" id="searchbox" name="filter"
 							class="form-control" placeholder="Search name" /> <input
-							type="submit" id="searchsubmit" value="Filter by name"
+							type="submit" id="searchsubmit" value="<spring:message code="dashboard.searchButton" />"
 							class="btn btn-primary" />
 					</form>
 				</div>
 				<div class="pull-right">
-					<a class="btn btn-success" id="addComputer" href="Add">Add
-						Computer</a> <a class="btn btn-default" id="editComputer" href="#"
-						onclick="$.fn.toggleEditMode();">Edit</a>
+					<a class="btn btn-success" id="addComputer" href="Add"><spring:message code="dashboard.addComputerButton" /> </a> <a class="btn btn-default" id="editComputer" href="#"
+						onclick="$.fn.toggleEditMode();"><spring:message code="dashboard.editComputerButton" /></a>
 				</div>
 			</div>
 		</div>
@@ -61,16 +60,16 @@
 						</span></th>
 						<c:choose>
 							<c:when test="${pageType == 'search'}">
-								<th><a href="Search?filter=${filter}&page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=NAME&asc=${paginationController.getInvertedAscendency(paginationController.getAscendency())}">Computer name</a></th>
-								<th><a href="Search?filter=${filter}&page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=INTRODUCED&asc=${paginationController.getInvertedAscendency(paginationController.getAscendency())}">Introduced date</a></th>
-								<th><a href="Search?filter=${filter}&page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=DISCONTINUED&asc=${paginationController.getInvertedAscendency(paginationController.getAscendency())}">Discontinued date</a></th>
-								<th>Company</th>
+								<th><a href="Search?filter=${filter}&page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=NAME&asc=${paginationController.getInvertedAscendency(paginationController.getAscendency())}"><spring:message code="dashboard.computerNameColumn" /></a></th>
+								<th><a href="Search?filter=${filter}&page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=INTRODUCED&asc=${paginationController.getInvertedAscendency(paginationController.getAscendency())}"><spring:message code="dashboard.introducedColumn" /></a></th>
+								<th><a href="Search?filter=${filter}&page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=DISCONTINUED&asc=${paginationController.getInvertedAscendency(paginationController.getAscendency())}"><spring:message code="dashboard.discontinuedColumn" /></a></th>
+								<th><spring:message code="dashboard.companyColumn" /></th>
 							</c:when>
 							<c:otherwise>
-								<th><a href="Dashboard?page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=NAME&asc=${paginationController.getInvertedAscendency(paginationController.getAscendency())}">Computer name</a></th>
-								<th><a href="Dashboard?page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=INTRODUCED&asc=${paginationController.getInvertedAscendency(paginationController.getAscendency())}">Introduced date</a></th>
-								<th><a href="Dashboard?page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=DISCONTINUED&asc=${paginationController.getInvertedAscendency(paginationController.getAscendency())}">Discontinued date</a></th>
-								<th>Company</th>
+								<th><a href="Dashboard?page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=NAME&asc=${paginationController.getInvertedAscendency(paginationController.getAscendency())}"><spring:message code="dashboard.computerNameColumn" /></a></th>
+								<th><a href="Dashboard?page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=INTRODUCED&asc=${paginationController.getInvertedAscendency(paginationController.getAscendency())}"><spring:message code="dashboard.introducedColumn" /></a></th>
+								<th><a href="Dashboard?page=${paginationController.getPage()}&lpp=${paginationController.getLinePerPage()}&col=DISCONTINUED&asc=${paginationController.getInvertedAscendency(paginationController.getAscendency())}"></a></th>
+								<th><spring:message code="dashboard.companyColumn" /></th>
 							</c:otherwise>
 						</c:choose>
 					
