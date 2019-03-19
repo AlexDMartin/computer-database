@@ -19,21 +19,26 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 public class CreateComputerController {
-  
-  @Autowired
-  private ComputerMapper computerMapper;
-  @Autowired
-  private CompanyMapper companyMapper;
-  @Autowired
-  private CreateComputerView view;
-  @Autowired
-  private ComputerService computerService;
-  @Autowired
-  private CompanyService companyService;
+
   private static Scanner scan = new Scanner(System.in);
   private static Logger logger = LoggerFactory.getLogger(CreateComputerController.class);
 
-  private CreateComputerController() {}
+  private ComputerMapper computerMapper;
+  private CompanyMapper companyMapper;
+  private ComputerService computerService;
+  private CompanyService companyService;
+  private CreateComputerView view;
+
+  @Autowired
+  private CreateComputerController(ComputerService computerService, CompanyService companyService,
+      ComputerMapper computerMapper, CompanyMapper companyMapper,
+      CreateComputerView createComputerView) {
+    this.computerService = computerService;
+    this.companyService = companyService;
+    this.computerMapper = computerMapper;
+    this.companyMapper = companyMapper;
+    this.view = createComputerView;
+  }
 
   /**
    * Renders the Create Computer view.
@@ -67,7 +72,7 @@ public class CreateComputerController {
         companyDto = (CompanyDto) companyMapper.entityToDto(company.get());
         computerDtoBuilder.addCompanyDto(companyDto);
       }
-     
+
       computer = computerMapper.dtoToEntity(computerDtoBuilder.build());
 
       scan.close();

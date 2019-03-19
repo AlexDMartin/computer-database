@@ -16,16 +16,18 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class ListCompanyController {
 
-  @Autowired
-  private CompanyService companyService;
-  @Autowired
-  private CompanyMapper companyMapper;
-  @Autowired
-  private ListCompanyView view;
   private Logger logger = LoggerFactory.getLogger(ListCompanyController.class);
 
-  private ListCompanyController() {
+  private CompanyService companyService;
+  private CompanyMapper companyMapper;
+  private ListCompanyView view;
 
+  @Autowired
+  private ListCompanyController(CompanyService companyService, CompanyMapper companyMapper,
+      ListCompanyView listCompanyView) {
+    this.companyService = companyService;
+    this.companyMapper = companyMapper;
+    this.view = listCompanyView;
   }
 
   /**

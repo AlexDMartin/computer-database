@@ -11,13 +11,17 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class DeleteComputerController {
 
-  @Autowired
-  private ComputerService computerService;
-  @Autowired
-  private DeleteComputerView view;
   private static Scanner scan = new Scanner(System.in);
 
-  private DeleteComputerController() {}
+  private ComputerService computerService;
+  private DeleteComputerView view;
+
+  @Autowired
+  private DeleteComputerController(ComputerService computerService,
+      DeleteComputerView deleteComputerView) {
+    this.computerService = computerService;
+    this.view = deleteComputerView;
+  }
 
   /**
    * Renders the Delete Computer view.
