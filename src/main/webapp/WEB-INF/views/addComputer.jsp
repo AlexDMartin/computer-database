@@ -6,11 +6,11 @@
 <head>
 <title>Computer Database</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="<c:url value="/css/bootstrap.min.css" />" rel="stylesheet"
+<link href="resources/css/bootstrap.min.css" rel="stylesheet"
 	media="screen">
-<link href="<c:url value="/css/font-awesome.css" />" rel="stylesheet"
+<link href="resources/css/font-awesome.css" rel="stylesheet"
 	media="screen">
-<link href="<c:url value="/css/main.css" />" rel="stylesheet"
+<link href="resources/css/main.css" rel="stylesheet"
 	media="screen">
 </head>
 <body>
@@ -60,8 +60,8 @@
 			</div>
 		</div>
 	</section>
-	<script src="<c:url value="/js/jquery.min.js" />" ></script>
-	<script src="<c:url value="/js/jquery.validate.min.js" />"></script>
-	<script src="<c:url value="/js/validation/AddValidator.js" />" ></script>
+	<script src="resources/js/jquery.min.js"></script>
+	<script src="resources/js/jquery.validate.min.js"></script>
+	<script src="resources/js/validation/AddValidator.js"></script>
 </body>
 </html>

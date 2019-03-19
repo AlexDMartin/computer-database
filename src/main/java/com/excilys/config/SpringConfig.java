@@ -70,7 +70,7 @@ public class SpringConfig implements WebApplicationInitializer, WebMvcConfigurer
   public ViewResolver internalResourceViewResolver() {
     InternalResourceViewResolver bean = new InternalResourceViewResolver();
     bean.setViewClass(JstlView.class);
-    bean.setPrefix("/WEB-INF/");
+    bean.setPrefix("/WEB-INF/views/");
     bean.setSuffix(".jsp");
 
     return bean;
