@@ -21,6 +21,7 @@ public class CliRenderer {
    */
   public static void main(String[] args) {
     Optional<ApplicationContext> applicationContext = Optional.empty();
+    
     try {
       applicationContext = Optional.of(new AnnotationConfigApplicationContext(SpringConfig.class));
       CliMainView cliMainView = applicationContext.get().getBean(CliMainView.class);
@@ -32,5 +33,6 @@ public class CliRenderer {
         ((ConfigurableApplicationContext) applicationContext.get()).close();
       }
     }
+    
   }
 }

@@ -38,6 +38,24 @@ public class SpringConfig implements WebApplicationInitializer, WebMvcConfigurer
   @Autowired
   private Environment environment;
 
+  @Override
+  public void onStartup(ServletContext servletContext) throws ServletException {
+    AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
+    rootContext.register(SpringConfig.class);
+    
+    servletContext.addListener(new ContextLoaderListener(rootContext));
+  }
+  
+  @Override
+  public void addResourceHandlers(final ResourceHandlerRegistry registry) {
+    registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+  }
+  
+  @Override
+  public void addInterceptors(InterceptorRegistry registry) {
+    registry.addInterceptor(localeInterceptor());
+  }
+  
   /**
    * Data source.
    *
@@ -53,14 +71,6 @@ public class SpringConfig implements WebApplicationInitializer, WebMvcConfigurer
     return ds;
   }
 
-  @Override
-  public void onStartup(ServletContext servletContext) throws ServletException {
-    AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
-    rootContext.register(SpringConfig.class);
-
-    servletContext.addListener(new ContextLoaderListener(rootContext));
-  }
-
   /**
    * View Resolver.
    * 
@@ -74,11 +84,6 @@ public class SpringConfig implements WebApplicationInitializer, WebMvcConfigurer
     bean.setSuffix(".jsp");
 
     return bean;
-  }
-
-  @Override
-  public void addResourceHandlers(final ResourceHandlerRegistry registry) {
-    registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
   }
 
   /**
@@ -117,10 +122,4 @@ public class SpringConfig implements WebApplicationInitializer, WebMvcConfigurer
     interceptor.setParamName("lang");
     return interceptor;
   }
-
-  @Override
-  public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(localeInterceptor());
-  }
-
 }
