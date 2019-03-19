@@ -10,22 +10,29 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class MenuController {
 
-  @Autowired
-  private ListComputerController listComputerController;
-  @Autowired
-  private ListCompanyController listCompanyController;
-  @Autowired
-  private ShowDetailsController showDetailsController;
-  @Autowired
-  private ListComputerController createComputerController;
-  @Autowired
-  private ListComputerController updateComputerController;
-  @Autowired
-  private ListComputerController deleteComputerController;
   private static final Logger logger = LoggerFactory.getLogger(MenuController.class);
 
+  private ListComputerController listComputerController;
+  private ListCompanyController listCompanyController;
+  private ShowDetailsController showDetailsController;
+  private CreateComputerController createComputerController;
+  private UpdateComputerController updateComputerController;
+  private DeleteComputerController deleteComputerController;
 
-  private MenuController() {}
+  @Autowired
+  private MenuController(ListComputerController listComputerController,
+      ListCompanyController listCompanyController, 
+      ShowDetailsController showDetailsController,
+      CreateComputerController createComputerController,
+      UpdateComputerController updateComputerController,
+      DeleteComputerController deleteComputerController) {
+    this.listComputerController = listComputerController;
+    this.listCompanyController = listCompanyController;
+    this.showDetailsController = showDetailsController;
+    this.createComputerController = createComputerController;
+    this.updateComputerController = updateComputerController;
+    this.deleteComputerController = deleteComputerController;
+  }
 
   /**
    * Resolve.

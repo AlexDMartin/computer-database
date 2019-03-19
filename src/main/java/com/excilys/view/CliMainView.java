@@ -8,11 +8,15 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CliMainView {
-  @Autowired
-  private MenuController menuController;
+  
   private static final Logger logger = LoggerFactory.getLogger(CliMainView.class);
 
-  private CliMainView() {}
+  private MenuController menuController;
+
+  @Autowired
+  private CliMainView(MenuController menuController) {
+    this.menuController = menuController;
+  }
 
   /**
    * Renders the cli main view.

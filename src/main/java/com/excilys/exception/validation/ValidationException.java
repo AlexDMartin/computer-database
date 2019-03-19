@@ -14,5 +14,4 @@ public class ValidationException extends Exception {
     super(message);
     logger.error(message);
   }
-
 }

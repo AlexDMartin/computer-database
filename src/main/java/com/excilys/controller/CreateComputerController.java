@@ -10,9 +10,6 @@ import com.excilys.exception.validation.ValidationException;
 import com.excilys.service.CompanyService;
 import com.excilys.service.ComputerService;
 import com.excilys.view.CreateComputerView;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Optional;
 import java.util.Scanner;
 import org.slf4j.Logger;
@@ -52,18 +49,14 @@ public class CreateComputerController {
 
       view.askForIntroduced();
       String introducedInput = scan.next();
-      Date introducedDate = null;
       if (introducedInput != null) {
         computerDtoBuilder.addIntroduced(introducedInput);
-        introducedDate = new SimpleDateFormat("yyyy-MM-dd").parse(introducedInput);
       }
 
       view.askForDiscontinued();
       String discontinuedInput = scan.next();
-      Date discontinuedDate = null;
       if (discontinuedInput != null) {
         computerDtoBuilder.addDiscontinued(discontinuedInput);
-        discontinuedDate = new SimpleDateFormat("yyyy-MM-dd").parse(discontinuedInput);
       }
 
       view.askForCompany();
@@ -78,8 +71,8 @@ public class CreateComputerController {
       computer = computerMapper.dtoToEntity(computerDtoBuilder.build());
 
       scan.close();
-    } catch (ValidationException | ParseException e) {
-      logger.warn(e.getMessage());
+    } catch (ValidationException validationException) {
+      logger.warn(validationException.getMessage());
     }
 
     try {

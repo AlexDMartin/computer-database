@@ -13,13 +13,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ComputerDao implements Dao<Computer> {
 
-  @Autowired
   private ComputerMapper computerMapper;
-
   private JdbcTemplate jdbcTemplate;
 
   @Autowired
-  private ComputerDao(DataSource dataSource) {
+  private ComputerDao(DataSource dataSource, ComputerMapper computerMapper) {
+    this.computerMapper = computerMapper;
     this.setJdbcTemplate(dataSource);
   }
 

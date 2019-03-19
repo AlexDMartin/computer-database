@@ -27,17 +27,22 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/Edit")
 public class EditComputer {
-  
-  @Autowired
-  private ComputerService computerService;
-  @Autowired
-  private CompanyService companyService;
-  @Autowired
-  private ComputerMapper computerMapper;
-  @Autowired
-  private CompanyMapper companyMapper;
-  
+
   private static Logger logger = LoggerFactory.getLogger(EditComputer.class);
+
+  private ComputerService computerService;
+  private CompanyService companyService;
+  private ComputerMapper computerMapper;
+  private CompanyMapper companyMapper;
+
+  @Autowired
+  private EditComputer(ComputerService computerService, CompanyService companyService,
+      ComputerMapper computerMapper, CompanyMapper companyMapper) {
+    this.computerService = computerService;
+    this.companyService = companyService;
+    this.computerMapper = computerMapper;
+    this.companyMapper = companyMapper;
+  }
 
   /**
    * This doGet methods returns information to prefill the edition form.
@@ -45,7 +50,7 @@ public class EditComputer {
    * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
    */
   @GetMapping
-  protected ModelAndView displayEditForm(WebRequest request, ModelAndView modelAndView) {
+  public ModelAndView displayEditForm(WebRequest request, ModelAndView modelAndView) {
     try {
       long id = Long.parseLong(request.getParameter("id"));
       Optional<Computer> computer = computerService.get(id);
@@ -70,9 +75,9 @@ public class EditComputer {
    * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
    */
   @PostMapping
-  protected ModelAndView postEditForm(WebRequest request, ModelAndView modelAndView) {
+  public ModelAndView postEditForm(WebRequest request, ModelAndView modelAndView) {
     try {
- 
+
       ComputerDtoBuilder computerDtoBuilder = new ComputerDtoBuilder();
 
       if (request.getParameter("id") != null) {

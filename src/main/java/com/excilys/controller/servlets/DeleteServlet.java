@@ -18,12 +18,16 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/Delete")
 public class DeleteServlet {
-
-  @Autowired
-  private ComputerService computerService;
   
   private static final Logger logger = LoggerFactory.getLogger(DeleteServlet.class);
 
+  private ComputerService computerService;
+  
+  @Autowired
+  private DeleteServlet(ComputerService computerService) {
+    this.computerService = computerService;
+  }
+  
   /**
    * Servlet doGet.
    * 

@@ -12,25 +12,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class CompanyDao implements Dao<Company> {
-  
-  @Autowired
-  private CompanyMapper companyMapper;
-  
-  private JdbcTemplate jdbcTemplate;
-  
+
   private static final String GET_ONE = "SELECT ID, NAME FROM company WHERE ID = ? LIMIT 1";
   private static final String GET_ALL = "SELECT ID, NAME FROM company ORDER BY ID";
   private static final String SAVE = "INSERT INTO company (NAME) VALUES (?)";
   private static final String UPDATE = "UPDATE company NAME = ? WHERE ID = ?";
   private static final String DELETE = "DELETE FROM company WHERE ID = ?";
   
+  private CompanyMapper companyMapper;
+  private JdbcTemplate jdbcTemplate;
+  
   @Autowired
-  private CompanyDao(DataSource dataSource) {
+  private CompanyDao(DataSource dataSource, CompanyMapper companyMapper) {
+    this.companyMapper = companyMapper;
     setJdbcTemplate(dataSource);
   }
   
-  
-  private void setJdbcTemplate(DataSource dataSource) {
+  private void setJdbcTemplate(DataSource dataSource) { 
     this.jdbcTemplate = new JdbcTemplate(dataSource);
   }
 

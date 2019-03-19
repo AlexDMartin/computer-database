@@ -28,16 +28,21 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/Add")
 public class AddComputer {
 
-  @Autowired
-  private ComputerService computerService;
-  @Autowired
-  private CompanyService companyService;
-  @Autowired
-  private ComputerMapper computerMapper;
-  @Autowired
-  private CompanyMapper companyMapper;
-  
   private static final Logger logger = LoggerFactory.getLogger(AddComputer.class);
+
+  private ComputerService computerService;
+  private CompanyService companyService;
+  private ComputerMapper computerMapper;
+  private CompanyMapper companyMapper;
+
+  @Autowired
+  private AddComputer(ComputerService computerService, CompanyService companyService,
+      ComputerMapper computerMapper, CompanyMapper companyMapper) {
+    this.computerService = computerService;
+    this.companyService = companyService;
+    this.computerMapper = computerMapper;
+    this.companyMapper = companyMapper;
+  }
 
   /**
    * This doGetMethod needs to return the company list in order to populate the scrolling list.
@@ -55,7 +60,7 @@ public class AddComputer {
       logger.warn(e.getMessage());
       modelAndView.addObject("stacktrace", e.getStackTrace());
     }
-    
+
     return modelAndView;
   }
 

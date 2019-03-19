@@ -16,10 +16,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class CompanyMapper implements Mapper<Company>, RowMapper<Company> {
 
-  @Autowired
   private CompanyValidation companyValidation;
-
-  private CompanyMapper() {}
+  
+  @Autowired
+  private CompanyMapper(CompanyValidation companyValidation) {
+    this.companyValidation = companyValidation;
+  }
 
   /**
    * Transforms a Company entity into a CompanyDTO.

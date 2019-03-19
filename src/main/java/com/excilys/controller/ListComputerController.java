@@ -16,14 +16,19 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class ListComputerController {
 
-  @Autowired
-  private ComputerService computerService;
-  @Autowired
-  private ComputerMapper computerMapper;
-  private ListComputerView view = ListComputerView.getInstance();
   private Logger logger = LoggerFactory.getLogger(ListComputerController.class);
 
-  private ListComputerController() {}
+  private ComputerService computerService;
+  private ComputerMapper computerMapper;
+  private ListComputerView view;
+
+  @Autowired
+  private ListComputerController(ComputerService computerService, ComputerMapper computerMapper,
+      ListComputerView listComputerView) {
+    this.computerService = computerService;
+    this.computerMapper = computerMapper;
+    this.view = listComputerView;
+  }
 
   /**
    * Renders the List Computer view.

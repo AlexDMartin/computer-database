@@ -21,16 +21,21 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/Search")
 public class SearchServlet {
 
-  @Autowired
-  private ComputerService computerService;
-  @Autowired
-  private PaginationController paginationController;
-  
   private static final int DEFAULT_LPP = 10;
   private static final int DEFAULT_PAGE = 1;
   private static final String DEFAULT_SORT_COLUMN = "ID";
   private static final String DEFAULT_ASCENDENCY = "DESC";
   private static Logger logger = LoggerFactory.getLogger(SearchServlet.class);
+
+  private ComputerService computerService;
+  private PaginationController paginationController;
+
+  @Autowired
+  private SearchServlet(ComputerService computerService,
+      PaginationController paginationController) {
+    this.computerService = computerService;
+    this.paginationController = paginationController;
+  }
 
   /**
    * Servlet doGet.
@@ -88,7 +93,7 @@ public class SearchServlet {
       logger.warn(beansException.getMessage());
       modelAndView.setViewName("redirect:500");
     }
-    
+
     return modelAndView;
 
   }

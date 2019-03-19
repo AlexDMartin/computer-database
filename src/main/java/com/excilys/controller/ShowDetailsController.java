@@ -16,16 +16,20 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class ShowDetailsController {
 
-  @Autowired
-  private ComputerService computerService;
-  @Autowired
-  private ComputerMapper computerMapper;
-  @Autowired
-  private ShowDetailsView view;
   private static Scanner scan = new Scanner(System.in);
   private static Logger logger = LoggerFactory.getLogger(ShowDetailsController.class);
 
-  private ShowDetailsController() {}
+  private ComputerService computerService;
+  private ComputerMapper computerMapper;
+  private ShowDetailsView view;
+
+  @Autowired
+  private ShowDetailsController(ComputerService computerService, ComputerMapper computerMapper,
+      ShowDetailsView view) {
+    this.computerService = computerService;
+    this.computerMapper = computerMapper;
+    this.view = view;
+  }
 
   /**
    * Renders the Show Details view.

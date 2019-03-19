@@ -2,31 +2,12 @@ package com.excilys.view;
 
 import com.excilys.dto.ComputerDto;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
-/**
- * View used to list all computers.
- */
+@Component
 public class ListComputerView {
 
-  /** Singleton implementation of ListComputerView. */
-  private static ListComputerView listComputerViewInstance = null;
-
-  /**
-   * Singleton implementation of ListComputerView.
-   */
   private ListComputerView() {}
-
-  /**
-   * Singleton implementation of ListComputerView.
-   *
-   * @return single instance of ListComputerView
-   */
-  public static ListComputerView getInstance() {
-    if (listComputerViewInstance == null) {
-      listComputerViewInstance = new ListComputerView();
-    }
-    return listComputerViewInstance;
-  }
 
   /**
    * Displays the view.

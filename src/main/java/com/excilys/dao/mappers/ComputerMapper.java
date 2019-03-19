@@ -26,16 +26,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class ComputerMapper implements Mapper<Computer>, RowMapper<Computer> {
 
-  private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
-  @Autowired
-  private CompanyDao companyDao;
-  @Autowired
-  private ComputerValidation computerValidation;
-  @Autowired
-  private CompanyMapper companyMapper;
   private static final Logger logger = LoggerFactory.getLogger(ComputerMapper.class);
+  private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
 
-  private ComputerMapper() {}
+  private CompanyDao companyDao;
+  private ComputerValidation computerValidation;
+  private CompanyMapper companyMapper;
+
+  @Autowired
+  private ComputerMapper(CompanyDao companyDao, ComputerValidation computerValidation,
+      CompanyMapper companyMapper) {
+    this.companyDao = companyDao;
+    this.computerValidation = computerValidation;
+    this.companyMapper = companyMapper;
+  }
 
   /**
    * Transforms a Company entity into a CompanyDTO.
@@ -117,9 +121,9 @@ public class ComputerMapper implements Mapper<Computer>, RowMapper<Computer> {
     computerBuilder.addCompany(company);
 
     Computer computer = computerBuilder.build();
-    
+
     computerValidation.validate(computer);
-    
+
     return computerBuilder.build();
   }
 
