@@ -21,6 +21,8 @@
 		</div>
 	</header>
 
+	<span style="float: right;"><spring:message code="lang" /> : <br /><a href="?lang=en"><spring:message code="lang.en" /></a> | <a href="?lang=fr"><spring:message code="lang.fr" /></a></span>
+
 	<section id="main">
 		<div class="container">
 			<h1 id="homeTitle"><spring:message code="dashboard.computersFound" arguments="${count}"/></h1>
