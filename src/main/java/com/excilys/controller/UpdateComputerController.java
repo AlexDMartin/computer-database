@@ -65,12 +65,10 @@ public class UpdateComputerController {
 
         view.askForNewName(computerDto.getName());
         String nameInput = scan.next();
-        computerValidation.validateName(nameInput);
         computerDto.setName(nameInput);
 
         view.askForNewIntroduced(computerDto.getIntroduced());
         String introducedInput = scan.next();
-        computerValidation.validateIntroductionDate(introducedInput);
         Date introducedDate = null;
         if (introducedInput != null) {
           computerDto.setIntroduced(introducedInput);
@@ -79,20 +77,16 @@ public class UpdateComputerController {
 
         view.askForNewDiscontinued(computerDto.getDiscontinued());
         String discontinuedInput = scan.next();
-        computerValidation.validateDiscontinuationDate(discontinuedInput);
-        Date discontinuedDate = null;
 
+        Date discontinuedDate = null;
         if (discontinuedInput != null) {
           computerDto.setDiscontinued(discontinuedInput);
           discontinuedDate = new SimpleDateFormat("yyyy-MM-dd").parse(discontinuedInput);
         }
 
-        computerValidation.validatePrecedence(introducedDate, discontinuedDate);
-
         view.askForNewCompany(computerDto.getCompanyDto());
         long companyInput = (long) scan.nextInt();
         Optional<Company> company = companyService.get(companyInput);
-        companyValidation.validateId(company.get().getId());
 
         CompanyDto companyDto = null;
         if (company.isPresent()) {

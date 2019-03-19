@@ -48,31 +48,27 @@ public class ComputerMapper implements Mapper<Computer>, RowMapper<Computer> {
     ComputerDtoBuilder computerDtoBuilder = new ComputerDtoBuilder();
     try {
 
-      computerValidation.validateId(computer.getId());
       computerDtoBuilder.addId(Integer.toString(computer.getId()));
 
-      computerValidation.validateName(computer.getName());
       computerDtoBuilder.addName(computer.getName());
 
       String formattedIntroduced = (computer.getIntroduced() != null)
           ? new SimpleDateFormat(DEFAULT_DATE_FORMAT).format(computer.getIntroduced())
           : null;
-      computerValidation.validateIntroductionDate(formattedIntroduced);
 
 
       String formattedDiscontinued = (computer.getDiscontinued() != null)
           ? new SimpleDateFormat(DEFAULT_DATE_FORMAT).format(computer.getDiscontinued())
           : null;
 
-      computerValidation.validateDiscontinuationDate(formattedDiscontinued);
-      computerValidation.validatePrecedence(computer.getIntroduced(), computer.getDiscontinued());
-
       computerDtoBuilder.addIntroduced(formattedIntroduced);
-      computerDtoBuilder.addDiscontinued(formattedIntroduced);
+      computerDtoBuilder.addDiscontinued(formattedDiscontinued);
 
       CompanyDto companyDto = computer.getCompany() != null
           ? (CompanyDto) companyMapper.entityToDto(computer.getCompany())
           : null;
+
+      computerValidation.validate(computer);
 
       computerDtoBuilder.addCompanyDto(companyDto);
 
@@ -96,18 +92,10 @@ public class ComputerMapper implements Mapper<Computer>, RowMapper<Computer> {
     ComputerDto computerDto = (ComputerDto) dto;
     ComputerBuilder computerBuilder = new ComputerBuilder();
 
-
-    computerValidation.validateId(Integer.parseInt(computerDto.getId()));
-
     computerBuilder
         .addId(computerDto.getId() != null ? Integer.parseInt(computerDto.getId()) : null);
 
-    computerValidation.validateName(computerDto.getName());
     computerBuilder.addName(computerDto.getName());
-
-
-    computerValidation.validateIntroductionDate(computerDto.getIntroduced());
-    computerValidation.validateDiscontinuationDate(computerDto.getDiscontinued());
 
     Date parsedIntroduced = null;
     Date parsedDiscontinued = null;
@@ -122,13 +110,16 @@ public class ComputerMapper implements Mapper<Computer>, RowMapper<Computer> {
       logger.warn(parseException.getMessage());
     }
 
-    computerValidation.validatePrecedence(parsedIntroduced, parsedDiscontinued);
     computerBuilder.addIntroduced(parsedIntroduced).addDiscontinued(parsedDiscontinued);
 
     Company company = companyMapper.dtoToEntity(computerDto.getCompanyDto());
 
     computerBuilder.addCompany(company);
 
+    Computer computer = computerBuilder.build();
+    
+    computerValidation.validate(computer);
+    
     return computerBuilder.build();
   }
 
@@ -136,7 +127,7 @@ public class ComputerMapper implements Mapper<Computer>, RowMapper<Computer> {
   public Computer mapRow(ResultSet rs, int rowNum) throws SQLException {
     ComputerBuilder builder = new ComputerBuilder();
 
-    if (rs.getInt("COMPANY_ID") > 0) {      
+    if (rs.getInt("COMPANY_ID") > 0) {
       Optional<Company> company = companyDao.get(rs.getInt("COMPANY_ID"));
       if (company.isPresent()) {
         builder.addCompany(company.get());

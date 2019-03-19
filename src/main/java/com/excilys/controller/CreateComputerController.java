@@ -32,10 +32,6 @@ public class CreateComputerController {
   @Autowired
   private CreateComputerView view;
   @Autowired
-  private ComputerValidation computerValidation;
-  @Autowired
-  private CompanyValidation companyValidation;
-  @Autowired
   private ComputerService computerService;
   @Autowired
   private CompanyService companyService;
@@ -54,12 +50,10 @@ public class CreateComputerController {
 
       view.askForName();
       String nameInput = scan.next();
-      computerValidation.validateName(nameInput);
       computerDtoBuilder.addName(nameInput);
 
       view.askForIntroduced();
       String introducedInput = scan.next();
-      computerValidation.validateIntroductionDate(introducedInput);
       Date introducedDate = null;
       if (introducedInput != null) {
         computerDtoBuilder.addIntroduced(introducedInput);
@@ -68,25 +62,21 @@ public class CreateComputerController {
 
       view.askForDiscontinued();
       String discontinuedInput = scan.next();
-      computerValidation.validateDiscontinuationDate(discontinuedInput);
       Date discontinuedDate = null;
       if (discontinuedInput != null) {
         computerDtoBuilder.addDiscontinued(discontinuedInput);
         discontinuedDate = new SimpleDateFormat("yyyy-MM-dd").parse(discontinuedInput);
       }
-      computerValidation.validatePrecedence(introducedDate, discontinuedDate);
 
       view.askForCompany();
       long companyInput = (long) scan.nextInt();
       Optional<Company> company = companyService.get(companyInput);
       if (company.isPresent()) {
-        companyValidation.validateId(company.get().getId());
-        companyValidation.validateName(company.get().getName());
         CompanyDto companyDto = null;
         companyDto = (CompanyDto) companyMapper.entityToDto(company.get());
         computerDtoBuilder.addCompanyDto(companyDto);
       }
-
+     
       computer = computerMapper.dtoToEntity(computerDtoBuilder.build());
 
       scan.close();

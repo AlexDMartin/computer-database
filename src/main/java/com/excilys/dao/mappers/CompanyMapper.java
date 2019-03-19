@@ -31,8 +31,7 @@ public class CompanyMapper implements Mapper<Company>, RowMapper<Company> {
   @Override
   public Dto entityToDto(Company company) throws CompanyValidationException {
 
-    companyValidation.validateId(company.getId());
-    companyValidation.validateName(company.getName());
+    companyValidation.validate(company);
 
     return new CompanyDtoBuilder().addId(Integer.toString(company.getId()))
         .addName(company.getName()).build();
@@ -49,11 +48,12 @@ public class CompanyMapper implements Mapper<Company>, RowMapper<Company> {
   public Company dtoToEntity(Dto dto) throws CompanyValidationException {
     CompanyDto companyDto = (CompanyDto) dto;
 
-    companyValidation.validateId(Integer.parseInt(companyDto.getId()));
-    companyValidation.validateName(companyDto.getName());
-
-    return new CompanyBuilder().addId(Integer.parseInt(companyDto.getId()))
+    Company company = new CompanyBuilder().addId(Integer.parseInt(companyDto.getId()))
         .addName(companyDto.getName()).build();
+
+    companyValidation.validate(company);
+
+    return company;
   }
 
   @Override

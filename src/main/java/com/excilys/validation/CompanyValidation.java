@@ -1,5 +1,7 @@
 package com.excilys.validation;
 
+import com.excilys.dao.model.Company;
+import com.excilys.exception.validation.company.CompanyValidationException;
 import com.excilys.exception.validation.company.InvalidIdCompanyValidationException;
 import com.excilys.exception.validation.company.InvalidNameCompanyValidationException;
 import java.util.regex.Matcher;
@@ -10,6 +12,17 @@ import org.springframework.stereotype.Component;
 public class CompanyValidation {
 
   private CompanyValidation() {}
+  
+  /**
+   * Validate a Company.
+   * 
+   * @param company the company that will be checked
+   * @throws CompanyValidationException the errors that will be throwed
+   */
+  public void validate(Company company) throws CompanyValidationException {
+    this.validateId(company.getId());
+    this.validateName(company.getName());
+  }
 
   /**
    * Validates the Company's id.
@@ -18,7 +31,7 @@ public class CompanyValidation {
    * @throws InvalidIdCompanyValidationException This exception is thrown when the Company's id is
    *         not valid
    */
-  public void validateId(int id) throws InvalidIdCompanyValidationException {
+  private void validateId(int id) throws InvalidIdCompanyValidationException {
     Pattern p = Pattern.compile("^-?\\d+$");
     Matcher m = p.matcher(Integer.toString(id));
 
@@ -35,7 +48,7 @@ public class CompanyValidation {
    * @throws InvalidNameCompanyValidationException This exception is thrown when the Company's name
    *         is not valid
    */
-  public void validateName(String name) throws InvalidNameCompanyValidationException {
+  private void validateName(String name) throws InvalidNameCompanyValidationException {
 
     if (name == null || name.isEmpty()) {
       throw new InvalidNameCompanyValidationException("The company\'s name is not valid.");

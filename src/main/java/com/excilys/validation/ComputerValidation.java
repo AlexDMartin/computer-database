@@ -1,5 +1,7 @@
 package com.excilys.validation;
 
+import com.excilys.dao.model.Computer;
+import com.excilys.exception.validation.computer.ComputerValidationException;
 import com.excilys.exception.validation.computer.InvalidDiscontinuationDateComputerValidationException;
 import com.excilys.exception.validation.computer.InvalidIdComputerValidationException;
 import com.excilys.exception.validation.computer.InvalidIntroductionDateComputerValidationException;
@@ -13,9 +15,22 @@ import org.springframework.stereotype.Component;
 @Component
 public class ComputerValidation {
 
-  /** Singleton implementation of ComputerValidation. */
   private ComputerValidation() {}
 
+  /**
+   * Validates a computer.
+   * 
+   * @param computer the computer that will be checked
+   * @throws ComputerValidationException the errors that will be throwed
+   */
+  public void validate(Computer computer) throws ComputerValidationException {
+    this.validateId(computer.getId());
+    this.validateName(computer.getName());
+    this.validateIntroductionDate(computer.getIntroduced().toString());
+    this.validateDiscontinuationDate(computer.getDiscontinued().toString());
+    this.validatePrecedence(computer.getIntroduced(), computer.getDiscontinued());
+  }
+  
   /**
    * Validates the Computer's id.
    * 
@@ -23,7 +38,7 @@ public class ComputerValidation {
    * @throws InvalidIdComputerValidationException This exception is thrown when the Computer's id is
    *         not valid
    */
-  public void validateId(int id) throws InvalidIdComputerValidationException {
+  private void validateId(int id) throws InvalidIdComputerValidationException {
 
     Pattern p = Pattern.compile("^-?\\d+$");
     Matcher m = p.matcher(Integer.toString(id));
@@ -40,7 +55,7 @@ public class ComputerValidation {
    * @throws InvalidNameComputerValidationException This exception is thrown when the Computer's
    *         name is not valid
    */
-  public void validateName(String name) throws InvalidNameComputerValidationException {
+  private void validateName(String name) throws InvalidNameComputerValidationException {
 
     if (name == null || name.isEmpty()) {
       throw new InvalidNameComputerValidationException("The computer\'s name is not valid.");
@@ -55,7 +70,7 @@ public class ComputerValidation {
    * @throws InvalidIntroductionDateComputerValidationException This exception is thrown when the
    *         Computer's introduction date is not valid
    */
-  public void validateIntroductionDate(String introduction)
+  private void validateIntroductionDate(String introduction)
       throws InvalidIntroductionDateComputerValidationException {
 
     if (introduction == null || introduction.isEmpty()) {
@@ -79,7 +94,7 @@ public class ComputerValidation {
    * @throws InvalidIntroductionDateComputerValidationException This exception is thrown when the
    *         Computer's discontinuation date is not valid
    */
-  public void validateDiscontinuationDate(String discontinued)
+  private void validateDiscontinuationDate(String discontinued)
       throws InvalidDiscontinuationDateComputerValidationException {
 
     if (discontinued == null || discontinued.isEmpty()) {
@@ -104,7 +119,7 @@ public class ComputerValidation {
    * @throws InvalidPrecedenceComputerValidationException Throwed when the discontinuation date is
    *         before the introduction date
    */
-  public void validatePrecedence(Date introduced, Date discontinued)
+  private void validatePrecedence(Date introduced, Date discontinued)
       throws InvalidPrecedenceComputerValidationException {
 
     if (discontinued == null || introduced == null) {
