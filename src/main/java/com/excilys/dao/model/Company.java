@@ -1,14 +1,22 @@
 package com.excilys.dao.model;
 
-/**
- * The Class Company.
- */
-public class Company {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-  /** The id. */
+@Entity
+@Table(name = "COMPANY")
+public class Company {
+  
+  @Id
+  @Column(name = "ID")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
 
-  /** The name. */
+  @Column(name = "NAME")
   private String name;
 
   /**

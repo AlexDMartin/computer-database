@@ -1,25 +1,36 @@
 package com.excilys.dao.model;
 
 import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import org.springframework.lang.Nullable;
 
-/**
- * The Class Computer.
- */
+@Entity
+@Table(name = "COMPUTER")
 public class Computer {
 
-  /** The id. */
+  @Id
+  @Column(name = "ID")
   private int id;
 
-  /** The name. */
+  @Column(name = "NAME")
   private String name;
 
-  /** The introduced. */
+  @Nullable
+  @Column(name = "INTRODUCED")
   private Date introduced;
 
-  /** The discontinued. */
+  @Nullable
+  @Column(name = "DISCONTINUED")
   private Date discontinued;
 
-  /** The company. */
+  @Nullable
+  @ManyToOne
+  @JoinColumn(name = "COMPANY_ID")
   private Company company;
 
   /**

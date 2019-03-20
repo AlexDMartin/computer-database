@@ -1,9 +1,12 @@
 package com.excilys.config;
 
+import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import java.util.Locale;
+import java.util.Properties;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -11,6 +14,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
@@ -61,15 +67,15 @@ public class SpringConfig implements WebApplicationInitializer, WebMvcConfigurer
    *
    * @return the hikari data source
    */
-  @Bean
-  public HikariDataSource dataSource() {
-    HikariDataSource ds = new HikariDataSource();
-    ds.setJdbcUrl(environment.getRequiredProperty("jdbcUrl"));
-    ds.setUsername(environment.getRequiredProperty("dataSource.user"));
-    ds.setPassword(environment.getRequiredProperty("dataSource.password"));
-    ds.setDriverClassName(environment.getRequiredProperty("driverClassName"));
-    return ds;
-  }
+//  @Bean
+//  public HikariDataSource dataSource() {
+//    HikariDataSource ds = new HikariDataSource();
+//    ds.setJdbcUrl(environment.getRequiredProperty("jdbcUrl"));
+//    ds.setUsername(environment.getRequiredProperty("dataSource.user"));
+//    ds.setPassword(environment.getRequiredProperty("dataSource.password"));
+//    ds.setDriverClassName(environment.getRequiredProperty("driverClassName"));
+//    return ds;
+//  }
 
   /**
    * View Resolver.
@@ -122,4 +128,49 @@ public class SpringConfig implements WebApplicationInitializer, WebMvcConfigurer
     interceptor.setParamName("lang");
     return interceptor;
   }
+  
+  /**
+   * Get Data Source.
+   * @return DataSource
+   */
+  @Bean
+  public DataSource getDataSource() {
+    HikariConfig config =
+        new HikariConfig(Thread.currentThread().getContextClassLoader().getResource("").getPath()
+            + "hikari.properties");
+    return new HikariDataSource(config);
+  }
+
+  /**
+   * Session Factory.
+   * @return SessionFactory
+   */
+  @Bean
+  public LocalSessionFactoryBean sessionFactory() {
+    LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
+    sessionFactory.setDataSource(getDataSource());
+    sessionFactory.setPackagesToScan("fr.excilys.dao.model");
+
+    sessionFactory.setHibernateProperties(hibernateProperties());
+    return sessionFactory;
+  }
+
+  /**
+   * Transaction Manager.
+   * @return TransactionManager
+   */
+  @Bean
+  public PlatformTransactionManager hibernateTransactionManager() {
+    HibernateTransactionManager transactionManager = new HibernateTransactionManager();
+    transactionManager.setSessionFactory(sessionFactory().getObject());
+    return transactionManager;
+  }
+  
+  private final Properties hibernateProperties() {
+    Properties hibernateProperties = new Properties();
+    hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "update");
+    hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL57Dialect");
+    return hibernateProperties;
+  }
+
 }
