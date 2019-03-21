@@ -65,7 +65,7 @@ public class CreateComputerController {
       }
 
       view.askForCompany();
-      long companyInput = (long) scan.nextInt();
+      int companyInput = scan.nextInt();
       Optional<Company> company = companyService.get(companyInput);
       if (company.isPresent()) {
         CompanyDto companyDto = null;

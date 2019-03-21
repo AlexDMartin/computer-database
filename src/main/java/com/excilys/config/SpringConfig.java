@@ -7,6 +7,7 @@ import java.util.Properties;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.sql.DataSource;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -15,7 +16,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
@@ -36,7 +37,7 @@ import org.springframework.web.servlet.view.JstlView;
     "com.excilys.controller", "com.excilys.dto", "com.excilys.validation",
     "com.excilys.exception.validation.company", "com.excilys.exception.validation.computer",
     "com.excilys.persistance.utils", "com.excilys.service", "com.excilys.validation",
-    "com.excilys.view", "com.excilys.viewcontroller"})
+    "com.excilys.view", "com.excilys.viewcontroller", "com.excilys.model"})
 @PropertySource(value = {"classpath:hikari.properties"})
 @EnableWebMvc
 public class SpringConfig implements WebApplicationInitializer, WebMvcConfigurer {
@@ -61,21 +62,6 @@ public class SpringConfig implements WebApplicationInitializer, WebMvcConfigurer
   public void addInterceptors(InterceptorRegistry registry) {
     registry.addInterceptor(localeInterceptor());
   }
-  
-  /**
-   * Data source.
-   *
-   * @return the hikari data source
-   */
-//  @Bean
-//  public HikariDataSource dataSource() {
-//    HikariDataSource ds = new HikariDataSource();
-//    ds.setJdbcUrl(environment.getRequiredProperty("jdbcUrl"));
-//    ds.setUsername(environment.getRequiredProperty("dataSource.user"));
-//    ds.setPassword(environment.getRequiredProperty("dataSource.password"));
-//    ds.setDriverClassName(environment.getRequiredProperty("driverClassName"));
-//    return ds;
-//  }
 
   /**
    * View Resolver.
@@ -143,16 +129,17 @@ public class SpringConfig implements WebApplicationInitializer, WebMvcConfigurer
 
   /**
    * Session Factory.
+   * 
    * @return SessionFactory
    */
   @Bean
-  public LocalSessionFactoryBean sessionFactory() {
-    LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-    sessionFactory.setDataSource(getDataSource());
-    sessionFactory.setPackagesToScan("fr.excilys.dao.model");
+  public SessionFactory sessionFactory() {
 
-    sessionFactory.setHibernateProperties(hibernateProperties());
-    return sessionFactory;
+    LocalSessionFactoryBuilder builder = new LocalSessionFactoryBuilder(getDataSource());
+    builder.scanPackages("com.excilys.dao.model");
+    builder.addProperties(hibernateProperties());
+
+    return builder.buildSessionFactory();
   }
 
   /**
@@ -162,7 +149,7 @@ public class SpringConfig implements WebApplicationInitializer, WebMvcConfigurer
   @Bean
   public PlatformTransactionManager hibernateTransactionManager() {
     HibernateTransactionManager transactionManager = new HibernateTransactionManager();
-    transactionManager.setSessionFactory(sessionFactory().getObject());
+    transactionManager.setSessionFactory(sessionFactory());
     return transactionManager;
   }
   
@@ -170,6 +157,7 @@ public class SpringConfig implements WebApplicationInitializer, WebMvcConfigurer
     Properties hibernateProperties = new Properties();
     hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "update");
     hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL57Dialect");
+    
     return hibernateProperties;
   }
 

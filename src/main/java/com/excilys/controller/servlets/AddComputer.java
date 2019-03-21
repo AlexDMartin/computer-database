@@ -76,7 +76,7 @@ public class AddComputer {
       String companyIdInput = request.getParameter("companyId");
 
       if (companyIdInput != null) {
-        long companyId = Long.parseLong(request.getParameter("companyId"));
+        int companyId = Integer.parseInt(request.getParameter("companyId"));
         Optional<Company> company = companyService.get(companyId);
         CompanyDto companyDto = null;
         if (company.isPresent()) {

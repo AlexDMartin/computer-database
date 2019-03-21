@@ -52,7 +52,7 @@ public class EditComputer {
   @GetMapping
   public ModelAndView displayEditForm(WebRequest request, ModelAndView modelAndView) {
     try {
-      long id = Long.parseLong(request.getParameter("id"));
+      int id = Integer.parseInt(request.getParameter("id"));
       Optional<Computer> computer = computerService.get(id);
       List<Company> companyList = companyService.getAll();
 
@@ -85,7 +85,7 @@ public class EditComputer {
       }
 
       if (request.getParameter("companyId") != null) {
-        long companyId = Long.parseLong(request.getParameter("companyId"));
+        int companyId = Integer.parseInt(request.getParameter("companyId"));
         Optional<Company> company = companyService.get(companyId);
         CompanyDto companyDto = null;
         if (company.isPresent()) {

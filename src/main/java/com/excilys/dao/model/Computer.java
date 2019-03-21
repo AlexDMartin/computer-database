@@ -5,34 +5,36 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.springframework.lang.Nullable;
 
 @Entity
-@Table(name = "COMPUTER")
+@Table(name = "computer")
 public class Computer {
 
   @Id
-  @Column(name = "ID")
+  @Column(name = "id")
   private int id;
 
-  @Column(name = "NAME")
+  @Column(name = "name")
   private String name;
 
   @Nullable
-  @Column(name = "INTRODUCED")
+  @Column(name = "introduced")
   private Date introduced;
 
   @Nullable
-  @Column(name = "DISCONTINUED")
+  @Column(name = "discontinued")
   private Date discontinued;
 
   @Nullable
-  @ManyToOne
-  @JoinColumn(name = "COMPANY_ID")
+  @OneToOne
+  @JoinColumn(name = "company_id", nullable = true)
   private Company company;
 
+  public Computer() {}
+  
   /**
    * Instantiates a new computer.
    */

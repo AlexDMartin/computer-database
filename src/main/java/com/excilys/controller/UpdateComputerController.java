@@ -75,7 +75,7 @@ public class UpdateComputerController {
         }
 
         view.askForNewCompany(computerDto.getCompanyDto());
-        long companyInput = (long) scan.nextInt();
+        int companyInput = scan.nextInt();
         Optional<Company> company = companyService.get(companyInput);
 
         CompanyDto companyDto = null;

@@ -16,7 +16,7 @@ public abstract interface CallableService<T> {
    * @param id the id
    * @return the optional
    */
-  public abstract Optional<T> get(long id);
+  public abstract Optional<T> get(int id);
 
   /**
    * Gets the all.

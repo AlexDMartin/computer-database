@@ -60,8 +60,6 @@
         <hibernate.version>5.4.1.Final</hibernate.version>
         <!-- Hibernate annotations -->
         <hibernate.annotation.version>3.5.6-Final</hibernate.annotation.version>
-        <!-- Jax-B -->
-        <jaxb.version>2.3.1</jaxb.version>
 	<!-- Config files -->
 		<!-- Checkstyle -->
 		<checkstyle.config.location>src/main/resources/checkstyle.xml</checkstyle.config.location>
@@ -194,25 +192,12 @@
 		    <artifactId>hibernate-core</artifactId>
 		    <version>${hibernate.version}</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
-<!-- 		<dependency> -->
-<!-- 		    <groupId>javax.xml.bind</groupId> -->
-<!-- 		    <artifactId>jaxb-api</artifactId> -->
-<!-- 		    <version>${jaxb.version}</version> -->
-<!-- 		</dependency> -->
-		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-annotations -->
-<!-- 		<dependency> -->
-<!-- 		    <groupId>org.hibernate</groupId> -->
-<!-- 		    <artifactId>hibernate-annotations</artifactId> -->
-<!-- 		    <version>${hibernate.annotation.version}</version> -->
-<!-- 		</dependency> -->
-<!-- https://mvnrepository.com/artifact/org.springframework/spring-orm -->
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-orm -->
 		<dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-orm</artifactId>
-		    <version>5.1.5.RELEASE</version>
+		    <version>${spring.version}</version>
 		</dependency>
-
 	</dependencies>
 	<reporting>
       <plugins>

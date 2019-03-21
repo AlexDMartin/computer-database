@@ -24,7 +24,7 @@ public class CompanyService implements CallableService<Company> {
    * @see com.excilys.service.CallableService#get(long)
    */
   @Override
-  public Optional<Company> get(long id) {
+  public Optional<Company> get(int id) {
     return companyDao.get(id);
   }
 

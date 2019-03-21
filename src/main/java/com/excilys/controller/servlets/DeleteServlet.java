@@ -41,7 +41,7 @@ public class DeleteServlet {
       String[] selectedId = selection.split(",");
 
       for (String id : selectedId) {
-        Optional<Computer> computer = computerService.get(Long.parseLong(id));
+        Optional<Computer> computer = computerService.get(Integer.parseInt(id));
         if (computer.isPresent()) {
           computerService.delete(computer.get());
         }

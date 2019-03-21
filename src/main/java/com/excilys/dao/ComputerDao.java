@@ -3,9 +3,17 @@ package com.excilys.dao;
 import com.excilys.controller.PaginationController;
 import com.excilys.dao.mappers.ComputerMapper;
 import com.excilys.dao.model.Computer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -13,28 +21,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ComputerDao implements Dao<Computer> {
 
-  private ComputerMapper computerMapper;
-  private JdbcTemplate jdbcTemplate;
-
-  @Autowired
-  private ComputerDao(DataSource dataSource, ComputerMapper computerMapper) {
-    this.computerMapper = computerMapper;
-    this.setJdbcTemplate(dataSource);
-  }
-
-  private void setJdbcTemplate(DataSource dataSource) {
-    this.jdbcTemplate = new JdbcTemplate(dataSource);
-  }
-
-  private static final String GET_ONE =
-      "SELECT ID, NAME, INTRODUCED, DISCONTINUED, COMPANY_ID FROM computer WHERE ID = ? LIMIT 1";
-
-  private static final String GET_ALL =
-      "SELECT ID, NAME, INTRODUCED, DISCONTINUED, COMPANY_ID FROM computer ORDER BY ID";
-
-  private static final String GET_PAGINATED = "SELECT computer.ID, " + "computer.NAME, "
-      + "INTRODUCED, " + "DISCONTINUED, " + "COMPANY_ID " + "FROM computer LEFT JOIN company "
-      + "ON computer.ID = company.ID " + "ORDER BY %s " + "LIMIT ? " + "OFFSET ?";
+  private static final Logger logger = LoggerFactory.getLogger(ComputerDao.class);
+  private static final String GET_ONE = "from Computer where id = :id";
+  private static final String GET_ALL = "from Computer";
+  private static final String GET_PAGINATED = "Select computer from Computer computer LEFT JOIN Company company on company.id=computer.id ";
 
   private static final String GET_SEARCHED_PAGINATED =
       "SELECT computer.ID, computer.NAME, INTRODUCED, DISCONTINUED, "
@@ -43,18 +33,34 @@ public class ComputerDao implements Dao<Computer> {
           + "OFFSET ?";
 
   private static final String SAVE =
-      "INSERT INTO computer (NAME, INTRODUCED, DISCONTINUED, COMPANY_ID) VALUES (?,?,?,?)";
+      "insert into computer (NAME, INTRODUCED, DISCONTINUED, COMPANY_ID) values (:name, :introduced, :discontinued, :cpaId)";
 
-  private static final String UPDATE = "UPDATE computer SET " + "NAME = ?" + ", INTRODUCED = ? "
-      + ", DISCONTINUED = ? " + ", COMPANY_ID = ? " + "WHERE ID = ?";
+  private static final String UPDATE =
+      "update Computer computer set computer.name = :name, computer.introduced = :introduced, computer.discontinued = :discontinued, computer.company = :cpaId  where id = :cpuId ";
 
-  private static final String DELETE = "DELETE FROM computer WHERE ID = ?";
+  private static final String DELETE = "delete Computer where id = :cpuId";
 
-  private static final String COUNT_ALL_COMPUTERS = "SELECT COUNT(ID) FROM computer";
+  private static final String COUNT_ALL_COMPUTERS = "select count(id) from Computer computer";
 
   private static final String COUNT_ALL_COMPUTERS_BY_CRITERIA = "SELECT COUNT(computer.ID) "
       + "FROM computer " + "LEFT JOIN company ON computer.ID = company.ID "
       + "WHERE computer.NAME LIKE ? OR company.NAME LIKE ? ";
+
+  private ComputerMapper computerMapper;
+  private SessionFactory sessionFactory;
+  private JdbcTemplate jdbcTemplate;
+
+  @Autowired
+  private ComputerDao(DataSource dataSource, SessionFactory sessionFactory,
+      ComputerMapper computerMapper) {
+    this.computerMapper = computerMapper;
+    this.sessionFactory = sessionFactory;
+    this.setJdbcTemplate(dataSource);
+  }
+
+  private void setJdbcTemplate(DataSource dataSource) {
+    this.jdbcTemplate = new JdbcTemplate(dataSource);
+  }
 
   /*
    * (non-Javadoc)
@@ -62,8 +68,17 @@ public class ComputerDao implements Dao<Computer> {
    * @see com.excilys.dao.Dao#get(long)
    */
   @Override
-  public Optional<Computer> get(long id) {
-    Computer computer = this.jdbcTemplate.query(GET_ONE, computerMapper, id).get(0);
+  public Optional<Computer> get(int id) {
+    Computer computer = null;
+
+    try (Session session = this.sessionFactory.openSession()) {
+      Query<Computer> query = session.createQuery(GET_ONE, Computer.class);
+      query.setParameter("id", id);
+      computer = query.uniqueResult();
+    } catch (HibernateException hibernateException) {
+      logger.warn(hibernateException.getMessage());
+    }
+
     return Optional.of(computer);
   }
 
@@ -74,7 +89,16 @@ public class ComputerDao implements Dao<Computer> {
    */
   @Override
   public List<Computer> getAll() {
-    return this.jdbcTemplate.query(GET_ALL, computerMapper);
+    List<Computer> computers = new ArrayList<>();
+
+    try (Session session = this.sessionFactory.openSession()) {
+      Query<Computer> query = session.createQuery(GET_ALL, Computer.class);
+      computers = query.list();
+    } catch (HibernateException hibernateException) {
+      logger.warn(hibernateException.getMessage());
+    }
+
+    return computers;
   }
 
   /**
@@ -83,14 +107,20 @@ public class ComputerDao implements Dao<Computer> {
    * @param paginationController A pagination controller
    */
   public List<Computer> getAllPaginated(PaginationController paginationController) {
-    String getPaginatedOrdered = String.format(GET_PAGINATED,
-        paginationController.getSortColumn() + " " + paginationController.getAscendency());
+    List<Computer> computers = new ArrayList<>();
 
-    return this.jdbcTemplate.query(getPaginatedOrdered, 
-        computerMapper,
-        paginationController.getLimit(),
-        paginationController.getOffset()
-    );
+    try (Session session = this.sessionFactory.openSession()) {
+      Query<Computer> query = session.createQuery(GET_PAGINATED, Computer.class)
+//          .setParameter("sortColumn", paginationController.getSortColumn())
+//          .setParameter("ascendency", paginationController.getAscendency())
+          .setFirstResult(paginationController.getOffset())
+          .setMaxResults(paginationController.getLimit());
+      computers = query.list();
+    } catch (HibernateException hibernateException) {
+      logger.warn(hibernateException.getMessage());
+    }
+
+    return computers;
   }
 
   /*
@@ -100,8 +130,25 @@ public class ComputerDao implements Dao<Computer> {
    */
   @Override
   public void save(Computer computer) {
-    this.jdbcTemplate.update(SAVE, computer.getName(), computer.getIntroduced(),
-        computer.getDiscontinued(), computer.getCompany().getId());
+    int insertedEntities = 0;
+
+    try (Session session = sessionFactory.openSession()) {
+      Transaction tx = session.beginTransaction();
+
+      insertedEntities = session.createQuery(SAVE).setParameter("name", computer.getName())
+          .setParameter("introduced", computer.getIntroduced())
+          .setParameter("discontinued", computer.getDiscontinued())
+          .setParameter("cpaId", computer.getCompany().getId())
+          .setParameter("cpuId", computer.getId()).executeUpdate();
+      tx.commit();
+      session.close();
+    } catch (HibernateException hibernateException) {
+      logger.warn(hibernateException.getMessage());
+    }
+
+    if (insertedEntities <= 0) {
+      logger.warn("No row inserted");
+    }
   }
 
   /*
@@ -111,8 +158,25 @@ public class ComputerDao implements Dao<Computer> {
    */
   @Override
   public void update(Computer computer) {
-    this.jdbcTemplate.update(UPDATE, computer.getName(), computer.getIntroduced(),
-        computer.getDiscontinued(), computer.getCompany().getId(), computer.getId());
+    int updatedEntities = 0;
+
+    try (Session session = sessionFactory.openSession()) {
+      Transaction tx = session.beginTransaction();
+
+      updatedEntities = session.createQuery(UPDATE).setParameter("name", computer.getName())
+          .setParameter("introduced", computer.getIntroduced())
+          .setParameter("discontinued", computer.getDiscontinued())
+          .setParameter("cpaId", computer.getCompany().getId())
+          .setParameter("cpuId", computer.getId()).executeUpdate();
+      tx.commit();
+      session.close();
+    } catch (HibernateException hibernateException) {
+      logger.warn(hibernateException.getMessage());
+    }
+
+    if (updatedEntities <= 0) {
+      logger.warn("No row updated");
+    }
   }
 
   /*
@@ -122,7 +186,24 @@ public class ComputerDao implements Dao<Computer> {
    */
   @Override
   public void delete(Computer computer) {
-    this.jdbcTemplate.update(DELETE, computer.getId());
+    int deletedEntities = 0;
+    
+    try (Session session = sessionFactory.openSession()) {
+      Transaction tx = session.beginTransaction();
+      
+      deletedEntities = session.createQuery(DELETE)
+          .setParameter("cpuId", computer.getId())
+          .executeUpdate();
+      tx.commit();
+      session.close();
+    
+    } catch (HibernateException hibernateException) {
+      logger.warn(hibernateException.getMessage());
+    }
+    
+    if (deletedEntities <= 0) {
+      logger.warn("No row deleted");
+    }
   }
 
   /**
@@ -135,12 +216,20 @@ public class ComputerDao implements Dao<Computer> {
    */
   public List<Computer> getAllSearchedPaginated(String filter,
       PaginationController paginationController) {
-    String getSearchedPaginatedOrdered = String.format(GET_SEARCHED_PAGINATED,
-        paginationController.getSortColumn() + " " + paginationController.getAscendency());
-    String filterWithPercents = "%" + filter + "%";
+    List<Computer> computers = new ArrayList<>();
 
-    return this.jdbcTemplate.query(getSearchedPaginatedOrdered, computerMapper, filterWithPercents,
-        filterWithPercents, paginationController.getLimit(), paginationController.getOffset());
+    try (Session session = this.sessionFactory.openSession()) {
+      Query<Computer> query = session.createQuery(GET_SEARCHED_PAGINATED, Computer.class)
+//          .setParameter("sortColumn", paginationController.getSortColumn())
+//          .setParameter("ascendency", paginationController.getAscendency())
+          .setFirstResult(paginationController.getOffset())
+          .setMaxResults(paginationController.getLimit());
+      computers = query.list();
+    } catch (HibernateException hibernateException) {
+      logger.warn(hibernateException.getMessage());
+    }
+
+    return computers;
   }
 
   /**
@@ -149,7 +238,14 @@ public class ComputerDao implements Dao<Computer> {
    * @return the total of computers
    */
   public int countAllComputer() {
-    return jdbcTemplate.queryForObject(COUNT_ALL_COMPUTERS, Integer.class);
+    Long count = null;
+    try (Session session = this.sessionFactory.openSession()) {
+      Query<Long> query = session.createQuery(COUNT_ALL_COMPUTERS, Long.class);
+      count = query.uniqueResult();
+    } catch (HibernateException hibernateException) {
+      logger.warn(hibernateException.getMessage());
+    }
+    return Math.toIntExact(count);
   }
 
   /**

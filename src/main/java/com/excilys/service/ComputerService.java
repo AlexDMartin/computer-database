@@ -25,7 +25,7 @@ public class ComputerService implements CallableService<Computer> {
    * @see com.excilys.service.CallableService#get(long)
    */
   @Override
-  public Optional<Computer> get(long id) {
+  public Optional<Computer> get(int id) {
     return computerDao.get(id);
   }
 
