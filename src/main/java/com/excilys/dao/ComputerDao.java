@@ -15,7 +15,6 @@ import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -24,7 +23,8 @@ public class ComputerDao implements Dao<Computer> {
   private static final Logger logger = LoggerFactory.getLogger(ComputerDao.class);
   private static final String GET_ONE = "from Computer where id = :id";
   private static final String GET_ALL = "from Computer";
-  private static final String GET_PAGINATED = "Select computer from Computer computer LEFT JOIN Company company on company.id=computer.id ";
+  private static final String GET_PAGINATED =
+      "Select computer from Computer computer LEFT JOIN Company company on company.id=computer.id ";
 
   private static final String GET_SEARCHED_PAGINATED =
       "SELECT computer.ID, computer.NAME, INTRODUCED, DISCONTINUED, "
@@ -46,20 +46,12 @@ public class ComputerDao implements Dao<Computer> {
       + "FROM computer " + "LEFT JOIN company ON computer.ID = company.ID "
       + "WHERE computer.NAME LIKE ? OR company.NAME LIKE ? ";
 
-  private ComputerMapper computerMapper;
   private SessionFactory sessionFactory;
-  private JdbcTemplate jdbcTemplate;
 
   @Autowired
   private ComputerDao(DataSource dataSource, SessionFactory sessionFactory,
       ComputerMapper computerMapper) {
-    this.computerMapper = computerMapper;
     this.sessionFactory = sessionFactory;
-    this.setJdbcTemplate(dataSource);
-  }
-
-  private void setJdbcTemplate(DataSource dataSource) {
-    this.jdbcTemplate = new JdbcTemplate(dataSource);
   }
 
   /*
@@ -255,9 +247,11 @@ public class ComputerDao implements Dao<Computer> {
    * @return the total of computers
    */
   public int countAllComputerByCriteria(String criteria) {
-    String filter = "%" + criteria + "%";
-
-    return jdbcTemplate.queryForObject(COUNT_ALL_COMPUTERS_BY_CRITERIA, Integer.class, filter,
-        filter);
+//    String filter = "%" + criteria + "%";
+//
+//    return jdbcTemplate.queryForObject(COUNT_ALL_COMPUTERS_BY_CRITERIA, Integer.class, filter,
+//        filter);
+    // TODO implement this method 
+    return 0;
   }
 }

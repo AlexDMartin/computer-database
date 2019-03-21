@@ -13,9 +13,7 @@ import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class CompanyDao implements Dao<Company> {
@@ -28,16 +26,10 @@ public class CompanyDao implements Dao<Company> {
   private static final String DELETE = "delete Company where id = ?";
 
   private SessionFactory sessionFactory;
-  private JdbcTemplate jdbcTemplate;
 
   @Autowired
   private CompanyDao(DataSource dataSource, SessionFactory sessionFactory) {
     this.sessionFactory = sessionFactory;
-    setJdbcTemplate(dataSource);
-  }
-
-  private void setJdbcTemplate(DataSource dataSource) {
-    this.jdbcTemplate = new JdbcTemplate(dataSource);
   }
 
   /*
@@ -136,8 +128,23 @@ public class CompanyDao implements Dao<Company> {
    * @see com.excilys.dao.Dao#delete(java.lang.Object)
    */
   @Override
-  @Transactional
   public void delete(Company company) {
-    this.jdbcTemplate.update(DELETE, company.getId());
+    int deletedEntities = 0;
+
+    try (Session session = sessionFactory.openSession()) {
+      Transaction tx = session.beginTransaction();
+
+      deletedEntities =
+          session.createQuery(DELETE).setParameter("cpuId", company.getId()).executeUpdate();
+      tx.commit();
+      session.close();
+
+    } catch (HibernateException hibernateException) {
+      logger.warn(hibernateException.getMessage());
+    }
+
+    if (deletedEntities <= 0) {
+      logger.warn("No row deleted");
+    }
   }
 }
