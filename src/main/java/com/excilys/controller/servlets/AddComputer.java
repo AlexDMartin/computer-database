@@ -1,21 +1,16 @@
 package com.excilys.controller.servlets;
 
-import com.excilys.dao.mappers.CompanyMapper;
-import com.excilys.dao.mappers.ComputerMapper;
-import com.excilys.dao.model.Company;
-import com.excilys.dao.model.Computer;
 import com.excilys.dto.CompanyDto;
 import com.excilys.dto.ComputerDto;
 import com.excilys.dto.ComputerDtoBuilder;
 import com.excilys.service.CompanyService;
 import com.excilys.service.ComputerService;
+import com.excilys.service.exception.ServiceException;
 import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,20 +23,13 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/Add")
 public class AddComputer {
 
-  private static final Logger logger = LoggerFactory.getLogger(AddComputer.class);
-
   private ComputerService computerService;
   private CompanyService companyService;
-  private ComputerMapper computerMapper;
-  private CompanyMapper companyMapper;
 
   @Autowired
-  private AddComputer(ComputerService computerService, CompanyService companyService,
-      ComputerMapper computerMapper, CompanyMapper companyMapper) {
+  private AddComputer(ComputerService computerService, CompanyService companyService) {
     this.computerService = computerService;
     this.companyService = companyService;
-    this.computerMapper = computerMapper;
-    this.companyMapper = companyMapper;
   }
 
   /**
@@ -52,14 +40,14 @@ public class AddComputer {
   @GetMapping
   public ModelAndView displayAddForm(WebRequest request, ModelAndView modelAndView) {
     try {
-      List<Company> companyList = companyService.getAll();
+      List<CompanyDto> companyList = companyService.getAll();
 
       modelAndView.addObject("companyList", companyList);
       modelAndView.setViewName("addComputer");
-    } catch (Exception e) {
-      logger.warn(e.getMessage());
-      modelAndView.addObject("stacktrace", e.getStackTrace());
+    } catch (ServiceException serviceException) {
+      modelAndView.addObject("stacktrace", serviceException.getStackTrace());
     }
+
 
     return modelAndView;
   }
@@ -77,10 +65,10 @@ public class AddComputer {
 
       if (companyIdInput != null) {
         int companyId = Integer.parseInt(request.getParameter("companyId"));
-        Optional<Company> company = companyService.get(companyId);
+        Optional<CompanyDto> company = companyService.get(companyId);
         CompanyDto companyDto = null;
         if (company.isPresent()) {
-          companyDto = (CompanyDto) companyMapper.entityToDto(company.get());
+          companyDto = company.get();
         }
         computerDtoBuilder.addCompanyDto(companyDto);
       }
@@ -99,12 +87,10 @@ public class AddComputer {
       computerDto = computerDtoBuilder.build();
 
       if (computerDto != null) {
-        Computer computer = computerMapper.dtoToEntity(computerDto);
-        computerService.save(computer);
+        computerService.save(computerDto);
       }
-    } catch (Exception e) {
-      logger.warn(e.getMessage());
-      modelAndView.addObject("stacktrace", e.getMessage());
+    } catch (ServiceException serviceException) {
+      modelAndView.addObject("stacktrace", serviceException.getMessage());
       modelAndView.setViewName("redirect:500");
     }
 

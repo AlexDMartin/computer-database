@@ -1,7 +1,8 @@
 package com.excilys.controller;
 
-import com.excilys.dao.model.Computer;
+import com.excilys.dto.ComputerDto;
 import com.excilys.service.ComputerService;
+import com.excilys.service.exception.ServiceException;
 import com.excilys.view.DeleteComputerView;
 import java.util.Optional;
 import java.util.Scanner;
@@ -32,10 +33,19 @@ public class DeleteComputerController {
 
     int id = scan.nextInt();
 
-    Optional<Computer> computer = computerService.get(id);
+    Optional<ComputerDto> computer = Optional.empty();
+    try {
+      computer = computerService.get(id);
+    } catch (ServiceException e) {
+      view.displayError();
+    }
 
     if (computer.isPresent()) {
-      computerService.delete(computer.get());
+      try {
+        computerService.delete(computer.get());
+      } catch (ServiceException e) {
+        view.displayError();
+      }
     }
 
     scan.close();

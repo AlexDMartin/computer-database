@@ -40,4 +40,8 @@ public class ShowDetailsView {
 
     System.out.println(line);
   }
+
+  public void displayError() {
+    System.out.println("There was an error displaying the computer"); 
+  }
 }

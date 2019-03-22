@@ -23,4 +23,11 @@ public class DeleteComputerView {
   public void askForConfirmation(Computer computer) {
     System.out.println("Are you sure you want to delete: " + computer);
   }
+
+  /**
+   * Displays the error.
+   */
+  public void displayError() {
+    System.out.println("There was an error deleting your computer");    
+  }
 }

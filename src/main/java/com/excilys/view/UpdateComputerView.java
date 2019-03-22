@@ -50,4 +50,18 @@ public class UpdateComputerView {
   public void askForNewCompany(CompanyDto companyDto) {
     System.out.println("Enter new company id (" + companyDto.getId() + "): ");
   }
+
+  /**
+   * Displays the company error.
+   */
+  public void displayCompanyError() {
+    System.out.println("There was an error retrieving the company");
+  }
+
+  /**
+   * Displays the error.
+   */
+  public void displayError() {
+    System.out.println("There was an error updating the computer");
+  }
 }

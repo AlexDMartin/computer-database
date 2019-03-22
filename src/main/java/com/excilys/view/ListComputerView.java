@@ -36,4 +36,8 @@ public class ListComputerView {
       System.out.println(line.toString());
     }
   }
+
+  public void displayError() {
+    System.out.println("There was an error displaying the computers");
+  }
 }

@@ -1,6 +1,6 @@
 package com.excilys.dto;
 
-public class ComputerDto implements Dto {
+public class ComputerDto computerDto =  implements Dto {
   private String id;
   private String name;
   private String introduced;

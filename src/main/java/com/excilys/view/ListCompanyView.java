@@ -19,4 +19,11 @@ public class ListCompanyView {
       System.out.println(companyDto.getName() + " (" + companyDto.getId() + ")");
     }
   }
+
+  /**
+   * Displays the error.
+   */
+  public void displayError() {
+    System.out.println("There was an error displaying the companies");
+  }
 }

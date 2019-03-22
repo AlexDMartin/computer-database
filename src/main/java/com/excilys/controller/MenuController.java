@@ -2,16 +2,12 @@ package com.excilys.controller;
 
 import com.excilys.dao.model.MenuItem;
 import java.util.Scanner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 @Controller
 public class MenuController {
-
-  private static final Logger logger = LoggerFactory.getLogger(MenuController.class);
-
+  
   private ListComputerController listComputerController;
   private ListCompanyController listCompanyController;
   private ShowDetailsController showDetailsController;
@@ -40,8 +36,6 @@ public class MenuController {
   public void resolve() {
     Scanner scan = new Scanner(System.in);
     int input = scan.nextInt();
-    String message = String.format("User typed : %d ",input);
-    logger.info(message);
     MenuItem inputMenuItem = MenuItem.valueOf(input).get();
     switch (inputMenuItem) {
       case LIST_COMPUTERS:

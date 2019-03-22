@@ -34,4 +34,11 @@ public class CreateComputerView {
   public void askForCompany() {
     System.out.println("Enter company id: ");
   }
+
+  /**
+   * Displays the error.
+   */
+  public void displayError() {
+    System.out.println("There was an error creating a new computer");
+  }
 }
