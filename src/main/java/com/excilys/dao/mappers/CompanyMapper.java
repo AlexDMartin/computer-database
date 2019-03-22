@@ -7,14 +7,11 @@ import com.excilys.dto.CompanyDtoBuilder;
 import com.excilys.dto.Dto;
 import com.excilys.exception.validation.company.CompanyValidationException;
 import com.excilys.validation.CompanyValidation;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CompanyMapper implements Mapper<Company>, RowMapper<Company> {
+public class CompanyMapper implements Mapper<Company> {
 
   private CompanyValidation companyValidation;
   
@@ -56,10 +53,5 @@ public class CompanyMapper implements Mapper<Company>, RowMapper<Company> {
     companyValidation.validate(company);
 
     return company;
-  }
-
-  @Override
-  public Company mapRow(ResultSet rs, int rowNum) throws SQLException {
-    return new CompanyBuilder().addId(rs.getInt("ID")).addName(rs.getString("NAME")).build();
   }
 }

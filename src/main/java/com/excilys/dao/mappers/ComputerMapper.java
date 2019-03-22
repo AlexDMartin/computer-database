@@ -1,6 +1,5 @@
 package com.excilys.dao.mappers;
 
-import com.excilys.dao.CompanyDao;
 import com.excilys.dao.model.Company;
 import com.excilys.dao.model.Computer;
 import com.excilys.dao.model.ComputerBuilder;
@@ -11,32 +10,26 @@ import com.excilys.dto.Dto;
 import com.excilys.exception.validation.ValidationException;
 import com.excilys.exception.validation.computer.ComputerValidationException;
 import com.excilys.validation.ComputerValidation;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ComputerMapper implements Mapper<Computer>, RowMapper<Computer> {
+public class ComputerMapper implements Mapper<Computer> {
 
   private static final Logger logger = LoggerFactory.getLogger(ComputerMapper.class);
   private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
 
-  private CompanyDao companyDao;
   private ComputerValidation computerValidation;
   private CompanyMapper companyMapper;
 
   @Autowired
-  private ComputerMapper(CompanyDao companyDao, ComputerValidation computerValidation,
+  private ComputerMapper(ComputerValidation computerValidation,
       CompanyMapper companyMapper) {
-    this.companyDao = companyDao;
     this.computerValidation = computerValidation;
     this.companyMapper = companyMapper;
   }
@@ -125,21 +118,5 @@ public class ComputerMapper implements Mapper<Computer>, RowMapper<Computer> {
     computerValidation.validate(computer);
 
     return computerBuilder.build();
-  }
-
-  @Override
-  public Computer mapRow(ResultSet rs, int rowNum) throws SQLException {
-    ComputerBuilder builder = new ComputerBuilder();
-
-    if (rs.getInt("COMPANY_ID") > 0) {
-      Optional<Company> company = companyDao.get(rs.getInt("COMPANY_ID"));
-      if (company.isPresent()) {
-        builder.addCompany(company.get());
-      }
-    }
-
-    return builder.addId(rs.getInt("ID")).addName(rs.getString("NAME"))
-        .addIntroduced(rs.getDate("INTRODUCED")).addDiscontinued(rs.getDate("DISCONTINUED"))
-        .build();
   }
 }

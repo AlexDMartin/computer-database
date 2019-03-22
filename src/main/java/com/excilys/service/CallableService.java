@@ -1,5 +1,6 @@
 package com.excilys.service;
 
+import com.excilys.service.exception.ServiceException;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,14 +17,14 @@ public abstract interface CallableService<T> {
    * @param id the id
    * @return the optional
    */
-  public abstract Optional<T> get(int id);
+  public abstract Optional<T> get(int id) throws ServiceException;
 
   /**
    * Gets the all.
    *
    * @return the all
    */
-  public abstract List<T> getAll();
+  public abstract List<T> getAll() throws ServiceException;
 
   /**
    * Save.
@@ -31,19 +32,19 @@ public abstract interface CallableService<T> {
    * @param t the t
    * @throws Exception the exception
    */
-  public abstract void save(T t) throws Exception;
+  public abstract void save(T t) throws ServiceException;
 
   /**
    * Update.
    *
    * @param t the t
    */
-  public abstract void update(T t);
+  public abstract void update(T t) throws ServiceException;
 
   /**
    * Delete.
    *
    * @param t the t
    */
-  public abstract void delete(T t);
+  public abstract void delete(T t) throws ServiceException;
 }
