@@ -1,8 +1,8 @@
 package com.excilys.dao;
 
-import com.excilys.controller.PaginationController;
 import com.excilys.dao.exception.DatabaseCallException;
 import com.excilys.dao.model.Computer;
+import com.excilys.web.controller.ListPage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -94,9 +94,9 @@ public class ComputerDao implements Dao<Computer> {
   /**
    * Gets a list of computer based on a pagination.
    * 
-   * @param paginationController A pagination controller
+   * @param listPage A pagination controller
    */
-  public List<Computer> getAllPaginated(PaginationController paginationController)
+  public List<Computer> getAllPaginated(ListPage listPage)
       throws DatabaseCallException {
     List<Computer> computers = new ArrayList<>();
 
@@ -104,8 +104,8 @@ public class ComputerDao implements Dao<Computer> {
       Query<Computer> query = session.createQuery(GET_PAGINATED, Computer.class)
           // .setParameter("sortColumn", paginationController.getSortColumn())
           // .setParameter("ascendency", paginationController.getAscendency())
-          .setFirstResult(paginationController.getOffset())
-          .setMaxResults(paginationController.getLimit());
+          .setFirstResult(listPage.getOffset())
+          .setMaxResults(listPage.getLimit());
       computers = query.list();
     } catch (HibernateException hibernateException) {
       throw new DatabaseCallException(hibernateException.getMessage());
@@ -200,20 +200,20 @@ public class ComputerDao implements Dao<Computer> {
    * Queries the database to return a computer list filtered and paginated.
    * 
    * @param filter The string by which the user is filtering with
-   * @param paginationController That will adapt the request to look out for the displayed computers
+   * @param listPage That will adapt the request to look out for the displayed computers
    *        only
    * @return
    */
   public List<Computer> getAllSearchedPaginated(String filter,
-      PaginationController paginationController) throws DatabaseCallException {
+      ListPage listPage) throws DatabaseCallException {
     List<Computer> computers = new ArrayList<>();
 
     try (Session session = this.sessionFactory.openSession()) {
       Query<Computer> query = session.createQuery(GET_SEARCHED_PAGINATED, Computer.class)
           // .setParameter("sortColumn", paginationController.getSortColumn())
           // .setParameter("ascendency", paginationController.getAscendency())
-          .setFirstResult(paginationController.getOffset())
-          .setMaxResults(paginationController.getLimit());
+          .setFirstResult(listPage.getOffset())
+          .setMaxResults(listPage.getLimit());
       computers = query.list();
     } catch (HibernateException hibernateException) {
       throw new DatabaseCallException(hibernateException.getMessage());

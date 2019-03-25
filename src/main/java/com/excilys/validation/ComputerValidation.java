@@ -1,12 +1,13 @@
 package com.excilys.validation;
 
 import com.excilys.dao.model.Computer;
-import com.excilys.exception.validation.computer.ComputerValidationException;
-import com.excilys.exception.validation.computer.InvalidDiscontinuationDateComputerValidationException;
-import com.excilys.exception.validation.computer.InvalidIdComputerValidationException;
-import com.excilys.exception.validation.computer.InvalidIntroductionDateComputerValidationException;
-import com.excilys.exception.validation.computer.InvalidNameComputerValidationException;
-import com.excilys.exception.validation.computer.InvalidPrecedenceComputerValidationException;
+import com.excilys.validation.exception.computer.ComputerValidationException;
+import com.excilys.validation.exception.computer.InvalidDiscontinuationDateComputerValidationException;
+import com.excilys.validation.exception.computer.InvalidIdComputerValidationException;
+import com.excilys.validation.exception.computer.InvalidIntroductionDateComputerValidationException;
+import com.excilys.validation.exception.computer.InvalidNameComputerValidationException;
+import com.excilys.validation.exception.computer.InvalidPrecedenceComputerValidationException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ComputerValidation {
+
+  private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
   private ComputerValidation() {}
 
@@ -26,9 +29,18 @@ public class ComputerValidation {
   public void validate(Computer computer) throws ComputerValidationException {
     this.validateId(computer.getId());
     this.validateName(computer.getName());
-    this.validateIntroductionDate(computer.getIntroduced().toString());
-    this.validateDiscontinuationDate(computer.getDiscontinued().toString());
-    this.validatePrecedence(computer.getIntroduced(), computer.getDiscontinued());
+    
+    if (computer.getIntroduced() != null) {
+      this.validateIntroductionDate(dateFormat.format(computer.getIntroduced()));
+    }
+    
+    if (computer.getDiscontinued() != null) {
+      this.validateDiscontinuationDate(dateFormat.format(computer.getDiscontinued()));
+    }
+    
+    if (computer.getIntroduced() != null && computer.getDiscontinued() != null) {
+      this.validatePrecedence(computer.getIntroduced(), computer.getDiscontinued());
+    }
   }
   
   /**

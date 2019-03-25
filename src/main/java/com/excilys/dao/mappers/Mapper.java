@@ -1,7 +1,7 @@
 package com.excilys.dao.mappers;
 
 import com.excilys.dto.Dto;
-import com.excilys.exception.validation.ValidationException;
+import com.excilys.validation.exception.ValidationException;
 
 /**
  * The Interface Mapper.

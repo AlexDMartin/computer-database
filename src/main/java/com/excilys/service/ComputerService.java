@@ -1,14 +1,15 @@
 package com.excilys.service;
 
-import com.excilys.controller.PaginationController;
 import com.excilys.dao.ComputerDao;
 import com.excilys.dao.exception.DatabaseCallException;
 import com.excilys.dao.mappers.ComputerMapper;
 import com.excilys.dao.model.Computer;
 import com.excilys.dto.ComputerDto;
-import com.excilys.exception.validation.ValidationException;
-import com.excilys.exception.validation.computer.ComputerValidationException;
+import com.excilys.dto.Dto;
 import com.excilys.service.exception.ServiceException;
+import com.excilys.validation.exception.ValidationException;
+import com.excilys.validation.exception.computer.ComputerValidationException;
+import com.excilys.web.controller.ListPage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +34,7 @@ public class ComputerService implements CallableService<ComputerDto> {
    * @see com.excilys.service.CallableService#get(long)
    */
   @Override
-  public Optional<ComputerDto> get(int id) throws ServiceException {
+  public Optional<ComputerDto> find(int id) throws ServiceException {
     Optional<Computer> computer;
     try {
       computer = computerDao.get(id);
@@ -59,7 +60,7 @@ public class ComputerService implements CallableService<ComputerDto> {
    * @see com.excilys.service.CallableService#getAll()
    */
   @Override
-  public List<ComputerDto> getAll() throws ServiceException {
+  public List<ComputerDto> findAll() throws ServiceException {
     List<Computer> computers = new ArrayList<>();
     try {
       computers = computerDao.getAll();
@@ -81,15 +82,16 @@ public class ComputerService implements CallableService<ComputerDto> {
 
   /**
    * 
+   * 
    * @param paginationController
    * @return
    * @throws ServiceException
    */
-  public List<ComputerDto> getAllPaginated(PaginationController paginationController)
+  public List<ComputerDto> findAllPaginated(ListPage listPage)
       throws ServiceException {
     List<Computer> computers = new ArrayList<>();
     try {
-      computers = computerDao.getAllPaginated(paginationController);
+      computers = computerDao.getAllPaginated(listPage);
     } catch (DatabaseCallException databaseCallException) {
       throw new ServiceException(databaseCallException.getMessage());
     }
@@ -110,15 +112,15 @@ public class ComputerService implements CallableService<ComputerDto> {
   /**
    * 
    * @param filter
-   * @param paginationController
+   * @param listPage
    * @return
    * @throws ServiceException
    */
-  public List<ComputerDto> getAllSearchedPaginated(String filter,
-      PaginationController paginationController) throws ServiceException {
+  public List<ComputerDto> findByFilterPaginated(String filter,
+      ListPage listPage) throws ServiceException {
     List<Computer> computers = new ArrayList<>();
     try {
-      computers = computerDao.getAllSearchedPaginated(filter, paginationController);
+      computers = computerDao.getAllSearchedPaginated(filter, listPage);
     } catch (DatabaseCallException databaseCallException) {
       throw new ServiceException(databaseCallException.getMessage());
     }
@@ -144,7 +146,7 @@ public class ComputerService implements CallableService<ComputerDto> {
   public void save(ComputerDto computerDto) throws ServiceException {
     Optional<Computer> computer = Optional.empty();
     try {
-      computer = Optional.of(computerMapper.dtoToEntity(computerDto));
+      computer = Optional.of(computerMapper.dtoToEntity((Dto) computerDto));
     } catch (ValidationException validationException) {
       throw new ServiceException(validationException.getMessage());
     }
@@ -167,7 +169,7 @@ public class ComputerService implements CallableService<ComputerDto> {
   public void update(ComputerDto computerDto) throws ServiceException {
     Optional<Computer> computer = Optional.empty();
     try {
-      computer = Optional.of(computerMapper.dtoToEntity(computerDto));
+      computer = Optional.of(computerMapper.dtoToEntity((Dto) computerDto));
     } catch (ValidationException validationException) {
       throw new ServiceException(validationException.getMessage());
     }
@@ -190,7 +192,7 @@ public class ComputerService implements CallableService<ComputerDto> {
   public void delete(ComputerDto computerDto) throws ServiceException {
     Optional<Computer> computer = Optional.empty();
     try {
-      computer = Optional.of(computerMapper.dtoToEntity(computerDto));
+      computer = Optional.of(computerMapper.dtoToEntity((Dto) computerDto));
     } catch (ValidationException validationException) {
       throw new ServiceException(validationException.getMessage());
     }
@@ -207,10 +209,10 @@ public class ComputerService implements CallableService<ComputerDto> {
   /**
    * Returns the number of computers in the whole table.
    * 
-   * @return
-   * @throws ServiceException
+   * @return the count of all computers
+   * @throws ServiceException Returned when the request fail
    */
-  public int countAllComputer() throws ServiceException {
+  public int findCount() throws ServiceException {
     try {
       return computerDao.countAllComputer();
     } catch (DatabaseCallException databaseCallException) {
@@ -221,13 +223,13 @@ public class ComputerService implements CallableService<ComputerDto> {
   /**
    * Returns the number of computers filtered by a criteria.
    * 
-   * @param criteria
-   * @return
+   * @param filter the filter
+   * @return the count of all computers sorted by criteria
    * @throws ServiceException
    */
-  public int countAllComputerByCriteria(String criteria) throws ServiceException {
+  public int findCountByFilter(String filter) throws ServiceException {
     try {
-      return computerDao.countAllComputerByCriteria(criteria);
+      return computerDao.countAllComputerByCriteria(filter);
     } catch (DatabaseCallException databaseCallException) {
       throw new ServiceException(databaseCallException.getMessage());
     }

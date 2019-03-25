@@ -37,7 +37,7 @@ import org.springframework.web.servlet.view.JstlView;
     "com.excilys.controller", "com.excilys.dto", "com.excilys.validation",
     "com.excilys.exception.validation.company", "com.excilys.exception.validation.computer",
     "com.excilys.persistance.utils", "com.excilys.service", "com.excilys.validation",
-    "com.excilys.view", "com.excilys.viewcontroller", "com.excilys.model"})
+    "com.excilys.view", "com.excilys.web.controller", "com.excilys.model"})
 @PropertySource(value = {"classpath:hikari.properties"})
 @EnableWebMvc
 public class SpringConfig implements WebApplicationInitializer, WebMvcConfigurer {

@@ -17,14 +17,14 @@ public abstract interface CallableService<T> {
    * @param id the id
    * @return the optional
    */
-  public abstract Optional<T> get(int id) throws ServiceException;
+  public abstract Optional<T> find(int id) throws ServiceException;
 
   /**
    * Gets the all.
    *
    * @return the all
    */
-  public abstract List<T> getAll() throws ServiceException;
+  public abstract List<T> findAll() throws ServiceException;
 
   /**
    * Save.

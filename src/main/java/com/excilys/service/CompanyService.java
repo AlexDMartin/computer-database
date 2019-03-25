@@ -5,9 +5,9 @@ import com.excilys.dao.exception.DatabaseCallException;
 import com.excilys.dao.mappers.CompanyMapper;
 import com.excilys.dao.model.Company;
 import com.excilys.dto.CompanyDto;
-import com.excilys.exception.validation.ValidationException;
-import com.excilys.exception.validation.company.CompanyValidationException;
 import com.excilys.service.exception.ServiceException;
+import com.excilys.validation.exception.ValidationException;
+import com.excilys.validation.exception.company.CompanyValidationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +32,7 @@ public class CompanyService implements CallableService<CompanyDto> {
    * @see com.excilys.service.CallableService#get(long)
    */
   @Override
-  public Optional<CompanyDto> get(int id) throws ServiceException {
+  public Optional<CompanyDto> find(int id) throws ServiceException {
 
     Optional<Company> company;
     try {
@@ -59,7 +59,7 @@ public class CompanyService implements CallableService<CompanyDto> {
    * @see com.excilys.service.CallableService#getAll()
    */
   @Override
-  public List<CompanyDto> getAll() throws ServiceException {
+  public List<CompanyDto> findAll() throws ServiceException {
 
     List<Company> companies = new ArrayList<>();
     try {

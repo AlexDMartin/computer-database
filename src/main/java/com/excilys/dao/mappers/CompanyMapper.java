@@ -5,8 +5,8 @@ import com.excilys.dao.model.CompanyBuilder;
 import com.excilys.dto.CompanyDto;
 import com.excilys.dto.CompanyDtoBuilder;
 import com.excilys.dto.Dto;
-import com.excilys.exception.validation.company.CompanyValidationException;
 import com.excilys.validation.CompanyValidation;
+import com.excilys.validation.exception.company.CompanyValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

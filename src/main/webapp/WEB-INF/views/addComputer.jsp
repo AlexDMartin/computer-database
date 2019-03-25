@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Computer Database</title>
+<title><spring:message code="application.title"/></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="resources/css/bootstrap.min.css" rel="stylesheet"
 	media="screen">
@@ -16,7 +16,7 @@
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-			<a class="navbar-brand" href="Dashboard"> <spring:message code="application.title" /> </a>
+			<a class="navbar-brand" href="/cdb/computers"> <spring:message code="application.title" /> </a>
 		</div>
 	</header>
 
@@ -25,7 +25,7 @@
 			<div class="row">
 				<div class="col-xs-8 col-xs-offset-2 box">
 					<h1><spring:message code="addComputer.title" /></h1>
-					<form id="addform"  action="Add" method="POST">
+					<form id="addform"  action="/computer" method="POST">
 						<fieldset>
 							<div class="form-group">
 								<label for="computerName"><spring:message code="addComputer.namePlaceHolder" /></label> <input
@@ -45,7 +45,7 @@
 							<div class="form-group">
 								<label for="companyId"><spring:message code="addComputer.company" /></label> <select
 									class="form-control" id="companyId" name="companyId">
-									<c:forEach var="company" items="${companyList}" varStatus="i">
+									<c:forEach var="company" items="${page.getCompanies()}" varStatus="i">
 										<option value="${company.getId()}">${company.getName()}</option>
 									</c:forEach>
 								</select>
@@ -53,7 +53,7 @@
 						</fieldset>
 						<div class="actions pull-right">
 							<input type="submit" value="<spring:message code="addComputer.addButton" />" class="btn btn-primary">
-							<spring:message code="application.or" /> <a href="Dashboard" class="btn btn-default"><spring:message code="application.cancel" /></a>
+							<spring:message code="application.or" /> <a href="/cdb/computers" class="btn btn-default"><spring:message code="application.cancel" /></a>
 						</div>
 					</form>
 				</div>
