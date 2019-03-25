@@ -28,8 +28,7 @@ public class ComputerMapper implements Mapper<Computer> {
   private CompanyMapper companyMapper;
 
   @Autowired
-  private ComputerMapper(ComputerValidation computerValidation,
-      CompanyMapper companyMapper) {
+  private ComputerMapper(ComputerValidation computerValidation, CompanyMapper companyMapper) {
     this.computerValidation = computerValidation;
     this.companyMapper = companyMapper;
   }
@@ -89,8 +88,9 @@ public class ComputerMapper implements Mapper<Computer> {
     ComputerDto computerDto = (ComputerDto) dto;
     ComputerBuilder computerBuilder = new ComputerBuilder();
 
-    computerBuilder
-        .addId(computerDto.getId() != null ? Integer.parseInt(computerDto.getId()) : null);
+    if (computerDto.getId() != null) {
+      computerBuilder.addId(Integer.parseInt(computerDto.getId()));
+    }
 
     computerBuilder.addName(computerDto.getName());
 

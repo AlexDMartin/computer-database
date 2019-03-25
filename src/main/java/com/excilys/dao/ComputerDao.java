@@ -121,24 +121,21 @@ public class ComputerDao implements Dao<Computer> {
    */
   @Override
   public void save(Computer computer) throws DatabaseCallException {
-    int insertedEntities = 0;
 
     try (Session session = sessionFactory.openSession()) {
       Transaction tx = session.beginTransaction();
 
-      insertedEntities = session.createQuery(SAVE).setParameter("name", computer.getName())
-          .setParameter("introduced", computer.getIntroduced())
-          .setParameter("discontinued", computer.getDiscontinued())
-          .setParameter("cpaId", computer.getCompany().getId())
-          .setParameter("cpuId", computer.getId()).executeUpdate();
+      session.saveOrUpdate(computer);
+      
+//      insertedEntities = session.createQuery(SAVE).setParameter("name", computer.getName())
+//          .setParameter("introduced", computer.getIntroduced())
+//          .setParameter("discontinued", computer.getDiscontinued())
+//          .setParameter("cpaId", computer.getCompany().getId())
+//          .setParameter("cpuId", computer.getId()).executeUpdate();
       tx.commit();
       session.close();
     } catch (HibernateException hibernateException) {
       throw new DatabaseCallException(hibernateException.getMessage());
-    }
-
-    if (insertedEntities <= 0) {
-      throw new DatabaseCallException("No row inserted");
     }
   }
 

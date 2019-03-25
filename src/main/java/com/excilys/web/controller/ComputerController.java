@@ -2,6 +2,7 @@ package com.excilys.web.controller;
 
 import com.excilys.dto.CompanyDto;
 import com.excilys.dto.ComputerDto;
+import com.excilys.dto.ComputerDtoBuilder;
 import com.excilys.service.CompanyService;
 import com.excilys.service.ComputerService;
 import com.excilys.service.exception.ServiceException;
@@ -156,10 +157,54 @@ public class ComputerController {
     return modelAndView;
   }
   
+  /**
+   * Saves a new Computer.
+   * 
+   * @param webRequest the webRequest
+   * @param modelAndView the modelAndView
+   * @return the modelAndView of a redirection
+   */
   @PostMapping("/computer")
   public ModelAndView save(WebRequest webRequest, ModelAndView modelAndView) {
-    modelAndView.setViewName("index");
-    return modelAndView;
+    ComputerDtoBuilder builder = new ComputerDtoBuilder();
+    
+    // Name
+    if(webRequest.getParameter("computerName") != null || !webRequest.getParameter("computerName").isEmpty()) {
+      builder.addName(webRequest.getParameter("computerName"));
+    }
+    
+    // Introduced
+    if (webRequest.getParameter("introduced") != null) {
+      builder.addIntroduced(webRequest.getParameter("introduced"));
+    }
+
+    // Discontinued
+    if (webRequest.getParameter("discontinued") != null) {
+      builder.addDiscontinued(webRequest.getParameter("discontinued"));
+    }
+    
+    // Company
+    int companyId = Integer.parseInt(webRequest.getParameter("companyId"));
+    Optional<CompanyDto> company = Optional.empty();
+    try {
+      company = companyService.find(companyId);
+    } catch (ServiceException serviceException) {
+      return this.getExceptionModelAndView(modelAndView, "500", serviceException);
+    }
+    
+    if(company.isPresent()) {
+      builder.addCompanyDto(company.get());
+    }
+
+    // Save
+    try {
+      computerService.save(builder.build());
+    } catch (ServiceException serviceException) {
+      return this.getExceptionModelAndView(modelAndView, "500", serviceException);
+    }
+    
+    // Redirect
+    return getAll(webRequest, modelAndView);
   }
 
   @PatchMapping("/computer")

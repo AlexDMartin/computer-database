@@ -6,11 +6,11 @@
 <head>
 <title><spring:message code="application.title"/></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="resources/css/bootstrap.min.css" rel="stylesheet"
+<link href="../resources/css/bootstrap.min.css" rel="stylesheet"
 	media="screen">
-<link href="resources/css/font-awesome.css" rel="stylesheet"
+<link href="../resources/css/font-awesome.css" rel="stylesheet"
 	media="screen">
-<link href="resources/css/main.css" rel="stylesheet"
+<link href="../resources/css/main.css" rel="stylesheet"
 	media="screen">
 </head>
 <body>
@@ -68,8 +68,8 @@
 			</div>
 		</div>
 	</section>
-	<script src="resources/js/jquery.min.js"></script>
-	<script src="resources/js/jquery.validate.min.js"></script>
-	<script src="resources/js/validation/EditValidator.js" ></script>
+	<script src="../resources/js/jquery.min.js"></script>
+	<script src="../resources/js/jquery.validate.min.js"></script>
+	<script src="../resources/js/validation/EditValidator.js" ></script>
 </body>
 </html>
