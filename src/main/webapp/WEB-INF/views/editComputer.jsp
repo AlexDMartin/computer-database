@@ -27,8 +27,7 @@
 						${page.getComputer().getId()}</div>
 					<h1><spring:message code="editComputer.title" /></h1>
 
-					<form id="editform" action="/computer">
-						<input type="hidden" name="_method" value="PATCH"/>
+					<form id="editform">
 						<input type="hidden" value="${page.getComputer().getId()}" id="id" name="id" />
 						<fieldset>
 							<div class="form-group">
@@ -70,6 +69,7 @@
 	</section>
 	<script src="../resources/js/jquery.min.js"></script>
 	<script src="../resources/js/jquery.validate.min.js"></script>
-	<script src="../resources/js/validation/EditValidator.js" ></script>
+	<script src="../resources/js/validation/EditValidator.js"></script>
+	<script src="../resources/js/mapping/editform.js"></script>
 </body>
 </html>

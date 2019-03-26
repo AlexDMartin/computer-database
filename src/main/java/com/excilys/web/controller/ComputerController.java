@@ -78,12 +78,10 @@ public class ComputerController {
     ListPage page = new ListPage();
 
     int pageIndex =
-        (webRequest.getParameter("page") == null 
-        || webRequest.getParameter("page").isEmpty())
-        || (webRequest.getParameter("request") == null
-        || webRequest.getParameter("request").equals("new")) 
-          ? ListPage.DEFAULT_PAGE
-          : Integer.parseInt(webRequest.getParameter("page"));
+        (webRequest.getParameter("page") == null || webRequest.getParameter("page").isEmpty())
+            || (webRequest.getParameter("request") == null
+                || webRequest.getParameter("request").equals("new")) ? ListPage.DEFAULT_PAGE
+                    : Integer.parseInt(webRequest.getParameter("page"));
 
     int lpp = (webRequest.getParameter("lpp") == null || webRequest.getParameter("lpp").isEmpty())
         ? ListPage.DEFAULT_LPP
@@ -131,7 +129,7 @@ public class ComputerController {
     return modelAndView;
   }
 
-  
+
   /**
    * Fills the creation form.
    * 
@@ -142,21 +140,21 @@ public class ComputerController {
   @GetMapping("/computer")
   public ModelAndView getCreateForm(WebRequest webRequest, ModelAndView modelAndView) {
     UniquePage page = new UniquePage();
-    
+
     List<CompanyDto> companies = new ArrayList<>();
     try {
       companies = companyService.findAll();
     } catch (ServiceException serviceException) {
       return this.getExceptionModelAndView(modelAndView, "500", serviceException);
     }
-    
+
     page.setCompanies(companies);
     modelAndView.setViewName("addComputer");
-    
+
     modelAndView.addObject("page", page);
     return modelAndView;
   }
-  
+
   /**
    * Saves a new Computer.
    * 
@@ -167,12 +165,13 @@ public class ComputerController {
   @PostMapping("/computer")
   public ModelAndView save(WebRequest webRequest, ModelAndView modelAndView) {
     ComputerDtoBuilder builder = new ComputerDtoBuilder();
-    
+
     // Name
-    if(webRequest.getParameter("computerName") != null || !webRequest.getParameter("computerName").isEmpty()) {
+    if (webRequest.getParameter("computerName") != null
+        || !webRequest.getParameter("computerName").isEmpty()) {
       builder.addName(webRequest.getParameter("computerName"));
     }
-    
+
     // Introduced
     if (webRequest.getParameter("introduced") != null) {
       builder.addIntroduced(webRequest.getParameter("introduced"));
@@ -182,7 +181,7 @@ public class ComputerController {
     if (webRequest.getParameter("discontinued") != null) {
       builder.addDiscontinued(webRequest.getParameter("discontinued"));
     }
-    
+
     // Company
     int companyId = Integer.parseInt(webRequest.getParameter("companyId"));
     Optional<CompanyDto> company = Optional.empty();
@@ -191,8 +190,8 @@ public class ComputerController {
     } catch (ServiceException serviceException) {
       return this.getExceptionModelAndView(modelAndView, "500", serviceException);
     }
-    
-    if(company.isPresent()) {
+
+    if (company.isPresent()) {
       builder.addCompanyDto(company.get());
     }
 
@@ -202,15 +201,65 @@ public class ComputerController {
     } catch (ServiceException serviceException) {
       return this.getExceptionModelAndView(modelAndView, "500", serviceException);
     }
-    
+
     // Redirect
     return getAll(webRequest, modelAndView);
   }
 
-  @PatchMapping("/computer")
+  /**
+   * Updates an existing computer.
+   * 
+   * @param webRequest the webRequest
+   * @param modelAndView the modelAndView.
+   * @return
+   */
+  @PatchMapping("/computer/{id}")
   public ModelAndView update(WebRequest webRequest, ModelAndView modelAndView) {
-    modelAndView.setViewName("index");
-    return modelAndView;
+    ComputerDtoBuilder builder = new ComputerDtoBuilder();
+    System.out.println("test");
+    // Id
+    if (webRequest.getParameter("id") != null || !webRequest.getParameter("id").isEmpty()) {
+      builder.addId(webRequest.getParameter("id"));
+    }
+
+    // Name
+    if (webRequest.getParameter("computerName") != null
+        || !webRequest.getParameter("computerName").isEmpty()) {
+      builder.addName(webRequest.getParameter("computerName"));
+    }
+
+    // Introduced
+    if (webRequest.getParameter("introduced") != null) {
+      builder.addIntroduced(webRequest.getParameter("introduced"));
+    }
+
+    // Discontinued
+    if (webRequest.getParameter("discontinued") != null) {
+      builder.addDiscontinued(webRequest.getParameter("discontinued"));
+    }
+
+    // Company
+    int companyId = Integer.parseInt(webRequest.getParameter("companyId"));
+    Optional<CompanyDto> company = Optional.empty();
+    try {
+      company = companyService.find(companyId);
+    } catch (ServiceException serviceException) {
+      return this.getExceptionModelAndView(modelAndView, "500", serviceException);
+    }
+
+    if (company.isPresent()) {
+      builder.addCompanyDto(company.get());
+    }
+
+    // Save
+    try {
+      computerService.save(builder.build());
+    } catch (ServiceException serviceException) {
+      return this.getExceptionModelAndView(modelAndView, "500", serviceException);
+    }
+
+    // Redirect
+    return getAll(webRequest, modelAndView);
   }
 
   @DeleteMapping("/computer")
@@ -219,7 +268,7 @@ public class ComputerController {
     return modelAndView;
   }
 
-  /** 
+  /**
    * getExceptionModelAndView is used to redirect to the Exception pages.
    * 
    * @param modelAndView the current ModelAndView
