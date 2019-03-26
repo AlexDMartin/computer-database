@@ -1,14 +1,32 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    
 	<modelVersion>4.0.0</modelVersion>
+    
 	<groupId>com.excilys.cdb</groupId>
-	<artifactId>cdb</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+    <artifactId>cdb</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+	
+    <packaging>pom</packaging>
+    
+    <modules>
+        <module>core</module>
+        <module>binding</module>
+        <module>console</module>
+        <module>persistance</module>
+        <module>service</module>
+        <module>webapp</module>
+        <module>test</module>
+        <module>exception</module>
+    </modules>
+    
 	<build>
+        
 		<sourceDirectory>src/main/java</sourceDirectory>
+        
 		<plugins>
+            
 			<!-- Maven compiler  -->
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -18,6 +36,7 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+            
 			<!-- Maven war -->
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
@@ -26,59 +45,84 @@
 					<warSourceDirectory>src/main/webapp</warSourceDirectory>
 				</configuration>
 			</plugin>
+            
 		</plugins>
+        
 	</build>
+    
 	<properties>
+        
 	<!-- Versions -->
 		<!-- slf4j -->
 		<slf4j.version>1.7.26</slf4j.version>
+        
 		<!-- logback -->
 		<logback.version>1.2.3</logback.version>
+        
 		<!-- mysql connector java -->
 		<mysql-connector-java.version>8.0.15</mysql-connector-java.version>
+        
 		<!-- JUnit -->
 		<junit.version>4.12</junit.version>
+        
 		<!-- Mockito -->
 		<mockito.version>1.10.19</mockito.version>
+        
 		<!-- JSP -->
 		<jsp.version>2.3.1</jsp.version>
+        
 		<!-- Servlet -->
 		<servlet.version>4.0.1</servlet.version>
+        
 		<!-- Taglibs -->
 		<taglibs.version>1.2.5</taglibs.version>
+        
 		<!-- JSTL -->
 		<jstl.version>1.2</jstl.version>
+        
 		<!-- HikariCP -->
 		<hikari.version>3.3.1</hikari.version>
+        
 		<!-- Spring -->
 		<spring.version>5.1.4.RELEASE</spring.version>
+        
 		<!-- Annotation -->
         <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
+        
         <!-- Inject -->
         <javax.inject.version>1</javax.inject.version>
+        
         <!-- Hibernate -->
         <hibernate.version>5.4.1.Final</hibernate.version>
+        
         <!-- Hibernate annotations -->
         <hibernate.annotation.version>3.5.6-Final</hibernate.annotation.version>
+        
 	<!-- Config files -->
 		<!-- Checkstyle -->
 		<checkstyle.config.location>src/main/resources/checkstyle.xml</checkstyle.config.location>
-	<!--  Encoding -->
+        
+        <!--  Encoding -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        
 	</properties>
+    
 	<dependencies>
+        
 		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
 		<dependency>
 		    <groupId>org.slf4j</groupId>
 		    <artifactId>slf4j-api</artifactId>
 		    <version>${slf4j.version}</version>
 		</dependency>
+        
 		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
 		<dependency>
 		     <groupId>org.slf4j</groupId>
 		     <artifactId>slf4j-simple</artifactId>
 		     <version>1.6.4</version>
 		 </dependency>
+         
 		<!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
 		<dependency>
 		    <groupId>ch.qos.logback</groupId>
@@ -86,18 +130,21 @@
 		    <version>${logback.version}</version>
 		    <scope>test</scope>
 		</dependency>
+        
 		<!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-core -->
 		<dependency>
 		    <groupId>ch.qos.logback</groupId>
 		    <artifactId>logback-core</artifactId>
 		    <version>${logback.version}</version>
 		</dependency>
+        
 		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>${mysql-connector-java.version}</version>
 		</dependency>
+        
 		<!-- https://mvnrepository.com/artifact/junit/junit -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -105,6 +152,7 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
+        
 		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
 		<dependency>
 			<groupId>org.mockito</groupId>
@@ -112,6 +160,7 @@
 			<version>${mockito.version}</version>
 			<scope>test</scope>
 		</dependency>
+        
 		<!-- https://mvnrepository.com/artifact/javax.servlet.jsp/javax.servlet.jsp-api -->
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
@@ -119,6 +168,7 @@
 			<version>${jsp.version}</version>
 			<scope>provided</scope>
 		</dependency>
+        
 		<!-- https://mvnrepository.com/artifact/javax.servlet/servlet-api -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -126,73 +176,86 @@
 			<version>${servlet.version}</version>
 			<scope>provided</scope>
 		</dependency>
+        
 		<!-- https://mvnrepository.com/artifact/org.apache.taglibs/taglibs-standard-impl -->
 		<dependency>
 		    <groupId>org.apache.taglibs</groupId>
 		    <artifactId>taglibs-standard-impl</artifactId>
 		    <version>${taglibs.version}</version>
 		</dependency>
+        
 		<!-- https://mvnrepository.com/artifact/javax.servlet/jstl -->
 		<dependency>
 		    <groupId>javax.servlet</groupId>
 		    <artifactId>jstl</artifactId>
 		    <version>${jstl.version}</version>
 		</dependency>
+        
 		<!-- https://github.com/brettwooldridge/HikariCP -->	
 	    <dependency>
 	        <groupId>com.zaxxer</groupId>
 	        <artifactId>HikariCP</artifactId>
 	        <version>${hikari.version}</version>
 	    </dependency>
+        
 	    <!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
 	    <dependency>
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
             <version>${javax.annotation-api.version}</version>
         </dependency>
+        
         <!-- https://mvnrepository.com/artifact/javax.inject/javax.inject -->
         <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
             <version>${javax.inject.version}</version>
         </dependency>
+        
         <!-- https://mvnrepository.com/artifact/org.springframework/spring-core -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
             <version>${spring.version}</version>
         </dependency>
+        
         <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
         </dependency>
+        
         <!-- https://mvnrepository.com/artifact/org.springframework/spring-web -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
             <version>${spring.version}</version>
-        </dependency>	
+        </dependency>
+        
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-webmvc -->
 		<dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-webmvc</artifactId>
 		    <version>${spring.version}</version>
 		</dependency>
+        
 		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
 		<dependency>
 		    <groupId>org.hibernate</groupId>
 		    <artifactId>hibernate-core</artifactId>
 		    <version>${hibernate.version}</version>
 		</dependency>
+        
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-orm -->
 		<dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-orm</artifactId>
 		    <version>${spring.version}</version>
 		</dependency>
+        
 	</dependencies>
+    
 	<reporting>
       <plugins>
         <plugin>
@@ -209,4 +272,5 @@
         </plugin>
       </plugins>
     </reporting>
+    
 </project>
