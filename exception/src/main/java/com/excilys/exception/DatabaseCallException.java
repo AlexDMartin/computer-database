@@ -1,4 +1,4 @@
-package com.excilys.dao.exception;
+package com.excilys.exception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

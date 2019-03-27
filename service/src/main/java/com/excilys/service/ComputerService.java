@@ -1,11 +1,11 @@
 package com.excilys.service;
 
 import com.excilys.dao.ComputerDao;
-import com.excilys.dao.exception.DatabaseCallException;
 import com.excilys.dao.mappers.ComputerMapper;
 import com.excilys.dao.model.Computer;
 import com.excilys.dto.ComputerDto;
 import com.excilys.dto.Dto;
+import com.excilys.exception.DatabaseCallException;
 import com.excilys.service.exception.ServiceException;
 import com.excilys.validation.exception.ValidationException;
 import com.excilys.validation.exception.computer.ComputerValidationException;

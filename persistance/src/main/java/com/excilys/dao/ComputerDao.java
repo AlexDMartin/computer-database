@@ -1,7 +1,7 @@
 package com.excilys.dao;
 
-import com.excilys.dao.exception.DatabaseCallException;
 import com.excilys.dao.model.Computer;
+import com.excilys.exception.DatabaseCallException;
 import com.excilys.web.controller.ListPage;
 import java.util.ArrayList;
 import java.util.List;

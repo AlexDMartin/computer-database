@@ -12,9 +12,7 @@
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.excilys.cdb</groupId>
 	<artifactId>webapp</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>webapp</name>
 	<packaging>war</packaging>
     
@@ -22,6 +20,18 @@
         <dependency>
             <groupId>com.excilys.cdb</groupId>
             <artifactId>service</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.excilys.cdb</groupId>
+            <artifactId>persistance</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.excilys.cdb</groupId>
+            <artifactId>exception</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>

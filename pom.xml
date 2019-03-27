@@ -38,35 +38,32 @@
 			</plugin>
             
 			<!-- Maven war -->
-			<plugin>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>3.2.1</version>
-				<configuration>
-					<warSourceDirectory>src/main/webapp</warSourceDirectory>
-				</configuration>
-			</plugin>
+<!-- 			<plugin> -->
+<!-- 				<artifactId>maven-war-plugin</artifactId> -->
+<!-- 				<version>3.2.1</version> -->
+<!-- 				<configuration> -->
+<!-- 					<warSourceDirectory>webapp/src/main/</warSourceDirectory> -->
+<!-- 				</configuration> -->
+<!-- 			</plugin> -->
             
 		</plugins>
         
 	</build>
-    
+
 	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
         
-	<!-- Versions -->
-		<!-- slf4j -->
+	<!-- Versions -->   
+	
+		<!-- Slf4j -->
 		<slf4j.version>1.7.26</slf4j.version>
-        
+	     
 		<!-- logback -->
 		<logback.version>1.2.3</logback.version>
         
 		<!-- mysql connector java -->
 		<mysql-connector-java.version>8.0.15</mysql-connector-java.version>
-        
-		<!-- JUnit -->
-		<junit.version>4.12</junit.version>
-        
-		<!-- Mockito -->
-		<mockito.version>1.10.19</mockito.version>
         
 		<!-- JSP -->
 		<jsp.version>2.3.1</jsp.version>
@@ -100,7 +97,7 @@
         
 	<!-- Config files -->
 		<!-- Checkstyle -->
-		<checkstyle.config.location>src/main/resources/checkstyle.xml</checkstyle.config.location>
+<!-- 		<checkstyle.config.location>src/main/resources/checkstyle.xml</checkstyle.config.location> -->
         
         <!--  Encoding -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -143,22 +140,6 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>${mysql-connector-java.version}</version>
-		</dependency>
-        
-		<!-- https://mvnrepository.com/artifact/junit/junit -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-        
-		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>${mockito.version}</version>
-			<scope>test</scope>
 		</dependency>
         
 		<!-- https://mvnrepository.com/artifact/javax.servlet.jsp/javax.servlet.jsp-api -->

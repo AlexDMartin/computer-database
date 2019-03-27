@@ -1,10 +1,10 @@
 package com.excilys.service;
 
 import com.excilys.dao.CompanyDao;
-import com.excilys.dao.exception.DatabaseCallException;
 import com.excilys.dao.mappers.CompanyMapper;
 import com.excilys.dao.model.Company;
 import com.excilys.dto.CompanyDto;
+import com.excilys.exception.DatabaseCallException;
 import com.excilys.service.exception.ServiceException;
 import com.excilys.validation.exception.ValidationException;
 import com.excilys.validation.exception.company.CompanyValidationException;

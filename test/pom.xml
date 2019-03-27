@@ -4,7 +4,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	
+
 	<parent>
 		<groupId>com.excilys.cdb</groupId>
 		<artifactId>cdb</artifactId>
@@ -12,9 +12,34 @@
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.excilys.cdb</groupId>
 	<artifactId>test</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>test</name>
 	<packaging>jar</packaging>
+	
+	<properties>
+		<!-- JUnit -->
+		<junit.version>4.12</junit.version>
+        
+		<!-- Mockito -->
+		<mockito.version>1.10.19</mockito.version>
+	</properties>
+
+
+	<dependencies>
+		<!-- https://mvnrepository.com/artifact/junit/junit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>${mockito.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>

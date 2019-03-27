@@ -1,6 +1,6 @@
 package com.excilys.dao;
 
-import com.excilys.dao.exception.DatabaseCallException;
+import com.excilys.exception.DatabaseCallException;
 import java.util.List;
 import java.util.Optional;
 

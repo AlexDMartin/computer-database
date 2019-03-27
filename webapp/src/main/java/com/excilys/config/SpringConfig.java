@@ -121,10 +121,12 @@ public class SpringConfig implements WebApplicationInitializer, WebMvcConfigurer
    */
   @Bean
   public DataSource getDataSource() {
-    HikariConfig config =
-        new HikariConfig(Thread.currentThread().getContextClassLoader().getResource("").getPath()
-            + "hikari.properties");
-    return new HikariDataSource(config);
+    HikariDataSource dataSource = new HikariDataSource();
+    dataSource.setJdbcUrl(environment.getRequiredProperty("jdbcUrl"));
+    dataSource.setUsername(environment.getRequiredProperty("dataSource.user"));
+    dataSource.setPassword(environment.getRequiredProperty("dataSource.password"));
+    dataSource.setDriverClassName(environment.getRequiredProperty("driverClassName"));
+    return dataSource;
   }
 
   /**
