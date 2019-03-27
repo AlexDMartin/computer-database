@@ -1,6 +1,6 @@
 package com.excilys.console.controller;
 
-import com.excilys.config.SpringConfig;
+import com.excilys.console.config.ConsoleSpringConfig;
 import com.excilys.console.view.CliMainView;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -23,7 +23,7 @@ public class CliRenderer {
     Optional<ApplicationContext> applicationContext = Optional.empty();
     
     try {
-      applicationContext = Optional.of(new AnnotationConfigApplicationContext(SpringConfig.class));
+      applicationContext = Optional.of(new AnnotationConfigApplicationContext(ConsoleSpringConfig.class));
       CliMainView cliMainView = applicationContext.get().getBean(CliMainView.class);
       cliMainView.render();
     } catch (BeansException beansException) {

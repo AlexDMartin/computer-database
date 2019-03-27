@@ -16,7 +16,7 @@
 	<name>console</name>
 	<packaging>jar</packaging>
     
-    <dependencies>
+    <dependencies>    
         <dependency>
             <groupId>com.excilys.cdb</groupId>
             <artifactId>service</artifactId>

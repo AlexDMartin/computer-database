@@ -1,6 +1,5 @@
 package com.excilys.config;
 
-import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import java.util.Locale;
 import java.util.Properties;
