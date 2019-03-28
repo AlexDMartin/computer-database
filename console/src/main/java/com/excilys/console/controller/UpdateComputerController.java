@@ -1,8 +1,6 @@
 package com.excilys.console.controller;
 
 import com.excilys.console.view.UpdateComputerView;
-import com.excilys.dao.mappers.CompanyMapper;
-import com.excilys.dao.mappers.ComputerMapper;
 import com.excilys.dto.CompanyDto;
 import com.excilys.dto.ComputerDto;
 import com.excilys.service.CompanyService;
