@@ -2,7 +2,6 @@ package com.excilys.console.controller;
 
 import com.excilys.dao.model.MenuItem;
 import java.util.Scanner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -15,7 +14,6 @@ public class MenuController {
   private UpdateComputerController updateComputerController;
   private DeleteComputerController deleteComputerController;
 
-  @Autowired
   private MenuController(ListComputerController listComputerController,
       ListCompanyController listCompanyController, 
       ShowDetailsController showDetailsController,

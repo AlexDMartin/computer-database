@@ -9,7 +9,6 @@ import com.excilys.service.ComputerService;
 import com.excilys.service.exception.ServiceException;
 import java.util.Optional;
 import java.util.Scanner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -21,7 +20,6 @@ public class CreateComputerController {
   private CompanyService companyService;
   private CreateComputerView view;
 
-  @Autowired
   private CreateComputerController(ComputerService computerService, CompanyService companyService,
       CreateComputerView createComputerView) {
     this.computerService = computerService;

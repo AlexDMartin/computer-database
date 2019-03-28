@@ -1,6 +1,6 @@
-package com.excilys.validation.exception.company;
+package com.excilys.exception.validation.company;
 
-import com.excilys.validation.exception.ValidationException;
+import com.excilys.exception.validation.ValidationException;
 
 public class CompanyValidationException extends ValidationException {
 

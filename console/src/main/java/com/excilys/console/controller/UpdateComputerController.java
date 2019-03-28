@@ -10,7 +10,6 @@ import com.excilys.service.ComputerService;
 import com.excilys.service.exception.ServiceException;
 import java.util.Optional;
 import java.util.Scanner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -22,12 +21,11 @@ public class UpdateComputerController {
   private CompanyService companyService;
   private UpdateComputerView view;
 
-  @Autowired
   private UpdateComputerController(ComputerService computerService, CompanyService companyService,
-      ComputerMapper computerMapper, CompanyMapper companyMapper,
       UpdateComputerView updateComputerView) {
     this.computerService = computerService;
     this.companyService = companyService;
+    this.view = updateComputerView;
   }
 
   /**

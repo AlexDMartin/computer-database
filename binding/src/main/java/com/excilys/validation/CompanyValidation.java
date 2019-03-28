@@ -1,9 +1,9 @@
 package com.excilys.validation;
 
 import com.excilys.dao.model.Company;
-import com.excilys.validation.exception.company.CompanyValidationException;
-import com.excilys.validation.exception.company.InvalidIdCompanyValidationException;
-import com.excilys.validation.exception.company.InvalidNameCompanyValidationException;
+import com.excilys.exception.validation.company.CompanyValidationException;
+import com.excilys.exception.validation.company.InvalidIdCompanyValidationException;
+import com.excilys.exception.validation.company.InvalidNameCompanyValidationException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.springframework.stereotype.Component;

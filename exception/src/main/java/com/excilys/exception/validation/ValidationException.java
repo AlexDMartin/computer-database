@@ -1,4 +1,4 @@
-package com.excilys.validation.exception;
+package com.excilys.exception.validation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

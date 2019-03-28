@@ -1,12 +1,12 @@
 package com.excilys.validation;
 
 import com.excilys.dao.model.Computer;
-import com.excilys.validation.exception.computer.ComputerValidationException;
-import com.excilys.validation.exception.computer.InvalidDiscontinuationDateComputerValidationException;
-import com.excilys.validation.exception.computer.InvalidIdComputerValidationException;
-import com.excilys.validation.exception.computer.InvalidIntroductionDateComputerValidationException;
-import com.excilys.validation.exception.computer.InvalidNameComputerValidationException;
-import com.excilys.validation.exception.computer.InvalidPrecedenceComputerValidationException;
+import com.excilys.exception.validation.computer.ComputerValidationException;
+import com.excilys.exception.validation.computer.InvalidDiscontinuationDateComputerValidationException;
+import com.excilys.exception.validation.computer.InvalidIdComputerValidationException;
+import com.excilys.exception.validation.computer.InvalidIntroductionDateComputerValidationException;
+import com.excilys.exception.validation.computer.InvalidNameComputerValidationException;
+import com.excilys.exception.validation.computer.InvalidPrecedenceComputerValidationException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;

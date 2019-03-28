@@ -7,21 +7,18 @@ import com.excilys.dto.CompanyDto;
 import com.excilys.dto.ComputerDto;
 import com.excilys.dto.ComputerDtoBuilder;
 import com.excilys.dto.Dto;
+import com.excilys.exception.validation.ValidationException;
+import com.excilys.exception.validation.computer.ComputerValidationException;
 import com.excilys.validation.ComputerValidation;
-import com.excilys.validation.exception.ValidationException;
-import com.excilys.validation.exception.computer.ComputerValidationException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ComputerMapper implements Mapper<Computer> {
 
-  private static final Logger logger = LoggerFactory.getLogger(ComputerMapper.class);
   private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
 
   private ComputerValidation computerValidation;
@@ -69,7 +66,7 @@ public class ComputerMapper implements Mapper<Computer> {
       computerDtoBuilder.addCompanyDto(companyDto);
 
     } catch (ValidationException validationException) {
-      logger.warn(validationException.getMessage());
+      throw new ComputerValidationException(validationException.getMessage());
     }
 
     return computerDtoBuilder.build();
@@ -104,7 +101,7 @@ public class ComputerMapper implements Mapper<Computer> {
           computerDto.getDiscontinued() == null || computerDto.getDiscontinued().isEmpty() ? null
               : new SimpleDateFormat(DEFAULT_DATE_FORMAT).parse(computerDto.getDiscontinued());
     } catch (ParseException parseException) {
-      logger.warn(parseException.getMessage());
+      throw new ComputerValidationException(parseException.getMessage());
     }
 
     computerBuilder.addIntroduced(parsedIntroduced).addDiscontinued(parsedDiscontinued);

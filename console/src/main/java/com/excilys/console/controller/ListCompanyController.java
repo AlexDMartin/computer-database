@@ -6,7 +6,6 @@ import com.excilys.service.CompanyService;
 import com.excilys.service.exception.ServiceException;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -15,7 +14,6 @@ public class ListCompanyController {
   private CompanyService companyService;
   private ListCompanyView view;
 
-  @Autowired
   private ListCompanyController(CompanyService companyService, ListCompanyView listCompanyView) {
     this.companyService = companyService;
     this.view = listCompanyView;

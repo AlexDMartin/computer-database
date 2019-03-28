@@ -5,13 +5,12 @@ import com.excilys.dao.mappers.CompanyMapper;
 import com.excilys.dao.model.Company;
 import com.excilys.dto.CompanyDto;
 import com.excilys.exception.DatabaseCallException;
+import com.excilys.exception.validation.ValidationException;
+import com.excilys.exception.validation.company.CompanyValidationException;
 import com.excilys.service.exception.ServiceException;
-import com.excilys.validation.exception.ValidationException;
-import com.excilys.validation.exception.company.CompanyValidationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,7 +19,6 @@ public class CompanyService implements CallableService<CompanyDto> {
   private CompanyDao companyDao;
   private CompanyMapper companyMapper;
 
-  @Autowired
   private CompanyService(CompanyDao companyDao, CompanyMapper companyMapper) {
     this.companyDao = companyDao;
     this.companyMapper = companyMapper;

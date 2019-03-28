@@ -1,4 +1,4 @@
-package com.excilys.validation.exception.company;
+package com.excilys.exception.validation.company;
 
 public class InvalidIdCompanyValidationException extends CompanyValidationException {
 

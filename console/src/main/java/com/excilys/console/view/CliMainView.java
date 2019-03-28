@@ -3,7 +3,6 @@ package com.excilys.console.view;
 import com.excilys.console.controller.MenuController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,7 +12,6 @@ public class CliMainView {
 
   private MenuController menuController;
 
-  @Autowired
   private CliMainView(MenuController menuController) {
     this.menuController = menuController;
   }

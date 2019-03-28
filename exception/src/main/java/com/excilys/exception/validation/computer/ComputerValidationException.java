@@ -1,6 +1,6 @@
-package com.excilys.validation.exception.computer;
+package com.excilys.exception.validation.computer;
 
-import com.excilys.validation.exception.ValidationException;
+import com.excilys.exception.validation.ValidationException;
 
 public class ComputerValidationException extends ValidationException {
 

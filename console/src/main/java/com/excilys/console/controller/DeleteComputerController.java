@@ -6,7 +6,6 @@ import com.excilys.service.ComputerService;
 import com.excilys.service.exception.ServiceException;
 import java.util.Optional;
 import java.util.Scanner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -17,7 +16,6 @@ public class DeleteComputerController {
   private ComputerService computerService;
   private DeleteComputerView view;
 
-  @Autowired
   private DeleteComputerController(ComputerService computerService,
       DeleteComputerView deleteComputerView) {
     this.computerService = computerService;

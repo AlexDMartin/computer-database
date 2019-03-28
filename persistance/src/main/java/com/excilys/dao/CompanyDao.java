@@ -5,12 +5,12 @@ import com.excilys.exception.DatabaseCallException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.transaction.Transactional;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -24,7 +24,6 @@ public class CompanyDao implements Dao<Company> {
 
   private SessionFactory sessionFactory;
 
-  @Autowired
   private CompanyDao(SessionFactory sessionFactory) {
     this.sessionFactory = sessionFactory;
   }
@@ -124,6 +123,7 @@ public class CompanyDao implements Dao<Company> {
    * 
    * @see com.excilys.dao.Dao#delete(java.lang.Object)
    */
+  @Transactional
   @Override
   public void delete(Company company) throws DatabaseCallException {
     int deletedEntities = 0;

@@ -1,4 +1,4 @@
-package com.excilys.validation.exception.computer;
+package com.excilys.exception.validation.computer;
 
 public class InvalidDiscontinuationDateComputerValidationException
     extends ComputerValidationException {

@@ -6,12 +6,12 @@ import com.excilys.web.controller.ListPage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.transaction.Transactional;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -20,18 +20,17 @@ public class ComputerDao implements Dao<Computer> {
   private static final String GET_ONE = "from Computer where id = :id";
   private static final String GET_ALL = "from Computer";
   private static final String GET_PAGINATED =
-      "Select computer "
+      "select computer "
       + "from Computer computer "
       + "left join Company company "
       + "on company.id = computer.id ";
   private static final String GET_SEARCHED_PAGINATED =
-      "SELECT computer.ID, computer.NAME, INTRODUCED, DISCONTINUED, "
-          + "COMPANY_ID FROM computer LEFT JOIN company ON computer.ID = company.ID "
-          + "WHERE computer.NAME LIKE ? OR company.NAME LIKE ? " + "ORDER BY %s " + "LIMIT ? "
-          + "OFFSET ?";
-  private static final String SAVE =
-      "insert into computer (NAME, INTRODUCED, DISCONTINUED, COMPANY_ID) "
-      + "values (:name, :introduced, :discontinued, :cpaId)";
+      "select computer "
+      + "from Computer computer "
+      + "left join Company company "
+      + "on company.id = computer.id "
+      + "where computer.id like :criteria "
+      + "or company.id like :criteria ";
   private static final String UPDATE =
       "update Computer computer "
       + "set computer.name = :name, "
@@ -41,13 +40,16 @@ public class ComputerDao implements Dao<Computer> {
       + "where id = :cpuId ";
   private static final String DELETE = "delete Computer where id = :cpuId";
   private static final String COUNT_ALL_COMPUTERS = "select count(id) from Computer computer";
-  private static final String COUNT_ALL_COMPUTERS_BY_CRITERIA = "SELECT COUNT(computer.ID) "
-      + "FROM computer " + "LEFT JOIN company ON computer.ID = company.ID "
-      + "WHERE computer.NAME LIKE ? OR company.NAME LIKE ? ";
+  private static final String COUNT_ALL_COMPUTERS_BY_CRITERIA =
+      "select count(computer.id) "
+      + "from Computer computer "
+      + "left join Company company "
+      + "on company.id = computer.id "
+      + "where computer.name like :criteria "
+      + "or company.name like :criteria";
 
   private SessionFactory sessionFactory;
 
-  @Autowired
   private ComputerDao(SessionFactory sessionFactory) {
     this.sessionFactory = sessionFactory;
   }
@@ -127,11 +129,6 @@ public class ComputerDao implements Dao<Computer> {
 
       session.saveOrUpdate(computer);
       
-//      insertedEntities = session.createQuery(SAVE).setParameter("name", computer.getName())
-//          .setParameter("introduced", computer.getIntroduced())
-//          .setParameter("discontinued", computer.getDiscontinued())
-//          .setParameter("cpaId", computer.getCompany().getId())
-//          .setParameter("cpuId", computer.getId()).executeUpdate();
       tx.commit();
       session.close();
     } catch (HibernateException hibernateException) {
@@ -172,6 +169,7 @@ public class ComputerDao implements Dao<Computer> {
    * 
    * @see com.excilys.dao.Dao#delete(java.lang.Object)
    */
+  @Transactional
   @Override
   public void delete(Computer computer) throws DatabaseCallException {
     int deletedEntities = 0;
@@ -242,11 +240,15 @@ public class ComputerDao implements Dao<Computer> {
    * @return the total of computers
    */
   public int countAllComputerByCriteria(String criteria) throws DatabaseCallException {
-    // String filter = "%" + criteria + "%";
-    //
-    // return jdbcTemplate.queryForObject(COUNT_ALL_COMPUTERS_BY_CRITERIA, Integer.class, filter,
-    // filter);
-    // TODO implement this method
-    return 0;
+    Long count = null;
+    String filter = "%" + criteria + "%";
+    try (Session session = this.sessionFactory.openSession()) {
+      Query<Long> query = session.createQuery(COUNT_ALL_COMPUTERS_BY_CRITERIA, Long.class);
+      query.setParameter("criteria", filter);
+      count = query.uniqueResult();
+    } catch (HibernateException hibernateException) {
+      throw new DatabaseCallException(hibernateException.getMessage());
+    }
+    return Math.toIntExact(count);
   }
 }

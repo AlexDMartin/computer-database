@@ -6,14 +6,13 @@ import com.excilys.dao.model.Computer;
 import com.excilys.dto.ComputerDto;
 import com.excilys.dto.Dto;
 import com.excilys.exception.DatabaseCallException;
+import com.excilys.exception.validation.ValidationException;
+import com.excilys.exception.validation.computer.ComputerValidationException;
 import com.excilys.service.exception.ServiceException;
-import com.excilys.validation.exception.ValidationException;
-import com.excilys.validation.exception.computer.ComputerValidationException;
 import com.excilys.web.controller.ListPage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,7 +21,6 @@ public class ComputerService implements CallableService<ComputerDto> {
   private ComputerDao computerDao;
   private ComputerMapper computerMapper;
 
-  @Autowired
   private ComputerService(ComputerDao computerDao, ComputerMapper computerMapper) {
     this.computerDao = computerDao;
     this.computerMapper = computerMapper;
