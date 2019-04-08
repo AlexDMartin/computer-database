@@ -1,10 +1,9 @@
-package com.excilys.mappers;
+package com.excilys.test.dao;
 
 import static org.junit.Assert.fail;
-
 import org.junit.Test;
 
-public class ComputerMapperTest {
+public class CompanyDaoTest {
 
   @Test
   public void test() {

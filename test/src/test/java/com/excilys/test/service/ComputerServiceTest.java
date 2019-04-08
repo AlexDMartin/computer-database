@@ -1,9 +1,10 @@
-package com.excilys.dao;
+package com.excilys.test.service;
 
 import static org.junit.Assert.fail;
+
 import org.junit.Test;
 
-public class CompanyDaoTest {
+public class ComputerServiceTest {
 
   @Test
   public void test() {

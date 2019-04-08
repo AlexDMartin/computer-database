@@ -1,10 +1,10 @@
-package com.excilys.dao;
+package com.excilys.test.validation;
 
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-public class ComputerDaoTest {
+public class ComputerValidationTest {
 
   @Test
   public void test() {

@@ -1,4 +1,4 @@
-package com.excilys.service;
+package com.excilys.test.service;
 
 import static org.junit.Assert.fail;
 
