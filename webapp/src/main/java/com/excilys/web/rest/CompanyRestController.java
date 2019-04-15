@@ -1,9 +1,8 @@
 package com.excilys.web.rest;
 
-import com.excilys.dao.mappers.CompanyMapper;
+import com.excilys.api.company.ApiCompanyException;
 import com.excilys.dto.CompanyDto;
 import com.excilys.service.CompanyService;
-import com.excilys.service.ComputerService;
 import com.excilys.service.exception.ServiceException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,92 +20,91 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class CompanyRestController {
-  
-  private ComputerService computerService;
-  private CompanyService companyService;
-  private CompanyMapper companyMapper;
 
-  private CompanyRestController(ComputerService computerService, CompanyService companyService,
-      CompanyMapper companyMapper) {
-    this.computerService = computerService;
+  private CompanyService companyService;
+
+  private CompanyRestController(CompanyService companyService) {
     this.companyService = companyService;
-    this.companyMapper = companyMapper;
   }
-  
+
   @GetMapping(value = "/companies/{id}", produces = "application/json")
-  public CompanyDto get(@PathVariable int id) {
+  public CompanyDto get(@PathVariable int id) throws ApiCompanyException {
     Optional<CompanyDto> companyDto = Optional.empty();
-    
+
     try {
       companyDto = companyService.find(id);
     } catch (ServiceException serviceException) {
-      // TODO: handle exception
+      throw new ApiCompanyException("Get request failed\n" + serviceException.getMessage());
     }
-    
-    if (companyDto.isPresent()) {      
+
+    if (companyDto.isPresent()) {
       return companyDto.get();
     }
-    
+
     return null;
   }
-  
+
   @GetMapping(value = "/companies", produces = "application/json")
-  public List<CompanyDto> getAll() {
+  public List<CompanyDto> getAll() throws ApiCompanyException {
     List<CompanyDto> companies = new ArrayList<>();
-    
+
     try {
       companies = companyService.findAll();
     } catch (ServiceException serviceException) {
-      // TODO: handle exception
+      throw new ApiCompanyException("Get request failed\n" + serviceException.getMessage());
     }
-    
+
     return companies;
   }
-    
+
   @DeleteMapping(value = "/companies/{id}", produces = "application/json")
-  public CompanyDto delete(@PathVariable int id) {
+  public CompanyDto delete(@PathVariable int id) throws ApiCompanyException {
     Optional<CompanyDto> companyDto = Optional.empty();
-    
+
     try {
       companyDto = companyService.find(id);
     } catch (ServiceException serviceException) {
-      // TODO: handle exception
+      throw new ApiCompanyException(
+          "Get request failed (Couldn\'t find the company that would be deleted)\n"
+              + serviceException.getMessage());
     }
-    
-    if(companyDto.isPresent()) {      
+
+    if (companyDto.isPresent()) {
       try {
         companyService.delete(companyDto.get());
       } catch (ServiceException serviceException) {
-        // TODO: handle exception
+        throw new ApiCompanyException("Delete request failed\n" + serviceException.getMessage());
       }
       return companyDto.get();
     }
     return null;
   }
-  
+
   @PostMapping(value = "/companies", produces = "application/json")
-  public ResponseEntity<CompanyDto> post(@PathVariable CompanyDto companyDto) {
-      if (companyDto != null) {
-        try {
-          companyService.save(companyDto);
-        } catch (ServiceException serviceException) {
-          // TODO: handle exception
-        }
-      }
-      
-      return new ResponseEntity<CompanyDto>(companyDto, HttpStatus.OK);
-  }
-  
-  @PatchMapping(value = "/companies/{id}", produces = "application/json")
-  public ResponseEntity<CompanyDto> patch(@PathVariable CompanyDto companyDto) {
+  public ResponseEntity<CompanyDto> post(@PathVariable CompanyDto companyDto)
+      throws ApiCompanyException {
     if (companyDto != null) {
       try {
         companyService.save(companyDto);
       } catch (ServiceException serviceException) {
-        // TODO: handle exception
+        throw new ApiCompanyException("Post request failed\n" + serviceException.getMessage());
       }
     }
-    
-    return new ResponseEntity<CompanyDto>(companyDto, HttpStatus.OK);
+
+    return new ResponseEntity<>(companyDto, HttpStatus.OK);
+  }
+
+  @PatchMapping(value = "/companies/{id}", produces = "application/json")
+  public ResponseEntity<CompanyDto> patch(@PathVariable CompanyDto companyDto)
+      throws ApiCompanyException {
+    if (companyDto != null) {
+      try {
+        companyService.save(companyDto);
+      } catch (ServiceException serviceException) {
+        throw new ApiCompanyException("Patch request failed\n" + serviceException.getMessage());
+      }
+    }
+
+    return new ResponseEntity<>(companyDto, HttpStatus.OK);
   }
 }

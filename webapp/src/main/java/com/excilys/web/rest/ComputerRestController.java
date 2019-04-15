@@ -1,8 +1,6 @@
 package com.excilys.web.rest;
 
-import com.excilys.dao.mappers.ComputerMapper;
 import com.excilys.dto.ComputerDto;
-import com.excilys.service.CompanyService;
 import com.excilys.service.ComputerService;
 import com.excilys.service.exception.ServiceException;
 import java.util.ArrayList;
@@ -21,14 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class ComputerRestController {
 
   private ComputerService computerService;
-  private CompanyService companyService;
-  private ComputerMapper computerMapper;
 
-  private ComputerRestController(ComputerService computerService, CompanyService companyService,
-      ComputerMapper computerMapper) {
+  private ComputerRestController(ComputerService computerService) {
     this.computerService = computerService;
-    this.companyService = companyService;
-    this.computerMapper = computerMapper;
   }
 
   @GetMapping(value = "/computers/{id}", produces = "application/json")
